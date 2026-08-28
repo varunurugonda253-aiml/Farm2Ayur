@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Farm2Ayur is an Ayurvedic Herb Traceability Platform providing crop-to-remedy transparency, verified laboratory reports, and digital tracking.">
+  <title>Farm2Ayur — Ayurvedic Herb Traceability Platform</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+  
+  <!-- CSS Link -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+  <!-- Background Blur Overlays for Modern UI -->
+  <div class="glow-orb glow-1"></div>
+  <div class="glow-orb glow-2"></div>
+
+  <!-- Desktop & Mobile Header Navigation -->
+  <header class="app-header">
+    <div class="header-container">
+      <a href="#home" class="logo">
+        <span class="logo-icon">🌿</span>
+        <span class="logo-text">Farm<span>2</span>Ayur</span>
+      </a>
+      
+      <!-- Desktop Navigation Menu -->
+      <nav class="desktop-nav">
+        <ul class="nav-links">
+          <li><a href="#home" class="nav-item active" data-view="home">Home</a></li>
+          <li><a href="#explore" class="nav-item" data-view="explore">Explore</a></li>
+          <li><a href="#herbs" class="nav-item" data-view="herbs">Herbs</a></li>
+          <li><a href="#supply-chain" class="nav-item" data-view="supply-chain">Supply Chain</a></li>
+          <li><a href="#knowledge" class="nav-item" data-view="knowledge">Knowledge</a></li>
+          <li><a href="#contribute" class="nav-item" data-view="contribute">Contribute</a></li>
+          <li><a href="#about" class="nav-item" data-view="about">About</a></li>
+          <li><a href="#contact" class="nav-item" data-view="contact">Contact</a></li>
+        </ul>
+      </nav>
+
+      <!-- Right Side CTA -->
+      <div class="header-right">
+        <a href="#contribute" class="btn btn-primary login-btn">Login / Register</a>
+        <button class="mobile-menu-toggle" aria-label="Toggle Menu" id="mobileMenuBtn">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-nav-drawer" id="mobileDrawer">
+      <ul class="mobile-nav-links">
+        <li><a href="#home" class="mobile-nav-item active" data-view="home">Home</a></li>
+        <li><a href="#explore" class="mobile-nav-item" data-view="explore">Explore</a></li>
+        <li><a href="#herbs" class="mobile-nav-item" data-view="herbs">Herbs</a></li>
+        <li><a href="#supply-chain" class="mobile-nav-item" data-view="supply-chain">Supply Chain</a></li>
+        <li><a href="#knowledge" class="mobile-nav-item" data-view="knowledge">Knowledge</a></li>
+        <li><a href="#contribute" class="mobile-nav-item" data-view="contribute">Contribute</a></li>
+        <li><a href="#about" class="mobile-nav-item" data-view="about">About</a></li>
+        <li><a href="#contact" class="mobile-nav-item" data-view="contact">Contact</a></li>
+      </ul>
+      <div class="mobile-nav-cta">
+        <a href="#contribute" class="btn btn-primary login-btn-mobile">Login / Register</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Views Container -->
+  <main class="main-content" id="mainContainer">
+
+    <!-- HOME VIEW -->
+    <section id="home" class="page-view active">
+      <!-- Full Page Hero Section -->
+      <div class="hero-section">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <span class="badge-tag animate-fade-in">🌿 Crop-to-Remedy Transparency</span>
+          <h1 class="hero-title animate-slide-up">Trace the Purity of Ayurvedic Herbs</h1>
+          <p class="hero-subtitle animate-slide-up-delay">Verifying the origin, batch quality, and processing timelines of traditional herbs with modern digital trust.</p>
+          
+          <!-- Home Quick Trace Search Bar -->
+          <div class="search-bar-container animate-slide-up-delay-2">
+            <form class="quick-trace-form" id="quickTraceForm">
+              <span class="search-icon">🔍</span>
+              <input type="text" placeholder="Enter Batch ID (e.g. ASH-2026-08, TUR-2026-09)..." id="quickTraceInput" required>
+              <button type="submit" class="btn btn-secondary">Trace Journey</button>
+            </form>
+            <div class="search-suggestions">
+              <span>Try: </span>
+              <button type="button" class="suggestion-tag" data-batch="ASH-2026-08">ASH-2026-08 (Ashwagandha)</button>
+              <button type="button" class="suggestion-tag" data-batch="TUR-2026-09">TUR-2026-09 (Turmeric)</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trust Stats Section -->
+      <div class="section-stats-wrap">
+        <div class="container grid grid-4">
+          <div class="stat-card">
+            <div class="stat-num" id="statFarmers">320+</div>
+            <div class="stat-label">Verified Farmers</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" id="statBatches">1,450+</div>
+            <div class="stat-label">Batches Traced</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" id="statHerbs">45</div>
+            <div class="stat-label">Botanical Species</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" id="statPurity">99.8%</div>
+            <div class="stat-label">Purity Index</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Overview Cards -->
+      <div class="container section-padding">
+        <div class="section-header">
+          <span class="section-tagline">How It Works</span>
+          <h2 class="section-heading">Ensuring Trust, Sharing Knowledge</h2>
+        </div>
+        <div class="grid grid-3">
+          <div class="card feat-overview">
+            <div class="card-icon">🗺️</div>
+            <h3>Dynamic Journey</h3>
+            <p>From clean soil analysis to manufacturing, track every transport event and ambient climate condition during transit.</p>
+          </div>
+          <div class="card feat-overview">
+            <div class="card-icon">🔬</div>
+            <h3>Chemical Profiling</h3>
+            <p>Access laboratory reports detailing active marker compound concentrations (Withanolides, Curcuminoids) and heavy metal limits.</p>
+          </div>
+          <div class="card feat-overview">
+            <div class="card-icon">📖</div>
+            <h3>Ayurvedic Integrity</h3>
+            <p>View classical herbal classifications based on Ayurvedic concepts: Rasa (Taste), Guna (Qualities), Virya (Potency), and Vipaka.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Featured Herbs -->
+      <div class="container section-padding bg-section-light">
+        <div class="section-header">
+          <span class="section-tagline">Botanical Catalog</span>
+          <h2 class="section-heading">Featured Ayurvedic Herbs</h2>
+        </div>
+        <div class="grid grid-3" id="featuredHerbsGrid">
+          <!-- Dynamically populated via JS -->
+        </div>
+        <div class="center-cta">
+          <a href="#herbs" class="btn btn-outline">Browse Herb Catalog</a>
+        </div>
+      </div>
+
+      <!-- Latest Batches -->
+      <div class="container section-padding">
+        <div class="section-header">
+          <span class="section-tagline">Verified Batches</span>
+          <h2 class="section-heading">Recently Logged Journeys</h2>
+        </div>
+        <div class="grid grid-3" id="recentBatchesGrid">
+          <!-- Dynamically populated via JS -->
+        </div>
+        <div class="center-cta">
+          <a href="#explore" class="btn btn-secondary">Trace Active Batch</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPLORE / TRACE VIEW -->
+    <section id="explore" class="page-view">
+      <div class="container section-padding">
+        <div class="view-intro">
+          <h1>Explore Batch Journeys</h1>
+          <p>Verify QR codes, trace batch details, and check quality analysis logs.</p>
+        </div>
+
+        <div class="explore-layout">
+          <!-- Search Panel -->
+          <div class="explore-search-panel card">
+            <h2>Trace Search Center</h2>
+            <form id="exploreSearchForm" class="explore-search-form">
+              <div class="input-wrap">
+                <label for="exploreSearchInput">Enter Batch ID or Herb Name</label>
+                <input type="text" id="exploreSearchInput" placeholder="e.g. ASH-2026-08, Turmeric..." required>
+              </div>
+              <button type="submit" class="btn btn-secondary w-100">Search Ledger</button>
+            </form>
+
+            <div class="divider"><span>OR</span></div>
+
+            <!-- QR Scanner Simulator -->
+            <div class="qr-simulator">
+              <h3>Scan QR Code</h3>
+              <p>Simulate mobile camera scanning. Hold a mock QR card to the scanner.</p>
+              <div class="qr-camera-view" id="qrCameraView">
+                <div class="qr-scanner-laser"></div>
+                <div class="qr-placeholder-text">
+                  <span class="qr-icon">📱</span>
+                  <span>Click to scan simulated QR tag</span>
+                </div>
+              </div>
+              <div class="qr-action-btn-wrap">
+                <button type="button" class="btn btn-outline btn-sm w-100" id="scanMockBtn">Simulate QR Scan</button>
+              </div>
+            </div>
+
+            <!-- Active Batches Shortcuts -->
+            <div class="explore-shortcuts">
+              <h4>Traceable Batches In Ledger</h4>
+              <div class="shortcut-buttons">
+                <button type="button" class="btn-shortcut" data-trace="ASH-2026-08">ASH-2026-08</button>
+                <button type="button" class="btn-shortcut" data-trace="TUR-2026-09">TUR-2026-09</button>
+                <button type="button" class="btn-shortcut" data-trace="TUL-2026-07">TUL-2026-07</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Trace Results Panel -->
+          <div class="explore-results-panel">
+            <!-- Initial Empty State -->
+            <div class="results-empty-state" id="traceEmptyState">
+              <span class="empty-icon">🔍</span>
+              <h3>Enter a Batch ID or select a shortcut to begin tracing</h3>
+              <p>The system will retrieve harvest logs, laboratory certificates, shipping logs, and processing timelines from our blockchain ledger.</p>
+            </div>
+
+            <!-- Error State -->
+            <div class="results-error-state hidden" id="traceErrorState">
+              <span class="error-icon">❌</span>
+              <h3>Batch ID Not Found</h3>
+              <p>We could not find a verified Ayurvedic trace matching this code. Please try one of our active demo batches: <strong>ASH-2026-08</strong>, <strong>TUR-2026-09</strong>, or <strong>TUL-2026-07</strong>.</p>
+            </div>
+
+            <!-- Loaded Trace Result -->
+            <div class="results-loaded-state hidden" id="traceLoadedState">
+              <!-- Herb & Batch Header -->
+              <div class="trace-header-card card">
+                <div class="trace-header-top">
+                  <div>
+                    <span class="batch-lbl" id="resultBatchId">ASH-2026-08</span>
+                    <h2 id="resultHerbName">Ashwagandha Roots</h2>
+                    <span class="sci-name" id="resultScientificName">Withania somnifera</span>
+                  </div>
+                  <div class="trace-status-badge">
+                    <span class="dot"></span> Verified Purity
+                  </div>
+                </div>
+                
+                <!-- Quick Info row -->
+                <div class="trace-header-info grid grid-3">
+                  <div class="info-item">
+                    <span class="info-label">Farmer Origin</span>
+                    <span class="info-val" id="resultFarmerName">Ramesh Chandra</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Region</span>
+                    <span class="info-val" id="resultRegion">Uttarakhand, India</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Active Compound</span>
+                    <span class="info-val" id="resultActiveContent">Withanolides: 4.8%</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Interactive Timeline Journey -->
+              <h3 class="timeline-title">Purity Timeline Journey</h3>
+              <div class="journey-timeline" id="journeyTimeline">
+                
+                <!-- Step 1: Cultivation / Farm -->
+                <div class="timeline-node" id="stepFarm">
+                  <div class="node-icon">🌾</div>
+                  <div class="node-content card">
+                    <span class="node-date" id="stepFarmDate">May - August 2026</span>
+                    <h3>1. Sustainable Harvesting</h3>
+                    <h4 id="stepFarmOwner">Ramesh Chandra (Almora Farms)</h4>
+                    <p class="node-desc">Cultivated using organic compost under biodynamic Himalayan rules. Harvested under strict root maturity standards.</p>
+                    <ul class="node-meta">
+                      <li><strong>Soil:</strong> Sandy loam, pH 7.2</li>
+                      <li><strong>Harvest Season:</strong> Sharad Ritu (Autumn)</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- Step 2: Collector -->
+                <div class="timeline-node" id="stepCollection">
+                  <div class="node-icon">📦</div>
+                  <div class="node-content card">
+                    <span class="node-date" id="stepCollectionDate">2026-08-05</span>
+                    <h3>2. Collection & Quality Check</h3>
+                    <h4 id="stepCollectionOwner">Himalayan Herbs Cooperative</h4>
+                    <p class="node-desc">Roots gathered, graded, cleaned with pure water, and packaged in eco-bags.</p>
+                    <ul class="node-meta">
+                      <li><strong>Moisture Test:</strong> Passed (10.4%)</li>
+                      <li><strong>Grading:</strong> Grade-A Thick Roots</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- Step 3: Processor -->
+                <div class="timeline-node" id="stepProcessor">
+                  <div class="node-icon">🏭</div>
+                  <div class="node-content card">
+                    <span class="node-date" id="stepProcessorDate">2026-08-12</span>
+                    <h3>3. Phytochemical Processing</h3>
+                    <h4 id="stepProcessorOwner">Purity Herbs Processing Ltd</h4>
+                    <p class="node-desc">Solar shade-dried and milled under GMP-compliant environments to preserve herbal potency (Virya).</p>
+                    <ul class="node-meta">
+                      <li><strong>Drying Temp:</strong> &lt; 40°C</li>
+                      <li><strong>Moisture Content:</strong> 6.2%</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- Step 4: Quality Labs -->
+                <div class="timeline-node" id="stepQC">
+                  <div class="node-icon">🔬</div>
+                  <div class="node-content card highlight-card">
+                    <span class="node-date" id="stepQCDate">2026-08-18</span>
+                    <h3>4. Laboratory Assay Verification</h3>
+                    <h4 id="stepQCOwner">NABL Accredited Phytochemical Lab</h4>
+                    <p class="node-desc">Validated for purity index, active phytochemical concentration, heavy metals, and pesticide assay.</p>
+                    <ul class="node-meta">
+                      <li><strong>Active Compounds:</strong> <span class="badge-success" id="resultQCActive">Withanolides 4.8%</span></li>
+                      <li><strong>Heavy Metals:</strong> Undetected</li>
+                    </ul>
+                    <button type="button" class="btn btn-outline btn-sm btn-icon" id="btnDownloadCOA">
+                      📄 View Quality Report (COA)
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Step 5: Logistics -->
+                <div class="timeline-node" id="stepLogistics">
+                  <div class="node-icon">🚛</div>
+                  <div class="node-content card">
+                    <span class="node-date" id="stepLogisticsDate">2026-08-20</span>
+                    <h3>5. Secure cold-chain Logistics</h3>
+                    <h4 id="stepLogisticsOwner">EcoCold Logistics</h4>
+                    <p class="node-desc">Transported with IoT temp logging to maintain organic structural integrity.</p>
+                    <ul class="node-meta">
+                      <li><strong>Temp Range:</strong> 20°C - 24°C</li>
+                      <li><strong>Humid Log:</strong> 45% Avg</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- Step 6: Manufacturing -->
+                <div class="timeline-node" id="stepManufacturer">
+                  <div class="node-icon">💊</div>
+                  <div class="node-content card">
+                    <span class="node-date" id="stepMfgDate">2026-08-25</span>
+                    <h3>6. Final Ayurvedic formulation</h3>
+                    <h4 id="stepMfgOwner">AyurVeda Wellness Products</h4>
+                    <p class="node-desc">Formulated into final dosage forms (capsules/tea) and serialized with QR integrity stickers.</p>
+                    <ul class="node-meta">
+                      <li><strong>Product Name:</strong> Ashwagandha extract capsules</li>
+                      <li><strong>Mfg Batch:</strong> M-ASH-9981</li>
+                    </ul>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HERBS / BATCHES VIEW -->
+    <section id="herbs" class="page-view">
+      <div class="container section-padding">
+        <div class="view-intro">
+          <h1>Botanical Catalog & Active Batches</h1>
+          <p>Browse detailed Ayurvedic profiles, properties, and active batches in circulation.</p>
+        </div>
+
+        <div class="catalog-layout">
+          <!-- Filters Sidebar -->
+          <div class="catalog-sidebar card">
+            <h3>Filter Profiles</h3>
+            
+            <div class="filter-group">
+              <label for="catalogSearch">Search Herbs</label>
+              <input type="text" id="catalogSearch" placeholder="Search by name, scientific...">
+            </div>
+
+            <div class="filter-group">
+              <label for="filterRasa">Rasa (Taste)</label>
+              <select id="filterRasa">
+                <option value="">All Tastes</option>
+                <option value="Tikta">Tikta (Bitter)</option>
+                <option value="Katu">Katu (Pungent)</option>
+                <option value="Madhura">Madhura (Sweet)</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label for="filterVirya">Virya (Potency)</label>
+              <select id="filterVirya">
+                <option value="">All Potencies</option>
+                <option value="Ushna">Ushna (Hot)</option>
+                <option value="Sheeta">Sheeta (Cold)</option>
+              </select>
+            </div>
+
+            <button type="button" class="btn btn-outline btn-sm w-100" id="resetFilters">Reset Filters</button>
+          </div>
+
+          <!-- Herbs Grid -->
+          <div class="catalog-grid-wrap">
+            <div class="grid grid-2" id="catalogGrid">
+              <!-- Dynamically populated via JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SUPPLY CHAIN VIEW -->
+    <section id="supply-chain" class="page-view">
+      <div class="container section-padding">
+        <div class="view-intro">
+          <h1>Interactive Supply Chain Ecosystem</h1>
+          <p>Understand the ecosystem of actors involved in bringing traceable herbs from soil to formulation.</p>
+        </div>
+
+        <!-- Visual Node Network Diagram -->
+        <div class="supply-map-wrapper card">
+          <h3>Ecosystem Nodes</h3>
+          <p>Click on any role node to inspect their operational standards and standard operating procedures (SOPs).</p>
+          
+          <div class="map-diagram-container">
+            <!-- Node network with SVG connections -->
+            <svg class="map-connections-svg" id="mapConnectionsSvg">
+              <!-- Lines generated by JS or static CSS coordinates -->
+            </svg>
+            
+            <div class="map-nodes-grid">
+              <button type="button" class="map-node-btn active" data-node="farmer">
+                <span class="icon">👩‍🌾</span>
+                <span class="label">Farmers</span>
+                <span class="standard">Organic soil standards</span>
+              </button>
+
+              <button type="button" class="map-node-btn" data-node="collector">
+                <span class="icon">📦</span>
+                <span class="label">Collectors</span>
+                <span class="standard">Sorting & grading SOPs</span>
+              </button>
+
+              <button type="button" class="map-node-btn" data-node="processor">
+                <span class="icon">🏭</span>
+                <span class="label">Processors</span>
+                <span class="standard">GMP Milled Extraction</span>
+              </button>
+
+              <button type="button" class="map-node-btn" data-node="labs">
+                <span class="icon">🔬</span>
+                <span class="label">QA Labs</span>
+                <span class="standard">Phytochemical assays</span>
+              </button>
+
+              <button type="button" class="map-node-btn" data-node="logistics">
+                <span class="icon">🚛</span>
+                <span class="label">Logistics</span>
+                <span class="standard">IoT cold storage</span>
+              </button>
+
+              <button type="button" class="map-node-btn" data-node="manufacturer">
+                <span class="icon">💊</span>
+                <span class="label">Manufacturers</span>
+                <span class="standard">Dosage & packaging QC</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Active Node Info Box -->
+          <div class="node-info-box card" id="nodeInfoBox">
+            <h3 id="nodeInfoTitle">Farmers (Organic Cultivators)</h3>
+            <p id="nodeInfoDesc">Our farmers follow traditional cultivation practices mapped to WHO Good Agricultural and Collection Practices (GACP). Every soil layer is inspected for pesticide residues, heavy metals, and natural carbon ratio before planting.</p>
+            <div class="node-info-stats">
+              <div><strong>Core Compliance:</strong> Soil chemical audits, organic bio-fertilizers only.</div>
+              <div><strong>Verified Registry:</strong> 320+ Farmers across Himalayan & Western Ghats belts.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Logistics timeline section -->
+        <div class="logistics-timeline-section section-padding">
+          <div class="section-header">
+            <span class="section-tagline">Standard Timeline</span>
+            <h2>Herb Lifecycle Milestones</h2>
+          </div>
+          
+          <div class="milestones-horizontal">
+            <div class="milestone-card card">
+              <span class="m-step">Day 1-120</span>
+              <h3>Cultivation</h3>
+              <p>Soil nourishment, weed control, and maturation logs maintained on site.</p>
+            </div>
+            <div class="milestone-card card">
+              <span class="m-step">Day 121-125</span>
+              <h3>Harvest & Pack</h3>
+              <p>Selective handpicking of active plant parts, cleaning and dry-sorting.</p>
+            </div>
+            <div class="milestone-card card">
+              <span class="m-step">Day 126-135</span>
+              <h3>GMP Processing</h3>
+              <p>Milling or extraction, active constituent testing, and packaging.</p>
+            </div>
+            <div class="milestone-card card">
+              <span class="m-step">Day 136-140</span>
+              <h3>Formulation</h3>
+              <p>Final packaging, serialization, and QR code ledger activation.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KNOWLEDGE / RESOURCES VIEW -->
+    <section id="knowledge" class="page-view">
+      <div class="container section-padding">
+        <div class="view-intro">
+          <h1>Ayurvedic Knowledge Center</h1>
+          <p>Scientific publications, classical Ayurvedic properties, cultivation guides, and standards.</p>
+        </div>
+
+        <div class="knowledge-grid">
+          <!-- Encyclopedia -->
+          <div class="card knowledge-block">
+            <h2>Ayurvedic Herb Encyclopedia</h2>
+            <p>Access pharmacological properties mapped directly to the classical Ayurvedic theory of Rasa-Panchaka (Taste, Quality, Potency, Post-digestive taste, and Special Action).</p>
+            <div class="encyclopedia-preview">
+              <div class="property-table-mini">
+                <div class="row"><strong>Rasa (Taste):</strong> Tikta (Bitter), Madhura (Sweet), Katu (Pungent)</div>
+                <div class="row"><strong>Guna (Qualities):</strong> Laghu (Light), Snigdha (Unctuous), Guru (Heavy)</div>
+                <div class="row"><strong>Virya (Potency):</strong> Ushna (Hot potency), Sheeta (Cold potency)</div>
+                <div class="row"><strong>Vipaka (Post-digestive):</strong> Madhura (Sweet), Katu (Pungent)</div>
+              </div>
+            </div>
+            <a href="#herbs" class="btn btn-outline btn-sm">Explore Encyclopedia Profiles</a>
+          </div>
+
+          <!-- Cultivation Guides -->
+          <div class="card knowledge-block">
+            <h2>Cultivation & Harvesting Guides</h2>
+            <p>Step-by-step manuals on climate profiles, soil compositions, and harvesting windows for optimal phytochemical expression (e.g. harvesting roots in Sharad Ritu, leaves in Varsha Ritu).</p>
+            <div class="guides-list">
+              <div class="guide-item">
+                <span>📖</span>
+                <div>
+                  <h4>Ashwagandha GACP Guidelines</h4>
+                  <p>Optimal spacing, moisture control, and alkaloid preservation parameters.</p>
+                </div>
+              </div>
+              <div class="guide-item">
+                <span>📖</span>
+                <div>
+                  <h4>Organic Turmeric Soil Prep</h4>
+                  <p>Curcumin optimization guidelines via biodynamic composting methods.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Downloadable documents -->
+          <div class="card knowledge-block w-100-col">
+            <h2>AYUSH Standards & Downloads</h2>
+            <p>Download certified standards, regulatory frameworks, and template files for audits.</p>
+            <div class="grid grid-3 doc-downloads">
+              <a href="#" class="doc-card" download>
+                <div class="doc-icon">📄</div>
+                <h4>WHO GACP Guidelines</h4>
+                <span class="file-info">PDF · 2.4 MB</span>
+              </a>
+              <a href="#" class="doc-card" download>
+                <div class="doc-icon">📄</div>
+                <h4>AYUSH Premium Certification Checklist</h4>
+                <span class="file-info">PDF · 1.2 MB</span>
+              </a>
+              <a href="#" class="doc-card" download>
+                <div class="doc-icon">📄</div>
+                <h4>Traceability Ledger Integration Manual</h4>
+                <span class="file-info">PDF · 3.1 MB</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTRIBUTE / REGISTER VIEW -->
+    <section id="contribute" class="page-view">
+      <div class="container section-padding">
+        <div class="view-intro">
+          <h1>Join the Traceability Network</h1>
+          <p>Register as a certified partner on the Farm2Ayur ledger to log and verify herbal paths.</p>
+        </div>
+
+        <div class="register-container card">
+          <!-- Multi-step Selector -->
+          <div class="registration-tabs">
+            <button type="button" class="tab-btn active" data-type="farmer">Farmer</button>
+            <button type="button" class="tab-btn" data-type="collector">Collector</button>
+            <button type="button" class="tab-btn" data-type="processor">Processor</button>
+            <button type="button" class="tab-btn" data-type="laboratory">Laboratory</button>
+            <button type="button" class="tab-btn" data-type="manufacturer">Manufacturer</button>
+          </div>
+
+          <!-- Active Form Panel -->
+          <form id="registrationForm" class="registration-form">
+            <input type="hidden" name="role" id="registerRole" value="farmer">
+            
+            <div class="form-grid">
+              <div class="input-wrap w-50">
+                <label for="regFullName">Contact Person Full Name</label>
+                <input type="text" id="regFullName" required placeholder="e.g. Ramesh Chandra">
+              </div>
+
+              <div class="input-wrap w-50">
+                <label for="regOrgName" id="lblOrgName">Farm / Organization Name</label>
+                <input type="text" id="regOrgName" required placeholder="e.g. Almora Ayurvedic Organic Farm">
+              </div>
+
+              <div class="input-wrap w-50">
+                <label for="regEmail">Email Address</label>
+                <input type="email" id="regEmail" required placeholder="e.g. ramesh@himalayanherbs.org">
+              </div>
+
+              <div class="input-wrap w-50">
+                <label for="regPhone">Phone Number</label>
+                <input type="tel" id="regPhone" required placeholder="e.g. +91 9876543210">
+              </div>
+
+              <div class="input-wrap w-100">
+                <label for="regLocation">Geographic Location / Coordinates</label>
+                <input type="text" id="regLocation" required placeholder="e.g. Almora District, Uttarakhand, GPS: 29.5892° N, 79.6467° E">
+              </div>
+
+              <div class="input-wrap w-100" id="roleSpecificWrap">
+                <label for="regCertification">Organic Certifications & Registry ID</label>
+                <input type="text" id="regCertification" placeholder="e.g. NPOP Organic ID: 9982-A, USDA Organic ID: Org-2219">
+              </div>
+
+              <div class="input-wrap w-100">
+                <label for="regNotes">Facility/Crop Overview</label>
+                <textarea id="regNotes" rows="4" placeholder="Briefly describe your crops, processing facilities, or testing equipment..."></textarea>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-secondary">Submit Registration</button>
+          </form>
+
+          <!-- Form Success state overlay -->
+          <div class="registration-success hidden" id="registrationSuccess">
+            <span class="success-icon">🎉</span>
+            <h2>Registration Submitted Successfully!</h2>
+            <p>Our audit team will verify your credentials and geographic coordinates. We will email your digital keys and access tags once approved.</p>
+            <button type="button" class="btn btn-outline" id="btnRegisterReset">Register Another Node</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT VIEW -->
+    <section id="about" class="page-view">
+      <div class="container section-padding">
+        <div class="about-container">
+          <div class="view-intro">
+            <h1>Our Mission & Technology</h1>
+            <p>Bridging ancient Ayurvedic wisdom with modern digital transparency.</p>
+          </div>
+
+          <div class="about-grid grid grid-2">
+            <div>
+              <h2>The Farm2Ayur Vision</h2>
+              <p>For centuries, Ayurvedic healing has relied on the purity and potency (Prana and Virya) of medicinal herbs. However, in modern supply chains, species substitution, adulteration, heavy metal residues, and soil depletion pose major quality issues.</p>
+              <p><strong>Farm2Ayur</strong> was established to restore absolute trust. By mapping regional cultivation profiles, ecological data, harvest seasons, temperature logs, and laboratory chemical checks, we ensure that every pill, capsule, or tea packet is authentic and pure.</p>
+            </div>
+            <div class="about-img-mock card">
+              <h3>Eco-Ledger Tech Stack</h3>
+              <div class="tech-stack-list">
+                <div class="tech-item">
+                  <strong>Digital Ledger Integrity:</strong> Tamper-evident ledger keys prevent modification of logistics and quality logs once written.
+                </div>
+                <div class="tech-item">
+                  <strong>IoT Ambient Loggers:</strong> Active IoT sensors record real-time storage temperature and relative humidity during shipment.
+                </div>
+                <div class="tech-item">
+                  <strong>Geographic Mapping:</strong> Verifies specific micro-climates, soil conditions, and farm coordinates.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sustainability-box card section-padding">
+            <h2>Sustainability & Fair-Trade Commitment</h2>
+            <p>We believe in ethical sourcing. Our platform rewards smallholder farmers who engage in regenerative organic farming. By verifying fair prices directly through transparent collector logs, we empower traditional farming communities in the Himalayas and Western Ghats to preserve biodiversity and protect vulnerable medicinal plants from overharvesting.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT VIEW -->
+    <section id="contact" class="page-view">
+      <div class="container section-padding">
+        <div class="view-intro">
+          <h1>Get In Touch</h1>
+          <p>Have questions about traceability, or want to audit our testing standards? Contact us.</p>
+        </div>
+
+        <div class="contact-layout grid grid-2">
+          <!-- FAQs -->
+          <div class="contact-faqs card">
+            <h2>Frequently Asked Questions</h2>
+            
+            <div class="faq-accordion">
+              <div class="faq-item">
+                <button class="faq-trigger">What is an Ayurvedic Traceability Certificate? <span>+</span></button>
+                <div class="faq-panel">
+                  <p>It is a certified report linking a unique formulation package to its specific batch harvest log, containing agricultural coordinates, processing dates, moisture assays, and phytochemical certifications.</p>
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <button class="faq-trigger">How are active chemical marker compounds verified? <span>+</span></button>
+                <div class="faq-panel">
+                  <p>Samples from processed batches are analyzed at NABL-accredited phytochemistry laboratories using HPLC (High-Performance Liquid Chromatography) to determine exact percentage yields of Withanolides, Curcuminoids, or Ursolic Acid.</p>
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <button class="faq-trigger">Can a farmer register directly on the platform? <span>+</span></button>
+                <div class="faq-panel">
+                  <p>Yes. Farmers can register through the Contribute section, providing organic credentials or details about their traditional wild collection practices. Our verification officers will conduct field visits before approving registration.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact Form / Info -->
+          <div class="contact-details card">
+            <h2>Contact Our Support Team</h2>
+            
+            <form id="contactForm" class="contact-form">
+              <div class="input-wrap">
+                <label for="contactName">Name</label>
+                <input type="text" id="contactName" required placeholder="e.g. Dr. Anand Dev">
+              </div>
+
+              <div class="input-wrap">
+                <label for="contactEmail">Email Address</label>
+                <input type="email" id="contactEmail" required placeholder="e.g. anand@ayurclinic.com">
+              </div>
+
+              <div class="input-wrap">
+                <label for="contactSubject">Subject</label>
+                <select id="contactSubject">
+                  <option value="general">General Inquiry</option>
+                  <option value="trace">Batch Trace Discrepancy</option>
+                  <option value="register">Registration Status</option>
+                  <option value="research">Research Partnership</option>
+                </select>
+              </div>
+
+              <div class="input-wrap">
+                <label for="contactMessage">Message</label>
+                <textarea id="contactMessage" rows="4" required placeholder="Write your message here..."></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-secondary w-100">Send Message</button>
+            </form>
+
+            <div class="contact-info-text">
+              <p>📍 <strong>Head Office:</strong> 4th Floor, AYUSH Innovation Hub, Indiranagar, Bangalore, 560038, India</p>
+              <p>✉️ <strong>Support Email:</strong> support@farm2ayur.org</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer Section -->
+  <footer class="app-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <a href="#home" class="logo">
+          <span class="logo-icon">🌿</span>
+          <span class="logo-text">Farm<span>2</span>Ayur</span>
+        </a>
+        <p>A digital trust ledger verifying Ayurvedic purity from soil to shelf. Enhancing safety, fair pricing, and classical botanical wisdom.</p>
+      </div>
+
+      <div class="footer-links-col">
+        <h4>Platform Map</h4>
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#explore">Explore / Trace</a></li>
+          <li><a href="#herbs">Herbs Catalog</a></li>
+          <li><a href="#supply-chain">Supply Chain Map</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-links-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="#knowledge">Knowledge Center</a></li>
+          <li><a href="#contribute">Contribute Node</a></li>
+          <li><a href="#about">About Our Tech</a></li>
+          <li><a href="#contact">Contact Support</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-links-col">
+        <h4>Traceable Batches</h4>
+        <ul>
+          <li><a href="#explore" class="trace-shortcut" data-batch="ASH-2026-08">ASH-2026-08</a></li>
+          <li><a href="#explore" class="trace-shortcut" data-batch="TUR-2026-09">TUR-2026-09</a></li>
+          <li><a href="#explore" class="trace-shortcut" data-batch="TUL-2026-07">TUL-2026-07</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container">
+        <p>&copy; 2026 Farm2Ayur. All rights reserved. Registered under AYUSH Digital Sourcing Guidelines.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- COA Report / Modal -->
+  <div class="modal-overlay hidden" id="coaModal">
+    <div class="modal-box card">
+      <button type="button" class="modal-close-btn" id="btnCloseModal">&times;</button>
+      <div class="modal-header-info">
+        <span class="modal-tag">CERTIFICATE OF ANALYSIS (COA)</span>
+        <h2 id="modalHerbTitle">Ashwagandha Roots</h2>
+        <p>Batch ID: <strong id="modalBatchId">ASH-2026-08</strong></p>
+      </div>
+      
+      <div class="modal-body-content">
+        <table class="purity-table">
+          <thead>
+            <tr>
+              <th>Test Parameters</th>
+              <th>Reference Standards (AYUSH/WHO)</th>
+              <th>Tested Value</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Active Constituent Assay</strong></td>
+              <td>Total Withanolides &gt; 1.50% w/w</td>
+              <td><strong class="highlight-val" id="modalActiveVal">4.82% w/w</strong></td>
+              <td><span class="status-pass">Passed</span></td>
+            </tr>
+            <tr>
+              <td><strong>Loss on Drying (Moisture)</strong></td>
+              <td>Not more than 8.00% w/w</td>
+              <td><span id="modalMoistureVal">6.20% w/w</span></td>
+              <td><span class="status-pass">Passed</span></td>
+            </tr>
+            <tr>
+              <td><strong>Heavy Metals (Pb, Cd, As, Hg)</strong></td>
+              <td>Lead &lt; 10ppm, Cadmium &lt; 0.3ppm</td>
+              <td>Undetected (Below Limits)</td>
+              <td><span class="status-pass">Passed</span></td>
+            </tr>
+            <tr>
+              <td><strong>Pesticide Residues</strong></td>
+              <td>Organochlorines: Nil</td>
+              <td>Not Detected</td>
+              <td><span class="status-pass">Passed</span></td>
+            </tr>
+            <tr>
+              <td><strong>Total Microbial Count</strong></td>
+              <td>Not more than 10^5 CFU/g</td>
+              <td>1.2 x 10^2 CFU/g</td>
+              <td><span class="status-pass">Passed</span></td>
+            </tr>
+            <tr>
+              <td><strong>Aflatoxins (B1+B2+G1+G2)</strong></td>
+              <td>Not more than 4ppb</td>
+              <td>Undetected</td>
+              <td><span class="status-pass">Passed</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="lab-signature-block">
+          <p>🔬 Verified by: <strong>Dr. K. Raghavan, Chief Phytochemist</strong></p>
+          <p>Lab Registration ID: <strong>NABL-PL-20998</strong></p>
+          <div class="e-seal">✓ E-Signed Ledger Verified</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QR Scan Animation/Result Popout -->
+  <div class="toast-message hidden" id="toastMessage">
+    <div class="toast-content">
+      <span class="toast-icon">✓</span>
+      <span class="toast-text" id="toastText">Batch ASH-2026-08 identified!</span>
+    </div>
+  </div>
+
+  <!-- Javascript Logic -->
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

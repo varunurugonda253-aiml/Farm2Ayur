@@ -13,6 +13,403 @@
   
   <!-- CSS Link -->
   <link rel="stylesheet" href="assets/css/style.css">
+
+  <!-- Custom CSS Overrides for Redesign -->
+  <style>
+    /* Hero CTA & Alignments */
+    .hero-cta-wrap {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+    
+    /* Hero bottom line and overlay adjustments */
+    .hero-section {
+      border-bottom: none !important;
+    }
+    .hero-overlay {
+      background: linear-gradient(rgba(12, 18, 14, 0.45) 0%, rgba(12, 18, 14, 1) 100%) !important;
+    }
+
+    /* AI Leaf Scanner Viewport & Controls */
+    .scanner-section {
+      background: radial-gradient(circle at top right, rgba(45, 90, 60, 0.1), transparent), var(--bg-dark);
+      border-top: 1px solid var(--border-glass);
+      border-bottom: 1px solid var(--border-glass);
+    }
+    .scanner-container {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .scanner-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--border-radius-lg);
+      padding: 2.5rem;
+      box-shadow: var(--shadow-premium);
+      text-align: center;
+    }
+    .scanner-viewport {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #050a06;
+      border: 1px solid var(--border-glass);
+      border-radius: var(--border-radius-md);
+      overflow: hidden;
+      margin: 1.5rem 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .scanner-laser {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, var(--gold-accent), transparent);
+      box-shadow: 0 0 12px var(--gold-accent);
+      opacity: 0;
+      pointer-events: none;
+    }
+    .scanner-viewport.scanning .scanner-laser {
+      opacity: 1;
+      animation: laser-scan 2s infinite linear;
+    }
+    @keyframes laser-scan {
+      0% { top: 0%; }
+      50% { top: 100%; }
+      100% { top: 0%; }
+    }
+    .scanner-grid-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                  linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 24px 24px;
+      pointer-events: none;
+      opacity: 0.5;
+    }
+    .scanner-target-box {
+      position: absolute;
+      width: 130px;
+      height: 130px;
+      border: 2px dashed rgba(212, 175, 55, 0.35);
+      border-radius: var(--border-radius-sm);
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-smooth);
+    }
+    .scanner-target-box::after {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--gold-accent);
+      border-right: none;
+      border-bottom: none;
+      top: -5px;
+      left: -5px;
+    }
+    .scanner-target-box::before {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--gold-accent);
+      border-left: none;
+      border-top: none;
+      bottom: -5px;
+      right: -5px;
+    }
+    .scanner-samples {
+      display: flex;
+      gap: 0.8rem;
+      justify-content: center;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+    .sample-leaf-btn {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--border-radius-sm);
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: var(--transition-smooth);
+    }
+    .sample-leaf-btn:hover {
+      border-color: var(--light-sage);
+      color: var(--text-light);
+      background: rgba(143, 188, 143, 0.08);
+      transform: translateY(-1px);
+    }
+    .scanner-results {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--border-radius-md);
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+      text-align: left;
+      animation: fadeIn 0.4s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.8rem;
+      border-bottom: 1px solid var(--border-glass);
+      padding-bottom: 0.5rem;
+    }
+    .result-accuracy {
+      background: rgba(212, 175, 55, 0.15);
+      color: var(--gold-accent);
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    /* Authentication Form View */
+    .auth-container {
+      max-width: 420px;
+      margin: 4rem auto;
+    }
+    .auth-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--border-radius-lg);
+      padding: 2.5rem;
+      box-shadow: var(--shadow-premium);
+      text-align: center;
+    }
+    .auth-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border-glass);
+      margin-bottom: 1.5rem;
+    }
+    .auth-tab-btn {
+      flex: 1;
+      padding: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      border: none;
+      background: none;
+      transition: var(--transition-smooth);
+    }
+    .auth-tab-btn.active {
+      color: var(--text-light);
+      border-bottom: 2px solid var(--gold-accent);
+    }
+
+    /* Ask Farm2Ayur Chatbot Drawer */
+    .chatbot-trigger {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--primary-green);
+      border: 1.5px solid var(--gold-accent);
+      color: var(--text-light);
+      box-shadow: 0 5px 25px rgba(0,0,0,0.6), var(--shadow-glow);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      transition: var(--transition-smooth);
+      font-size: 1.4rem;
+    }
+    .chatbot-trigger:hover {
+      transform: scale(1.06) rotate(5deg);
+      background: var(--secondary-green);
+      box-shadow: 0 5px 25px rgba(0,0,0,0.7), 0 0 20px rgba(212,175,55,0.3);
+    }
+    .chatbot-panel {
+      position: fixed;
+      bottom: 6.5rem;
+      right: 2rem;
+      width: 340px;
+      height: 460px;
+      background: rgba(12, 18, 14, 0.96);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--border-radius-md);
+      box-shadow: var(--shadow-premium);
+      display: flex;
+      flex-direction: column;
+      z-index: 1000;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      transform: translateY(20px);
+      opacity: 0;
+      pointer-events: none;
+    }
+    .chatbot-panel.open {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: all;
+    }
+    .chatbot-header {
+      background: var(--primary-green);
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-glass);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .chatbot-header h3 {
+      font-size: 1rem;
+      font-family: var(--font-display);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .chatbot-close-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.25rem;
+      cursor: pointer;
+      line-height: 1;
+    }
+    .chatbot-close-btn:hover {
+      color: var(--text-light);
+    }
+    .chatbot-body {
+      flex: 1;
+      padding: 1rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      font-size: 0.85rem;
+    }
+    .chat-msg {
+      max-width: 85%;
+      padding: 0.6rem 0.8rem;
+      border-radius: var(--border-radius-sm);
+      line-height: 1.4;
+    }
+    .chat-msg.bot {
+      background: rgba(255,255,255,0.04);
+      align-self: flex-start;
+      border-bottom-left-radius: 0;
+      border-left: 2px solid var(--gold-accent);
+    }
+    .chat-msg.user {
+      background: var(--secondary-green);
+      color: var(--text-light);
+      align-self: flex-end;
+      border-bottom-right-radius: 0;
+    }
+    .chatbot-footer {
+      padding: 0.75rem;
+      border-top: 1px solid var(--border-glass);
+      background: rgba(0,0,0,0.25);
+    }
+    .chatbot-presets {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .preset-query-btn {
+      text-align: left;
+      background: rgba(255,255,255,0.01);
+      border: 1px solid var(--border-glass);
+      border-radius: 6px;
+      padding: 0.4rem 0.6rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: var(--transition-smooth);
+    }
+    .preset-query-btn:hover {
+      color: var(--text-light);
+      border-color: var(--gold-accent);
+      background: rgba(212, 175, 55, 0.05);
+    }
+    .chatbot-form {
+      display: flex;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+    }
+    .chatbot-input {
+      flex: 1;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--border-glass);
+      border-radius: 4px;
+      padding: 0.4rem 0.6rem;
+      font-size: 0.8rem;
+      color: var(--text-light);
+      outline: none;
+    }
+    .chatbot-input:focus {
+      border-color: var(--gold-accent);
+    }
+
+    /* How It Works Card Step Indicators */
+    .how-card {
+      text-align: center;
+      position: relative;
+      padding-top: 2rem !important;
+    }
+    .how-card-num {
+      position: absolute;
+      top: -16px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 32px;
+      height: 32px;
+      background: var(--gold-accent);
+      color: var(--text-dark);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      box-shadow: 0 0 10px rgba(212, 175, 55, 0.25);
+    }
+
+    /* Authentic Image Styling for featured grids */
+    .herb-card-img-wrap {
+      width: 100%;
+      height: 200px;
+      overflow: hidden;
+      border-radius: var(--border-radius-sm);
+      border: 1px solid var(--border-glass);
+      background: rgba(0,0,0,0.2);
+    }
+    .herb-card-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition-smooth);
+    }
+    .card:hover .herb-card-img-wrap img {
+      transform: scale(1.04);
+    }
+  </style>
 </head>
 <body>
 
@@ -33,18 +430,13 @@
         <ul class="nav-links">
           <li><a href="#home" class="nav-item active" data-view="home">Home</a></li>
           <li><a href="#explore" class="nav-item" data-view="explore">Explore</a></li>
-          <li><a href="#herbs" class="nav-item" data-view="herbs">Herbs</a></li>
           <li><a href="#supply-chain" class="nav-item" data-view="supply-chain">Supply Chain</a></li>
-          <li><a href="#knowledge" class="nav-item" data-view="knowledge">Knowledge</a></li>
-          <li><a href="#contribute" class="nav-item" data-view="contribute">Contribute</a></li>
-          <li><a href="#about" class="nav-item" data-view="about">About</a></li>
-          <li><a href="#contact" class="nav-item" data-view="contact">Contact</a></li>
         </ul>
       </nav>
 
       <!-- Right Side CTA -->
       <div class="header-right">
-        <a href="#contribute" class="btn btn-primary login-btn">Login / Register</a>
+        <a href="#login" class="btn btn-primary login-btn" id="headerLoginBtn" data-view="login">Login / Register</a>
         <button class="mobile-menu-toggle" aria-label="Toggle Menu" id="mobileMenuBtn">
           <span class="bar"></span>
           <span class="bar"></span>
@@ -58,15 +450,10 @@
       <ul class="mobile-nav-links">
         <li><a href="#home" class="mobile-nav-item active" data-view="home">Home</a></li>
         <li><a href="#explore" class="mobile-nav-item" data-view="explore">Explore</a></li>
-        <li><a href="#herbs" class="mobile-nav-item" data-view="herbs">Herbs</a></li>
         <li><a href="#supply-chain" class="mobile-nav-item" data-view="supply-chain">Supply Chain</a></li>
-        <li><a href="#knowledge" class="mobile-nav-item" data-view="knowledge">Knowledge</a></li>
-        <li><a href="#contribute" class="mobile-nav-item" data-view="contribute">Contribute</a></li>
-        <li><a href="#about" class="mobile-nav-item" data-view="about">About</a></li>
-        <li><a href="#contact" class="mobile-nav-item" data-view="contact">Contact</a></li>
       </ul>
       <div class="mobile-nav-cta">
-        <a href="#contribute" class="btn btn-primary login-btn-mobile">Login / Register</a>
+        <a href="#login" class="btn btn-primary login-btn-mobile" id="mobileHeaderLoginBtn" data-view="login">Login / Register</a>
       </div>
     </div>
   </header>
@@ -76,132 +463,188 @@
 
     <!-- HOME VIEW -->
     <section id="home" class="page-view active">
-      <!-- Full Page Hero Section -->
+      <!-- Broad Hero Section -->
       <div class="hero-section">
         <div class="hero-overlay"></div>
         <div class="hero-content">
-          <span class="badge-tag animate-fade-in">🌿 Crop-to-Remedy Transparency</span>
-          <h1 class="hero-title animate-slide-up">Trace the Purity of Ayurvedic Herbs</h1>
-          <p class="hero-subtitle animate-slide-up-delay">Verifying the origin, batch quality, and processing timelines of traditional herbs with modern digital trust.</p>
+          <span class="badge-tag animate-fade-in">🌿 AI-Powered Botanical Platform</span>
+          <h1 class="hero-title animate-slide-up">Discover the Plants Behind Ayurveda</h1>
+          <p class="hero-subtitle animate-slide-up-delay">Identify medicinal herbs with AI scanning technology, explore authentic botanical properties, and understand crop-to-remedy traceability logs.</p>
           
-          <!-- Home Quick Trace Search Bar -->
-          <div class="search-bar-container animate-slide-up-delay-2">
-            <form class="quick-trace-form" id="quickTraceForm">
-              <span class="search-icon">🔍</span>
-              <input type="text" placeholder="Enter Batch ID (e.g. ASH-2026-08, TUR-2026-09)..." id="quickTraceInput" required>
-              <button type="submit" class="btn btn-secondary">Trace Journey</button>
-            </form>
-            <div class="search-suggestions">
-              <span>Try: </span>
-              <button type="button" class="suggestion-tag" data-batch="ASH-2026-08">ASH-2026-08 (Ashwagandha)</button>
-              <button type="button" class="suggestion-tag" data-batch="TUR-2026-09">TUR-2026-09 (Turmeric)</button>
-            </div>
+          <div class="hero-cta-wrap animate-slide-up-delay-2">
+            <a href="#scan" class="btn btn-secondary" id="heroScanBtn">Scan Your Leaf</a>
+            <a href="#explore" class="btn btn-outline">Explore Herbs</a>
           </div>
         </div>
       </div>
 
-      <!-- Trust Stats Section -->
-      <div class="section-stats-wrap">
-        <div class="container grid grid-4">
-          <div class="stat-card">
-            <div class="stat-num" id="statFarmers">320+</div>
-            <div class="stat-label">Verified Farmers</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-num" id="statBatches">1,450+</div>
-            <div class="stat-label">Batches Traced</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-num" id="statHerbs">45</div>
-            <div class="stat-label">Botanical Species</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-num" id="statPurity">99.8%</div>
-            <div class="stat-label">Purity Index</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Overview Cards -->
+      <!-- How Farm2Ayur Works -->
       <div class="container section-padding">
         <div class="section-header">
           <span class="section-tagline">How It Works</span>
-          <h2 class="section-heading">Ensuring Trust, Sharing Knowledge</h2>
+          <h2 class="section-heading">Platform Flow Process</h2>
         </div>
-        <div class="grid grid-3">
-          <div class="card feat-overview">
-            <div class="card-icon">🗺️</div>
-            <h3>Dynamic Journey</h3>
-            <p>From clean soil analysis to manufacturing, track every transport event and ambient climate condition during transit.</p>
+        <div class="grid grid-4">
+          <div class="card how-card">
+            <div class="how-card-num">1</div>
+            <div class="card-icon" style="margin-top:0.3rem;">📱</div>
+            <h3>1. Scan</h3>
+            <p>Identify a medicinal plant using the AI leaf scanner on your mobile or desktop camera.</p>
           </div>
-          <div class="card feat-overview">
-            <div class="card-icon">🔬</div>
-            <h3>Chemical Profiling</h3>
-            <p>Access laboratory reports detailing active marker compound concentrations (Withanolides, Curcuminoids) and heavy metal limits.</p>
+          <div class="card how-card">
+            <div class="how-card-num">2</div>
+            <div class="card-icon" style="margin-top:0.3rem;">📖</div>
+            <h3>2. Discover</h3>
+            <p>Learn authentic pharmacological details, traditional properties, and active constituents.</p>
           </div>
-          <div class="card feat-overview">
-            <div class="card-icon">📖</div>
-            <h3>Ayurvedic Integrity</h3>
-            <p>View classical herbal classifications based on Ayurvedic concepts: Rasa (Taste), Guna (Qualities), Virya (Potency), and Vipaka.</p>
+          <div class="card how-card">
+            <div class="how-card-num">3</div>
+            <div class="card-icon" style="margin-top:0.3rem;">🔬</div>
+            <h3>3. Verify</h3>
+            <p>Understand crop location, cooperative harvesting details, and laboratory testing logs.</p>
+          </div>
+          <div class="card how-card">
+            <div class="how-card-num">4</div>
+            <div class="card-icon" style="margin-top:0.3rem;">🤝</div>
+            <h3>4. Trust</h3>
+            <p>Rely on verified ledger entries and authentic analytical data to ensure safety and potency.</p>
           </div>
         </div>
       </div>
 
-      <!-- Featured Herbs -->
+      <!-- Core Features/Positioning Section -->
       <div class="container section-padding bg-section-light">
         <div class="section-header">
-          <span class="section-tagline">Botanical Catalog</span>
-          <h2 class="section-heading">Featured Ayurvedic Herbs</h2>
+          <span class="section-tagline">Three Capabilities</span>
+          <h2 class="section-heading">Core Ecosystem Pillars</h2>
         </div>
-        <div class="grid grid-3" id="featuredHerbsGrid">
-          <!-- Dynamically populated via JS -->
-        </div>
-        <div class="center-cta">
-          <a href="#herbs" class="btn btn-outline">Browse Herb Catalog</a>
+        <div class="grid grid-3">
+          <div class="card">
+            <div class="card-icon">🧠</div>
+            <h3>AI Identification</h3>
+            <p>Instantly match leaf venation and morphology to prevent adulteration, species substitution, or incorrect botanical sourcing.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">📚</div>
+            <h3>Botanical Encyclopedia</h3>
+            <p>Access authentic classical properties (Rasa, Guna, Virya, Vipaka) mapped to modern phytochemical assays and laboratory checks.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">⛓️</div>
+            <h3>Logistics Transparency</h3>
+            <p>Trace raw materials through secure digital records from farm soil, collection center, processing mill, lab tests, to formulations.</p>
+          </div>
         </div>
       </div>
 
-      <!-- Latest Batches -->
+
+      <!-- Supply Chain Summary section -->
+      <div class="container section-padding bg-section-light">
+        <div class="section-header">
+          <span class="section-tagline">Blockchain Tracking</span>
+          <h2 class="section-heading">Sourced Ledger Transparency</h2>
+        </div>
+        <div class="grid grid-2" style="align-items: center; gap: var(--spacing-lg);">
+          <div>
+            <p>Farm2Ayur logs environmental telemetry, harvest dates, transport logs, and lab analysis reports. By tracing batch serial codes or scanning QR tags, users can see the exact hands the herbs passed through from soil to formulation.</p>
+            <p>This prevents counterfeit substitutions, guarantees organic compliance, and ensures complete safety against heavy metals and toxic pesticide residues.</p>
+            <div style="margin-top: 1.5rem;">
+              <a href="#supply-chain" class="btn btn-secondary">Trace Active Batch</a>
+            </div>
+          </div>
+          <div class="card" style="padding: 2.5rem; text-align: center; border-color: rgba(212,175,55,0.25);">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">📦</div>
+            <h3>Verify Sourced Herbs</h3>
+            <p style="font-size: 0.9rem; margin-bottom: 1.2rem;">Try our batch registry search, simulate a mobile QR code scan, and review interactive purity timeline maps.</p>
+            <a href="#supply-chain" class="btn btn-outline btn-sm">Go to Supply Chain Panel</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Knowledge Center brief -->
       <div class="container section-padding">
         <div class="section-header">
-          <span class="section-tagline">Verified Batches</span>
-          <h2 class="section-heading">Recently Logged Journeys</h2>
+          <span class="section-tagline">Authentic Science</span>
+          <h2 class="section-heading">Ayurvedic Standards & Publications</h2>
         </div>
-        <div class="grid grid-3" id="recentBatchesGrid">
-          <!-- Dynamically populated via JS -->
+        <div class="grid grid-3 doc-downloads">
+          <a href="#knowledge" class="doc-card" style="display: block; padding: 1.5rem; border: 1px solid var(--border-glass); border-radius: var(--border-radius-sm); text-align: left;">
+            <div class="doc-icon" style="font-size: 2rem; margin-bottom: 0.8rem;">📄</div>
+            <h4 style="margin-bottom: 0.3rem;">WHO GACP Guidelines</h4>
+            <p style="font-size:0.8rem; color: var(--text-muted); margin-bottom:0;">Good agricultural and collection practices standard manual for medicinal plants.</p>
+          </a>
+          <a href="#knowledge" class="doc-card" style="display: block; padding: 1.5rem; border: 1px solid var(--border-glass); border-radius: var(--border-radius-sm); text-align: left;">
+            <div class="doc-icon" style="font-size: 2rem; margin-bottom: 0.8rem;">📄</div>
+            <h4 style="margin-bottom: 0.3rem;">AYUSH Premium Standard Checklist</h4>
+            <p style="font-size:0.8rem; color: var(--text-muted); margin-bottom:0;">Accreditation requirements and check criteria for high-quality botanical exports.</p>
+          </a>
+          <a href="#knowledge" class="doc-card" style="display: block; padding: 1.5rem; border: 1px solid var(--border-glass); border-radius: var(--border-radius-sm); text-align: left;">
+            <div class="doc-icon" style="font-size: 2rem; margin-bottom: 0.8rem;">📄</div>
+            <h4 style="margin-bottom: 0.3rem;">Ledger Integration Manual</h4>
+            <p style="font-size:0.8rem; color: var(--text-muted); margin-bottom:0;">Technical documentation detailing how labs and mills upload secure testing logs.</p>
+          </a>
         </div>
-        <div class="center-cta">
-          <a href="#explore" class="btn btn-secondary">Trace Active Batch</a>
+        <div class="center-cta" style="margin-top: 2rem;">
+          <a href="#knowledge" class="btn btn-outline">Go to Knowledge Center</a>
         </div>
       </div>
     </section>
 
-    <!-- EXPLORE / TRACE VIEW -->
     <section id="explore" class="page-view">
+      <!-- Featured Herbs -->
+      <div class="container section-padding">
+        <div class="section-header">
+          <span class="section-tagline">Featured Selection</span>
+          <h2 class="section-heading">Featured Ayurvedic Herbs</h2>
+        </div>
+        <div class="grid grid-3" id="featuredHerbsGrid">
+          <!-- Dynamically populated via JS, using real botanical images -->
+        </div>
+      </div>
+    </section>
+
+    <!-- SCAN VIEW -->
+    <section id="scan" class="page-view">
+      <div class="container section-padding scanner-section" style="margin-top: 2rem;">
+        <div class="section-header">
+          <span class="section-tagline">AI Plant Identifier</span>
+          <h2 class="section-heading">Scan Your Leaf</h2>
+        </div>
+        <div class="scanner-container">
+          <div class="scanner-box" id="scannerBox">
+            <!-- Content will be rendered dynamically by custom JS based on logged in state -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SUPPLY CHAIN VIEW (INCLUDES TRACE SEARCH & ECOSYSTEM MAP) -->
+    <section id="supply-chain" class="page-view">
       <div class="container section-padding">
         <div class="view-intro">
-          <h1>Explore Batch Journeys</h1>
-          <p>Verify QR codes, trace batch details, and check quality analysis logs.</p>
+          <h1>Ecosystem Sourcing & Traceability</h1>
+          <p>Verify batch logs, review chemical analysis reports, and understand the secure supply chain milestones.</p>
         </div>
 
-        <div class="explore-layout">
+        <!-- Interactive Tracing Ledger -->
+        <div class="explore-layout" style="margin-bottom: var(--spacing-lg);">
           <!-- Search Panel -->
           <div class="explore-search-panel card">
-            <h2>Trace Search Center</h2>
+            <h2>Trace Sourced Ledger</h2>
             <form id="exploreSearchForm" class="explore-search-form">
               <div class="input-wrap">
                 <label for="exploreSearchInput">Enter Batch ID or Herb Name</label>
                 <input type="text" id="exploreSearchInput" placeholder="e.g. ASH-2026-08, Turmeric..." required>
               </div>
-              <button type="submit" class="btn btn-secondary w-100">Search Ledger</button>
+              <button type="submit" class="btn btn-secondary w-100">Search Registry</button>
             </form>
 
             <div class="divider"><span>OR</span></div>
 
             <!-- QR Scanner Simulator -->
             <div class="qr-simulator">
-              <h3>Scan QR Code</h3>
-              <p>Simulate mobile camera scanning. Hold a mock QR card to the scanner.</p>
+              <h3>Scan Product QR Code</h3>
+              <p>Simulate mobile camera scanning. Hold a mock QR card to the scanner viewport.</p>
               <div class="qr-camera-view" id="qrCameraView">
                 <div class="qr-scanner-laser"></div>
                 <div class="qr-placeholder-text">
@@ -216,7 +659,7 @@
 
             <!-- Active Batches Shortcuts -->
             <div class="explore-shortcuts">
-              <h4>Traceable Batches In Ledger</h4>
+              <h4>Active Ledger Registries</h4>
               <div class="shortcut-buttons">
                 <button type="button" class="btn-shortcut" data-trace="ASH-2026-08">ASH-2026-08</button>
                 <button type="button" class="btn-shortcut" data-trace="TUR-2026-09">TUR-2026-09</button>
@@ -230,15 +673,15 @@
             <!-- Initial Empty State -->
             <div class="results-empty-state" id="traceEmptyState">
               <span class="empty-icon">🔍</span>
-              <h3>Enter a Batch ID or select a shortcut to begin tracing</h3>
-              <p>The system will retrieve harvest logs, laboratory certificates, shipping logs, and processing timelines from our blockchain ledger.</p>
+              <h3>Enter a Batch ID or select a shortcut registry to trace</h3>
+              <p>The system will query harvest coordinates, laboratory Certificates of Analysis (COA), logistics temperatures, and serialization dates from the digital ledger.</p>
             </div>
 
             <!-- Error State -->
             <div class="results-error-state hidden" id="traceErrorState">
               <span class="error-icon">❌</span>
-              <h3>Batch ID Not Found</h3>
-              <p>We could not find a verified Ayurvedic trace matching this code. Please try one of our active demo batches: <strong>ASH-2026-08</strong>, <strong>TUR-2026-09</strong>, or <strong>TUL-2026-07</strong>.</p>
+              <h3>Batch Registry Not Found</h3>
+              <p>We could not find a verified trace matching that ID. Try using one of our demo batch codes: <strong>ASH-2026-08</strong>, <strong>TUR-2026-09</strong>, or <strong>TUL-2026-07</strong>.</p>
             </div>
 
             <!-- Loaded Trace Result -->
@@ -274,7 +717,7 @@
               </div>
 
               <!-- Interactive Timeline Journey -->
-              <h3 class="timeline-title">Purity Timeline Journey</h3>
+              <h3 class="timeline-title">Purity Sourced Timeline Journey</h3>
               <div class="journey-timeline" id="journeyTimeline">
                 
                 <!-- Step 1: Cultivation / Farm -->
@@ -350,7 +793,6 @@
                     <p class="node-desc">Transported with IoT temp logging to maintain organic structural integrity.</p>
                     <ul class="node-meta">
                       <li><strong>Temp Range:</strong> 20°C - 24°C</li>
-                      <li><strong>Humid Log:</strong> 45% Avg</li>
                     </ul>
                   </div>
                 </div>
@@ -374,109 +816,40 @@
             </div>
           </div>
         </div>
-      </div>
-    </section>
 
-    <!-- HERBS / BATCHES VIEW -->
-    <section id="herbs" class="page-view">
-      <div class="container section-padding">
-        <div class="view-intro">
-          <h1>Botanical Catalog & Active Batches</h1>
-          <p>Browse detailed Ayurvedic profiles, properties, and active batches in circulation.</p>
-        </div>
-
-        <div class="catalog-layout">
-          <!-- Filters Sidebar -->
-          <div class="catalog-sidebar card">
-            <h3>Filter Profiles</h3>
-            
-            <div class="filter-group">
-              <label for="catalogSearch">Search Herbs</label>
-              <input type="text" id="catalogSearch" placeholder="Search by name, scientific...">
-            </div>
-
-            <div class="filter-group">
-              <label for="filterRasa">Rasa (Taste)</label>
-              <select id="filterRasa">
-                <option value="">All Tastes</option>
-                <option value="Tikta">Tikta (Bitter)</option>
-                <option value="Katu">Katu (Pungent)</option>
-                <option value="Madhura">Madhura (Sweet)</option>
-              </select>
-            </div>
-
-            <div class="filter-group">
-              <label for="filterVirya">Virya (Potency)</label>
-              <select id="filterVirya">
-                <option value="">All Potencies</option>
-                <option value="Ushna">Ushna (Hot)</option>
-                <option value="Sheeta">Sheeta (Cold)</option>
-              </select>
-            </div>
-
-            <button type="button" class="btn btn-outline btn-sm w-100" id="resetFilters">Reset Filters</button>
-          </div>
-
-          <!-- Herbs Grid -->
-          <div class="catalog-grid-wrap">
-            <div class="grid grid-2" id="catalogGrid">
-              <!-- Dynamically populated via JS -->
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SUPPLY CHAIN VIEW -->
-    <section id="supply-chain" class="page-view">
-      <div class="container section-padding">
-        <div class="view-intro">
-          <h1>Interactive Supply Chain Ecosystem</h1>
-          <p>Understand the ecosystem of actors involved in bringing traceable herbs from soil to formulation.</p>
-        </div>
-
-        <!-- Visual Node Network Diagram -->
+        <!-- Ecosystem Nodes Map -->
         <div class="supply-map-wrapper card">
-          <h3>Ecosystem Nodes</h3>
+          <h3>Ecosystem Sourcing Nodes</h3>
           <p>Click on any role node to inspect their operational standards and standard operating procedures (SOPs).</p>
           
           <div class="map-diagram-container">
-            <!-- Node network with SVG connections -->
-            <svg class="map-connections-svg" id="mapConnectionsSvg">
-              <!-- Lines generated by JS or static CSS coordinates -->
-            </svg>
-            
+            <svg class="map-connections-svg" id="mapConnectionsSvg"></svg>
             <div class="map-nodes-grid">
               <button type="button" class="map-node-btn active" data-node="farmer">
                 <span class="icon">👩‍🌾</span>
                 <span class="label">Farmers</span>
                 <span class="standard">Organic soil standards</span>
               </button>
-
               <button type="button" class="map-node-btn" data-node="collector">
                 <span class="icon">📦</span>
                 <span class="label">Collectors</span>
                 <span class="standard">Sorting & grading SOPs</span>
               </button>
-
               <button type="button" class="map-node-btn" data-node="processor">
                 <span class="icon">🏭</span>
                 <span class="label">Processors</span>
                 <span class="standard">GMP Milled Extraction</span>
               </button>
-
               <button type="button" class="map-node-btn" data-node="labs">
                 <span class="icon">🔬</span>
                 <span class="label">QA Labs</span>
                 <span class="standard">Phytochemical assays</span>
               </button>
-
               <button type="button" class="map-node-btn" data-node="logistics">
                 <span class="icon">🚛</span>
                 <span class="label">Logistics</span>
                 <span class="standard">IoT cold storage</span>
               </button>
-
               <button type="button" class="map-node-btn" data-node="manufacturer">
                 <span class="icon">💊</span>
                 <span class="label">Manufacturers</span>
@@ -496,33 +869,32 @@
           </div>
         </div>
 
-        <!-- Logistics timeline section -->
+        <!-- LifeCycle Milestones -->
         <div class="logistics-timeline-section section-padding">
           <div class="section-header">
             <span class="section-tagline">Standard Timeline</span>
             <h2>Herb Lifecycle Milestones</h2>
           </div>
-          
           <div class="milestones-horizontal">
             <div class="milestone-card card">
               <span class="m-step">Day 1-120</span>
               <h3>Cultivation</h3>
-              <p>Soil nourishment, weed control, and maturation logs maintained on site.</p>
+              <p>Soil nourishment, weed control, and organic composting logs registered on site.</p>
             </div>
             <div class="milestone-card card">
               <span class="m-step">Day 121-125</span>
               <h3>Harvest & Pack</h3>
-              <p>Selective handpicking of active plant parts, cleaning and dry-sorting.</p>
+              <p>Selective handpicking of active plant parts, sorting, wash and moisture check.</p>
             </div>
             <div class="milestone-card card">
               <span class="m-step">Day 126-135</span>
               <h3>GMP Processing</h3>
-              <p>Milling or extraction, active constituent testing, and packaging.</p>
+              <p>Solar shade-drying, grinding or extracting, phytochemical assaying and vacuum packaging.</p>
             </div>
             <div class="milestone-card card">
               <span class="m-step">Day 136-140</span>
               <h3>Formulation</h3>
-              <p>Final packaging, serialization, and QR code ledger activation.</p>
+              <p>Conversion into capsules/tablets, package sterilization, serialization and QR ledger activation.</p>
             </div>
           </div>
         </div>
@@ -534,7 +906,7 @@
       <div class="container section-padding">
         <div class="view-intro">
           <h1>Ayurvedic Knowledge Center</h1>
-          <p>Scientific publications, classical Ayurvedic properties, cultivation guides, and standards.</p>
+          <p>Scientific publications, classical Ayurvedic pharmacopoeias, cultivation guides, and standards.</p>
         </div>
 
         <div class="knowledge-grid">
@@ -550,7 +922,7 @@
                 <div class="row"><strong>Vipaka (Post-digestive):</strong> Madhura (Sweet), Katu (Pungent)</div>
               </div>
             </div>
-            <a href="#herbs" class="btn btn-outline btn-sm">Explore Encyclopedia Profiles</a>
+            <a href="#explore" class="btn btn-outline btn-sm">Explore Encyclopedia Profiles</a>
           </div>
 
           <!-- Cultivation Guides -->
@@ -601,75 +973,11 @@
       </div>
     </section>
 
-    <!-- CONTRIBUTE / REGISTER VIEW -->
-    <section id="contribute" class="page-view">
-      <div class="container section-padding">
-        <div class="view-intro">
-          <h1>Join the Traceability Network</h1>
-          <p>Register as a certified partner on the Farm2Ayur ledger to log and verify herbal paths.</p>
-        </div>
-
-        <div class="register-container card">
-          <!-- Multi-step Selector -->
-          <div class="registration-tabs">
-            <button type="button" class="tab-btn active" data-type="farmer">Farmer</button>
-            <button type="button" class="tab-btn" data-type="collector">Collector</button>
-            <button type="button" class="tab-btn" data-type="processor">Processor</button>
-            <button type="button" class="tab-btn" data-type="laboratory">Laboratory</button>
-            <button type="button" class="tab-btn" data-type="manufacturer">Manufacturer</button>
-          </div>
-
-          <!-- Active Form Panel -->
-          <form id="registrationForm" class="registration-form">
-            <input type="hidden" name="role" id="registerRole" value="farmer">
-            
-            <div class="form-grid">
-              <div class="input-wrap w-50">
-                <label for="regFullName">Contact Person Full Name</label>
-                <input type="text" id="regFullName" required placeholder="e.g. Ramesh Chandra">
-              </div>
-
-              <div class="input-wrap w-50">
-                <label for="regOrgName" id="lblOrgName">Farm / Organization Name</label>
-                <input type="text" id="regOrgName" required placeholder="e.g. Almora Ayurvedic Organic Farm">
-              </div>
-
-              <div class="input-wrap w-50">
-                <label for="regEmail">Email Address</label>
-                <input type="email" id="regEmail" required placeholder="e.g. ramesh@himalayanherbs.org">
-              </div>
-
-              <div class="input-wrap w-50">
-                <label for="regPhone">Phone Number</label>
-                <input type="tel" id="regPhone" required placeholder="e.g. +91 9876543210">
-              </div>
-
-              <div class="input-wrap w-100">
-                <label for="regLocation">Geographic Location / Coordinates</label>
-                <input type="text" id="regLocation" required placeholder="e.g. Almora District, Uttarakhand, GPS: 29.5892° N, 79.6467° E">
-              </div>
-
-              <div class="input-wrap w-100" id="roleSpecificWrap">
-                <label for="regCertification">Organic Certifications & Registry ID</label>
-                <input type="text" id="regCertification" placeholder="e.g. NPOP Organic ID: 9982-A, USDA Organic ID: Org-2219">
-              </div>
-
-              <div class="input-wrap w-100">
-                <label for="regNotes">Facility/Crop Overview</label>
-                <textarea id="regNotes" rows="4" placeholder="Briefly describe your crops, processing facilities, or testing equipment..."></textarea>
-              </div>
-            </div>
-
-            <button type="submit" class="btn btn-secondary">Submit Registration</button>
-          </form>
-
-          <!-- Form Success state overlay -->
-          <div class="registration-success hidden" id="registrationSuccess">
-            <span class="success-icon">🎉</span>
-            <h2>Registration Submitted Successfully!</h2>
-            <p>Our audit team will verify your credentials and geographic coordinates. We will email your digital keys and access tags once approved.</p>
-            <button type="button" class="btn btn-outline" id="btnRegisterReset">Register Another Node</button>
-          </div>
+    <!-- LOGIN / REGISTER VIEW [NEW] -->
+    <section id="login" class="page-view">
+      <div class="container section-padding auth-container">
+        <div class="auth-box" id="authBox">
+          <!-- Populated dynamically via JS -->
         </div>
       </div>
     </section>
@@ -744,7 +1052,7 @@
               <div class="faq-item">
                 <button class="faq-trigger">Can a farmer register directly on the platform? <span>+</span></button>
                 <div class="faq-panel">
-                  <p>Yes. Farmers can register through the Contribute section, providing organic credentials or details about their traditional wild collection practices. Our verification officers will conduct field visits before approving registration.</p>
+                  <p>Yes. Sourcing nodes can submit their certification credentials directly to our compliance officers. Once soil and farming records are verified, digital access keys are issued to write to the ledger.</p>
                 </div>
               </div>
             </div>
@@ -794,7 +1102,7 @@
 
   </main>
 
-  <!-- Footer Section -->
+  <!-- Compact Footer Section -->
   <footer class="app-footer">
     <div class="container footer-grid">
       <div class="footer-brand">
@@ -802,42 +1110,44 @@
           <span class="logo-icon">🌿</span>
           <span class="logo-text">Farm<span>2</span>Ayur</span>
         </a>
-        <p>A digital trust ledger verifying Ayurvedic purity from soil to shelf. Enhancing safety, fair pricing, and classical botanical wisdom.</p>
+        <p>A digital platform verifying Ayurvedic purity from soil to shelf. Enhancing identification safety, authentic botanical records, and fair farm pricing.</p>
       </div>
 
       <div class="footer-links-col">
-        <h4>Platform Map</h4>
+        <h4>Navigation</h4>
         <ul>
           <li><a href="#home">Home</a></li>
-          <li><a href="#explore">Explore / Trace</a></li>
-          <li><a href="#herbs">Herbs Catalog</a></li>
-          <li><a href="#supply-chain">Supply Chain Map</a></li>
+          <li><a href="#explore">Explore Herbs</a></li>
+          <li><a href="#supply-chain">Supply Chain Trace</a></li>
         </ul>
       </div>
 
       <div class="footer-links-col">
-        <h4>Resources</h4>
+        <h4>Company & Tech</h4>
         <ul>
+          <li><a href="#about">About Our Mission</a></li>
           <li><a href="#knowledge">Knowledge Center</a></li>
-          <li><a href="#contribute">Contribute Node</a></li>
-          <li><a href="#about">About Our Tech</a></li>
           <li><a href="#contact">Contact Support</a></li>
         </ul>
       </div>
 
       <div class="footer-links-col">
-        <h4>Traceable Batches</h4>
+        <h4>Demo Batches</h4>
         <ul>
-          <li><a href="#explore" class="trace-shortcut" data-batch="ASH-2026-08">ASH-2026-08</a></li>
-          <li><a href="#explore" class="trace-shortcut" data-batch="TUR-2026-09">TUR-2026-09</a></li>
-          <li><a href="#explore" class="trace-shortcut" data-batch="TUL-2026-07">TUL-2026-07</a></li>
+          <li><a href="#supply-chain" class="trace-shortcut-footer" data-batch="ASH-2026-08">ASH-2026-08 (Ashwa)</a></li>
+          <li><a href="#supply-chain" class="trace-shortcut-footer" data-batch="TUR-2026-09">TUR-2026-09 (Turmeric)</a></li>
+          <li><a href="#supply-chain" class="trace-shortcut-footer" data-batch="TUL-2026-07">TUL-2026-07 (Tulsi)</a></li>
         </ul>
       </div>
     </div>
 
     <div class="footer-bottom">
-      <div class="container">
-        <p>&copy; 2026 Farm2Ayur. All rights reserved. Registered under AYUSH Digital Sourcing Guidelines.</p>
+      <div class="container" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; font-size: 0.8rem; color: var(--text-muted);">
+        <p>&copy; 2026 Farm2Ayur. All rights reserved. Under AYUSH Digital Sourcing Guidelines.</p>
+        <p>
+          <a href="#" style="margin-right: 1rem; hover: color: var(--text-light)">Privacy Policy</a>
+          <a href="#" style="hover: color: var(--text-light)">Terms of Service</a>
+        </p>
       </div>
     </div>
   </footer>
@@ -919,7 +1229,549 @@
     </div>
   </div>
 
+  <!-- Chatbot Widget markup -->
+  <button type="button" class="chatbot-trigger" id="chatbotTrigger" aria-label="Ask Farm2Ayur Assistant">💬</button>
+  <div class="chatbot-panel" id="chatbotPanel">
+    <div class="chatbot-header">
+      <h3>🌿 Ask Farm2Ayur</h3>
+      <button type="button" class="chatbot-close-btn" id="chatbotClose">&times;</button>
+    </div>
+    <div class="chatbot-body" id="chatbotBody">
+      <div class="chat-msg bot">
+        Namaste! I am your Farm2Ayur virtual botanical guide. Feel free to ask me questions about medicinal herbs, our AI leaf identifier, or how to search crop-to-remedy tracing logs!
+      </div>
+    </div>
+    <div class="chatbot-footer">
+      <div class="chatbot-presets">
+        <button type="button" class="preset-query-btn" data-query="How does the leaf scanner work?">How does the leaf scanner work?</button>
+        <button type="button" class="preset-query-btn" data-query="How is herb purity verified?">How is herb purity verified?</button>
+        <button type="button" class="preset-query-btn" data-query="Tell me about Ashwagandha certifications.">Tell me about Ashwagandha certifications.</button>
+      </div>
+      <form id="chatbotForm" class="chatbot-form">
+        <input type="text" id="chatbotInput" class="chatbot-input" placeholder="Type a question..." required>
+        <button type="submit" class="btn btn-secondary btn-sm" style="padding:0.4rem 0.8rem; font-size:0.8rem;">Send</button>
+      </form>
+    </div>
+  </div>
+
   <!-- Javascript Logic -->
   <script src="assets/js/app.js"></script>
+
+  <!-- Custom Script for Redesign Functionality & Overrides -->
+  <script>
+    // Mutate the global herbsDb array BEFORE DOMContentLoaded fully handles rendering in app.js
+    if (typeof herbsDb !== 'undefined') {
+      // Modify existing items to use authentic botanical images
+      if (herbsDb.ashwagandha) {
+        herbsDb.ashwagandha.icon = '<img src="assets/images/ashwagandha.jpg" alt="Ashwagandha">';
+      }
+      if (herbsDb.turmeric) {
+        herbsDb.turmeric.icon = '<img src="assets/images/turmeric.jpg" alt="Turmeric">';
+      }
+      if (herbsDb.tulsi) {
+        herbsDb.tulsi.icon = '<img src="assets/images/tulsi.jpg" alt="Tulsi">';
+      }
+      
+      // Remove Shatavari and add Brahmi and Neem since we have images
+      if (herbsDb.shatavari) {
+        delete herbsDb.shatavari;
+      }
+      
+      herbsDb.neem = {
+        id: "neem",
+        name: "Neem (Arishta)",
+        icon: '<img src="assets/images/neem.jpg" alt="Neem">',
+        scientificName: "Azadirachta indica",
+        ayurvedicProperties: {
+          rasa: "Tikta (Bitter), Kashaya (Astringent)",
+          guna: "Laghu (Light), Ruksha (Dry)",
+          virya: "Sheeta (Cold)",
+          vipaka: "Katu (Pungent)"
+        },
+        activeBatches: [],
+        description: "Neem is a legendary bitter herb known as 'the village pharmacy' in Indian villages. It is celebrated for its deep blood-purifying properties, support for clear skin health, and natural systemic detoxification.",
+        benefits: ["Purifies blood chemistry and supports clear skin healing", "Maintains healthy blood sugar pathways", "Supports oral hygiene and normal digestion flows"],
+        certification: "USDA Organic, GMP Certified, ISO 9001"
+      };
+
+      herbsDb.brahmi = {
+        id: "brahmi",
+        name: "Brahmi (Gotu Kola)",
+        icon: '<img src="assets/images/brahmi.jpg" alt="Brahmi">',
+        scientificName: "Bacopa monnieri",
+        ayurvedicProperties: {
+          rasa: "Tikta (Bitter), Kashaya (Astringent), Madhura (Sweet)",
+          guna: "Laghu (Light), Sara (Flowing)",
+          virya: "Sheeta (Cold)",
+          vipaka: "Madhura (Sweet)"
+        },
+        activeBatches: [],
+        description: "Brahmi is a premier rejuvenating herb for the brain and nervous system. It enhances cognitive clarity, supports memory retention, focus, and study concentration, while cooling and pacifying excessive Pitta energy.",
+        benefits: ["Promotes memory, focus speed, and study concentration", "Soothes nervous energy and maintains calm response to stress", "Supports restful sleep quality and cognitive reserves"],
+        certification: "Ecocert Organic, GMP, AYUSH Premium Certification"
+      };
+    }
+
+    // Local state checking (defined globally so router overrides can access it)
+    function isUserLoggedIn() {
+      return localStorage.getItem('farm2ayur_logged_in') === 'true';
+    }
+
+    // Add login and scan to allowed pages array (which is const but we mutate it)
+    if (typeof pageOrder !== 'undefined') {
+      if (!pageOrder.includes('login')) {
+        pageOrder.push('login');
+      }
+      if (!pageOrder.includes('scan')) {
+        pageOrder.push('scan');
+      }
+      // Remove contribute from page list
+      const cIdx = pageOrder.indexOf('contribute');
+      if (cIdx !== -1) {
+        pageOrder.splice(cIdx, 1);
+      }
+    }
+
+    // REDEFINE core routing overrides
+    const originalHandleViewParams = handleViewParams;
+    handleViewParams = function(view, params) {
+      if (view === 'scan' && !isUserLoggedIn()) {
+        window.location.hash = '#login';
+        if (typeof showToast === 'function') {
+          showToast("Please log in to access the AI Leaf Scanner.");
+        }
+        return;
+      }
+      if (view === 'explore' && params.batch) {
+        // Intercept explore?batch=... and route to supply-chain?batch=...
+        window.location.hash = `#supply-chain?batch=${encodeURIComponent(params.batch)}`;
+        return;
+      }
+      if (view === 'supply-chain' && params.batch) {
+        const input = document.getElementById('exploreSearchInput');
+        if (input) {
+          input.value = params.batch;
+          // Defer executeTrace slightly to ensure explore views are active
+          setTimeout(() => {
+            if (typeof executeTrace === 'function') {
+              executeTrace(params.batch);
+            }
+          }, 100);
+        }
+      }
+      if (typeof originalHandleViewParams === 'function') {
+        originalHandleViewParams(view, params);
+      }
+    };
+
+    // DOM Interaction Handlers
+    document.addEventListener("DOMContentLoaded", () => {
+      function setUserLoggedIn(status) {
+        if (status) {
+          localStorage.setItem('farm2ayur_logged_in', 'true');
+        } else {
+          localStorage.removeItem('farm2ayur_logged_in');
+        }
+        updateAuthBtn();
+        updateScannerUI();
+        updateAuthUI();
+      }
+
+      // Update header buttons text based on auth status
+      function updateAuthBtn() {
+        const headerBtn = document.getElementById('headerLoginBtn');
+        const mobileBtn = document.getElementById('mobileHeaderLoginBtn');
+        
+        if (isUserLoggedIn()) {
+          if (headerBtn) {
+            headerBtn.innerText = "My Account";
+            headerBtn.classList.add('btn-secondary');
+            headerBtn.classList.remove('btn-primary');
+          }
+          if (mobileBtn) {
+            mobileBtn.innerText = "My Account";
+            mobileBtn.classList.add('btn-secondary');
+            mobileBtn.classList.remove('btn-primary');
+          }
+        } else {
+          if (headerBtn) {
+            headerBtn.innerText = "Login / Register";
+            headerBtn.classList.remove('btn-secondary');
+            headerBtn.classList.add('btn-primary');
+          }
+          if (mobileBtn) {
+            mobileBtn.innerText = "Login / Register";
+            mobileBtn.classList.remove('btn-secondary');
+            mobileBtn.classList.add('btn-primary');
+          }
+        }
+      }
+
+      // Scanner View Rendering and Simulation
+      function updateScannerUI() {
+        const scannerBox = document.getElementById('scannerBox');
+        if (!scannerBox) return;
+
+        if (!isUserLoggedIn()) {
+          scannerBox.innerHTML = `
+            <div style="padding: 1rem 0;">
+              <span style="font-size: 3.5rem; display: block; margin-bottom: 1rem;">🔒</span>
+              <h2>Authentication Required</h2>
+              <p style="margin-top: 0.5rem; margin-bottom: 1.5rem; max-width: 450px; margin-left: auto; margin-right: auto;">
+                You must have an active Farm2Ayur account to access the AI Leaf Identification scanner.
+              </p>
+              <a href="#login" class="btn btn-secondary">Log In / Register Now</a>
+            </div>
+          `;
+        } else {
+          scannerBox.innerHTML = `
+            <div>
+              <h3>AI Plant Leaf Scanner</h3>
+              <p>Position a medicinal leaf in the camera viewfinder frame or select a mock sample below.</p>
+              
+              <div class="scanner-viewport" id="scannerViewport">
+                <div class="scanner-laser"></div>
+                <div class="scanner-grid-overlay"></div>
+                <div class="scanner-target-box" id="scannerTargetBox">
+                  <span style="font-size: 2.8rem;" id="scannerTargetIcon">🍃</span>
+                </div>
+                <div id="scannerStatusText" style="margin-top: 10px; font-weight: 500; font-size: 0.9rem; color: var(--text-muted); z-index: 2;">
+                  Align leaf inside target zone
+                </div>
+              </div>
+
+              <div class="scanner-samples" id="scannerSamples">
+                <button type="button" class="sample-leaf-btn" data-herb="ashwagandha">🌱 Ashwagandha Leaf</button>
+                <button type="button" class="sample-leaf-btn" data-herb="tulsi">🌿 Tulsi Leaf</button>
+                <button type="button" class="sample-leaf-btn" data-herb="neem">🍃 Neem Leaf</button>
+                <button type="button" class="sample-leaf-btn" data-herb="turmeric">🍂 Turmeric Leaf</button>
+              </div>
+
+              <div class="scanner-results hidden" id="scannerResults"></div>
+            </div>
+          `;
+
+          // Attach scan triggers
+          const sampleButtons = scannerBox.querySelectorAll('.sample-leaf-btn');
+          const viewport = document.getElementById('scannerViewport');
+          const statusText = document.getElementById('scannerStatusText');
+          const targetIcon = document.getElementById('scannerTargetIcon');
+          const resultsBox = document.getElementById('scannerResults');
+
+          sampleButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+              const herbId = btn.getAttribute('data-herb');
+              
+              // Scanning State
+              viewport.classList.add('scanning');
+              sampleButtons.forEach(b => b.disabled = true);
+              statusText.innerText = "Analyzing vein morphology and cell structure...";
+              targetIcon.innerText = "🔎";
+              resultsBox.classList.add('hidden');
+
+              setTimeout(() => {
+                viewport.classList.remove('scanning');
+                sampleButtons.forEach(b => b.disabled = false);
+                statusText.innerText = "Scan Complete";
+                targetIcon.innerText = "✓";
+                
+                // Show Match
+                resultsBox.classList.remove('hidden');
+                
+                if (herbId === 'ashwagandha') {
+                  resultsBox.innerHTML = `
+                    <div class="result-header">
+                      <div>
+                        <strong>Ashwagandha (Withania somnifera)</strong>
+                        <span style="display:block; font-size:0.75rem; color: var(--text-muted);">Family: Solanaceae</span>
+                      </div>
+                      <span class="result-accuracy">99.2% Match</span>
+                    </div>
+                    <p style="font-size:0.85rem; margin-bottom: 0.8rem;">
+                      <strong>Botanical Notes:</strong> Short ovate leaves with fine stellate hairs. PACIFIES: Vata and Kapha dosha. Rejuvenating Rasayana.
+                    </p>
+                    <div style="display:flex; gap: 0.5rem; flex-wrap:wrap; margin-top: 1rem;">
+                      <button type="button" class="btn btn-primary btn-sm view-profile-btn" data-herb="ashwagandha">View Botanical Profile</button>
+                      <a href="#supply-chain?batch=ASH-2026-08" class="btn btn-secondary btn-sm">Trace Active Batch (ASH-2026-08)</a>
+                    </div>
+                  `;
+                } else if (herbId === 'tulsi') {
+                  resultsBox.innerHTML = `
+                    <div class="result-header">
+                      <div>
+                        <strong>Tulsi (Ocimum sanctum)</strong>
+                        <span style="display:block; font-size:0.75rem; color: var(--text-muted);">Family: Lamiaceae</span>
+                      </div>
+                      <span class="result-accuracy">98.6% Match</span>
+                    </div>
+                    <p style="font-size:0.85rem; margin-bottom: 0.8rem;">
+                      <strong>Botanical Notes:</strong> Purples stems, opposite decussate serrate leaves with high glandular aromatic hairs. Clears respiratory channels.
+                    </p>
+                    <div style="display:flex; gap: 0.5rem; flex-wrap:wrap; margin-top: 1rem;">
+                      <button type="button" class="btn btn-primary btn-sm view-profile-btn" data-herb="tulsi">View Botanical Profile</button>
+                      <a href="#supply-chain?batch=TUL-2026-07" class="btn btn-secondary btn-sm">Trace Active Batch (TUL-2026-07)</a>
+                    </div>
+                  `;
+                } else if (herbId === 'neem') {
+                  resultsBox.innerHTML = `
+                    <div class="result-header">
+                      <div>
+                        <strong>Neem (Azadirachta indica)</strong>
+                        <span style="display:block; font-size:0.75rem; color: var(--text-muted);">Family: Meliaceae</span>
+                      </div>
+                      <span class="result-accuracy">97.4% Match</span>
+                    </div>
+                    <p style="font-size:0.85rem; margin-bottom: 0.8rem;">
+                      <strong>Botanical Notes:</strong> Asymmetrical pinnate leaves with deeply serrated edges. Extremely bitter (Tikta). Purifies blood and controls Pitta.
+                    </p>
+                    <div style="display:flex; gap: 0.5rem; flex-wrap:wrap; margin-top: 1rem;">
+                      <button type="button" class="btn btn-primary btn-sm view-profile-btn" data-herb="neem">View Botanical Profile</button>
+                      <span style="font-size:0.8rem; color: var(--text-muted); align-self:center;">No active supply batches</span>
+                    </div>
+                  `;
+                } else if (herbId === 'turmeric') {
+                  resultsBox.innerHTML = `
+                    <div class="result-header">
+                      <div>
+                        <strong>Turmeric (Curcuma longa)</strong>
+                        <span style="display:block; font-size:0.75rem; color: var(--text-muted);">Family: Zingiberaceae</span>
+                      </div>
+                      <span class="result-accuracy">96.8% Match</span>
+                    </div>
+                    <p style="font-size:0.85rem; margin-bottom: 0.8rem;">
+                      <strong>Botanical Notes:</strong> Broad green leaf sheaths rising from underground aromatic rhizomes. Promotes skin health and balances all three doshas.
+                    </p>
+                    <div style="display:flex; gap: 0.5rem; flex-wrap:wrap; margin-top: 1rem;">
+                      <button type="button" class="btn btn-primary btn-sm view-profile-btn" data-herb="turmeric">View Botanical Profile</button>
+                      <a href="#supply-chain?batch=TUR-2026-09" class="btn btn-secondary btn-sm">Trace Active Batch (TUR-2026-09)</a>
+                    </div>
+                  `;
+                }
+
+                // Connect the dynamically spawned "View Botanical Profile" button
+                resultsBox.querySelector('.view-profile-btn').addEventListener('click', (e) => {
+                  const viewHerbId = e.target.getAttribute('data-herb');
+                  if (typeof openHerbModal === 'function') {
+                    openHerbModal(viewHerbId);
+                  }
+                });
+
+              }, 1600);
+            });
+          });
+        }
+      }
+
+      // Authentication View Rendering
+      function updateAuthUI() {
+        const authBox = document.getElementById('authBox');
+        if (!authBox) return;
+
+        if (isUserLoggedIn()) {
+          authBox.innerHTML = `
+            <div style="padding: 1.5rem 0;">
+              <span style="font-size: 3.5rem; display: block; margin-bottom: 1.2rem;">🌿</span>
+              <h2>Welcome to Farm2Ayur</h2>
+              <p style="margin-top: 0.5rem; color: var(--text-muted);">
+                Logged in securely as <strong style="color: var(--gold-accent);">demo@farm2ayur.org</strong>
+              </p>
+              <div style="margin-top: 2.5rem; display: flex; flex-direction: column; gap: 1rem;">
+                <a href="#scan" class="btn btn-secondary">Go to AI Scanner</a>
+                <button type="button" class="btn btn-outline" id="authLogoutBtn">Log Out</button>
+              </div>
+            </div>
+          `;
+
+          document.getElementById('authLogoutBtn').addEventListener('click', () => {
+            setUserLoggedIn(false);
+            if (typeof showToast === 'function') {
+              showToast("Logged out successfully.");
+            }
+            window.location.hash = '#home';
+          });
+        } else {
+          authBox.innerHTML = `
+            <div>
+              <div class="auth-tabs">
+                <button type="button" class="auth-tab-btn active" id="authTabLogin">Log In</button>
+                <button type="button" class="auth-tab-btn" id="authTabRegister">Register</button>
+              </div>
+              <form id="authForm" style="text-align: left;">
+                <div class="input-wrap" id="authNameWrap" style="display: none;">
+                  <label for="authName">Full Name</label>
+                  <input type="text" id="authName" placeholder="Enter your full name">
+                </div>
+                <div class="input-wrap">
+                  <label for="authEmail">Email Address</label>
+                  <input type="email" id="authEmail" required placeholder="demo@farm2ayur.org">
+                </div>
+                <div class="input-wrap">
+                  <label for="authPassword">Password</label>
+                  <input type="password" id="authPassword" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn btn-secondary w-100" style="margin-top: 1rem;" id="authSubmitBtn">Log In</button>
+              </form>
+            </div>
+          `;
+
+          // Handle form switching
+          const tabLogin = document.getElementById('authTabLogin');
+          const tabRegister = document.getElementById('authTabRegister');
+          const nameWrap = document.getElementById('authNameWrap');
+          const submitBtn = document.getElementById('authSubmitBtn');
+          let currentTab = 'login';
+
+          tabLogin.addEventListener('click', () => {
+            tabLogin.classList.add('active');
+            tabRegister.classList.remove('active');
+            nameWrap.style.display = 'none';
+            submitBtn.innerText = "Log In";
+            currentTab = 'login';
+          });
+
+          tabRegister.addEventListener('click', () => {
+            tabRegister.classList.add('active');
+            tabLogin.classList.remove('active');
+            nameWrap.style.display = 'flex';
+            submitBtn.innerText = "Create Account";
+            currentTab = 'register';
+          });
+
+          // Handle Submit
+          document.getElementById('authForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            submitBtn.innerText = currentTab === 'login' ? "Verifying Credentials..." : "Creating Secure Profile...";
+            submitBtn.disabled = true;
+
+            setTimeout(() => {
+              setUserLoggedIn(true);
+              submitBtn.disabled = false;
+              if (typeof showToast === 'function') {
+                showToast(currentTab === 'login' ? "Welcome back!" : "Account registered successfully!");
+              }
+              // Redirect back to dedicated scan view
+              window.location.hash = '#scan';
+            }, 800);
+          });
+        }
+      }
+
+      // Initial UIs load
+      setUserLoggedIn(isUserLoggedIn());
+
+      // Action helper for Hero Scan button
+      const heroScanBtn = document.getElementById('heroScanBtn');
+      if (heroScanBtn) {
+        heroScanBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (!isUserLoggedIn()) {
+            window.location.hash = '#login';
+            if (typeof showToast === 'function') {
+              showToast("Please log in to access the AI Leaf Scanner.");
+            }
+          } else {
+            window.location.hash = '#scan';
+          }
+        });
+      }
+
+      // FAQ accordion trigger fixes (since accordion triggers were already attached in app.js, we don't interfere, but double check)
+      
+      // SUPPLY CHAIN SHORTCUT REDIRECT FIX (footer)
+      document.querySelectorAll('.trace-shortcut-footer').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const batchId = link.getAttribute('data-batch');
+          window.location.hash = `#supply-chain?batch=${encodeURIComponent(batchId)}`;
+        });
+      });
+
+      // FLOATING CHATBOT EVENT LOGIC
+      const chatbotTrigger = document.getElementById('chatbotTrigger');
+      const chatbotPanel = document.getElementById('chatbotPanel');
+      const chatbotClose = document.getElementById('chatbotClose');
+      const chatbotBody = document.getElementById('chatbotBody');
+      const chatbotForm = document.getElementById('chatbotForm');
+      const chatbotInput = document.getElementById('chatbotInput');
+
+      if (chatbotTrigger && chatbotPanel) {
+        chatbotTrigger.addEventListener('click', () => {
+          chatbotPanel.classList.toggle('open');
+        });
+        
+        if (chatbotClose) {
+          chatbotClose.addEventListener('click', () => {
+            chatbotPanel.classList.remove('open');
+          });
+        }
+
+        // Preset queries listener
+        chatbotPanel.querySelectorAll('.preset-query-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const query = btn.getAttribute('data-query');
+            handleChatSubmit(query);
+          });
+        });
+
+        // Chat input submit
+        if (chatbotForm) {
+          chatbotForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const text = chatbotInput.value.trim();
+            if (text) {
+              handleChatSubmit(text);
+              chatbotInput.value = '';
+            }
+          });
+        }
+      }
+
+      function handleChatSubmit(userMsg) {
+        // 1. Append User Message
+        appendChatMsg(userMsg, 'user');
+        
+        // 2. Append typing indicator
+        const typingId = appendChatMsg('...', 'bot typing');
+        
+        // 3. Match reply or default reply
+        setTimeout(() => {
+          const typingMsg = document.getElementById(typingId);
+          if (typingMsg) typingMsg.remove();
+          
+          let botReply = "Thank you for writing. Farm2Ayur records complete environmental sensor data, harvest dates, and laboratory assays on our digital ledger. You can inspect active batches in our Supply Chain tab.";
+          
+          const lower = userMsg.toLowerCase();
+          if (lower.includes('scanner') || lower.includes('identify') || lower.includes('leaf')) {
+            botReply = "The AI leaf scanner uses a convolutional neural network (CNN) running locally. It identifies leaf outline contours and vein spacing to authenticate herb species, ensuring growers harvest and mill correct botanicals.";
+          } else if (lower.includes('purity') || lower.includes('verify') || lower.includes('laboratory') || lower.includes('coa')) {
+            botReply = "Herbs are verified at NABL-accredited phytochemistry facilities. We test for active secondary markers (e.g. Withanolides >1.50%), humidity levels, heavy metals (Pb, Cd), and organochlorines. Certificates of Analysis are securely bound to batch logs.";
+          } else if (lower.includes('ashwagandha')) {
+            botReply = "Our registered Ashwagandha batches (like ASH-2026-08) hold certified USDA Organic, NPOP India, and GMP certifications. Verified Withanolides average 4.82% w/w, well exceeding the 1.50% reference standard.";
+          } else if (lower.includes('turmeric') || lower.includes('haridra')) {
+            botReply = "Haridra (Curcuma longa) root batches (like TUR-2026-09) are sourced from red clay soil in Wayanad, Kerala. Verified Curcuminoids average a high 5.40% w/w (standard >3.00%).";
+          } else if (lower.includes('tulsi')) {
+            botReply = "Holy Basil (Ocimum sanctum) batches (like TUL-2026-07) are wildcrafted in Kangra, Himachal Pradesh. Active constituent Ursolic Acid is tested at 1.62% w/w (standard >0.50%).";
+          }
+          
+          appendChatMsg(botReply, 'bot');
+        }, 800);
+      }
+
+      let chatCounter = 0;
+      function appendChatMsg(text, sender) {
+        chatCounter++;
+        const id = 'chat-msg-' + chatCounter;
+        const msgDiv = document.createElement('div');
+        msgDiv.id = id;
+        msgDiv.className = `chat-msg ${sender}`;
+        msgDiv.innerText = text;
+        chatbotBody.appendChild(msgDiv);
+        chatbotBody.scrollTop = chatbotBody.scrollHeight;
+        return id;
+      }
+
+    });
+  </script>
 </body>
 </html>

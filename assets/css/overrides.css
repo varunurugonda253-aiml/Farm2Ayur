@@ -1,0 +1,636 @@
+/*
+ * =============================================================
+ * Farm2Ayur � CSS Overrides & Feature Styles
+ * File: assets/css/overrides.css
+ *
+ * Extends the base design system (style.css) with component-specific
+ * and feature styles. Organised by section for easy navigation.
+ * =============================================================
+ */
+
+
+/* =============================================================
+   LAYOUT BASE
+   Prevent horizontal scroll caused by fixed full-width elements
+   ============================================================= */
+body {
+  overflow-x: hidden;
+}
+
+/* Keep text readable over every dark or translucent surface. */
+:root {
+  --text-muted: #c3d1c8;
+  --border-glass: rgba(255, 255, 255, 0.16);
+}
+
+p,
+li,
+label,
+input,
+select,
+textarea,
+.nav-item,
+.mobile-nav-item {
+  color: var(--text-light);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #b9c9bf;
+  opacity: 1;
+}
+
+select option {
+  background: var(--bg-dark);
+  color: var(--text-light);
+}
+
+
+/* =============================================================
+   HERO SECTION
+   ============================================================= */
+.hero-section {
+  border-bottom: none !important;
+}
+
+.hero-overlay {
+  background: linear-gradient(
+    rgba(12, 18, 14, 0.45) 0%,
+    rgba(12, 18, 14, 1) 100%
+  ) !important;
+}
+
+.hero-cta-wrap {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+/* inline-block lets GSAP wrap words cleanly */
+.hero-title {
+  display: inline-block;
+}
+
+/* "Discover the Plants Behind" - soft sage-silver gradient */
+.hero-title-main {
+  background: linear-gradient(135deg, #ffffff 30%, #d4ede1 75%, #a6dbbf 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* "Ayurveda" - hand-lettered calligraphic script with emerald-to-gold gradient */
+.ayurveda-word {
+  font-family: 'Pinyon Script', 'Great Vibes', 'Nautilus Pompilius', 'La Parisienne', 'Watermelon', cursive;
+  font-size: 2em;
+  font-weight: 400;
+  background: linear-gradient(135deg, #10b981 0%, #34d399 30%, #fbbf24 65%, #ffe082 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  vertical-align: middle;
+  padding: 0 0.1em;
+  transform: translateY(-0.06em) rotate(-1.5deg);
+  -webkit-text-stroke: 0.3px rgba(255, 255, 255, 0.2);
+  filter:
+    drop-shadow(0 4px 12px rgba(52, 211, 153, 0.25))
+    drop-shadow(0 2px 5px rgba(0, 0, 0, 0.8));
+}
+
+
+/* =============================================================
+   AMBIENT BACKGROUND � Canvas Particles & Aurora Glow
+   Fixed, full-screen, pointer-events:none � never blocks user interaction
+   ============================================================= */
+#ambient-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  /* A fixed, pointer-free background stays active across every SPA view. */
+  z-index: 1;
+  opacity: 0.55;
+}
+
+.ambient-aurora {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(15, 80, 50, 0.55) 0%,
+    rgba(0, 40, 24, 0.15) 50%,
+    transparent 80%
+  );
+  opacity: 0.85;
+  animation: aurora-pulse 8s ease-in-out infinite alternate;
+}
+
+.glow-orb {
+  z-index: 0;
+}
+
+/* Keep the visible site above the background without changing fixed overlays. */
+body > .app-header,
+body > .main-content,
+body > .app-footer {
+  position: relative;
+  z-index: 2;
+}
+
+@keyframes aurora-pulse {
+  0%   { transform: scale(1)    translate(0, 0);    opacity: 0.7; }
+  50%  { transform: scale(1.15) translate(1%, 1%);  opacity: 0.9; }
+  100% { transform: scale(1)    translate(-1%, -1%); opacity: 0.7; }
+}
+
+
+/* =============================================================
+   AI LEAF SCANNER SECTION
+   ============================================================= */
+.scanner-section {
+  background: radial-gradient(circle at top right, rgba(45, 90, 60, 0.1), transparent), var(--bg-dark);
+  border-top: 1px solid var(--border-glass);
+  border-bottom: 1px solid var(--border-glass);
+}
+
+.scanner-container {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.scanner-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--border-radius-lg);
+  padding: 2.5rem;
+  box-shadow: var(--shadow-premium);
+  text-align: center;
+}
+
+.scanner-viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #050a06;
+  border: 1px solid var(--border-glass);
+  border-radius: var(--border-radius-md);
+  overflow: hidden;
+  margin: 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hidden by default; shown when JS adds .scanning class */
+.scanner-laser {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, var(--gold-accent), transparent);
+  box-shadow: 0 0 12px var(--gold-accent);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.scanner-viewport.scanning .scanner-laser {
+  opacity: 1;
+  animation: laser-scan 2s infinite linear;
+}
+
+@keyframes laser-scan {
+  0%   { top: 0%; }
+  50%  { top: 100%; }
+  100% { top: 0%; }
+}
+
+.scanner-grid-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* Dashed reticle frame with corner bracket pseudo-elements */
+.scanner-target-box {
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  border: 2px dashed rgba(212, 175, 55, 0.35);
+  border-radius: var(--border-radius-sm);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-smooth);
+}
+
+.scanner-target-box::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--gold-accent);
+  border-right: none;
+  border-bottom: none;
+  top: -5px;
+  left: -5px;
+}
+
+.scanner-target-box::before {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--gold-accent);
+  border-left: none;
+  border-top: none;
+  bottom: -5px;
+  right: -5px;
+}
+
+.scanner-samples {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.sample-leaf-btn {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--border-radius-sm);
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: var(--transition-smooth);
+}
+
+.sample-leaf-btn:hover {
+  border-color: var(--light-sage);
+  color: var(--text-light);
+  background: rgba(143, 188, 143, 0.08);
+  transform: translateY(-1px);
+}
+
+.scanner-results {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--border-radius-md);
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+  text-align: left;
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+  border-bottom: 1px solid var(--border-glass);
+  padding-bottom: 0.5rem;
+}
+
+.result-accuracy {
+  background: rgba(212, 175, 55, 0.15);
+  color: var(--gold-accent);
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+
+/* =============================================================
+   AUTHENTICATION FORM
+   ============================================================= */
+.auth-container {
+  max-width: 420px;
+  margin: 4rem auto;
+}
+
+.auth-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--border-radius-lg);
+  padding: 2.5rem;
+  box-shadow: var(--shadow-premium);
+  text-align: center;
+}
+
+.auth-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-glass);
+  margin-bottom: 1.5rem;
+}
+
+.auth-tab-btn {
+  flex: 1;
+  padding: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  border: none;
+  background: none;
+  transition: var(--transition-smooth);
+}
+
+.auth-tab-btn.active {
+  color: var(--text-light);
+  border-bottom: 2px solid var(--gold-accent);
+}
+
+
+/* =============================================================
+   CHATBOT DRAWER � Fixed floating button + slide-up panel
+   ============================================================= */
+.chatbot-trigger {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--primary-green);
+  border: 1.5px solid var(--gold-accent);
+  color: var(--text-light);
+  box-shadow: 0 5px 25px rgba(0,0,0,0.6), var(--shadow-glow);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  transition: var(--transition-smooth);
+  font-size: 1.4rem;
+}
+
+.chatbot-trigger:hover {
+  transform: scale(1.06) rotate(5deg);
+  background: var(--secondary-green);
+  box-shadow: 0 5px 25px rgba(0,0,0,0.7), 0 0 20px rgba(212,175,55,0.3);
+}
+
+/* Panel is invisible until JS adds .open */
+.chatbot-panel {
+  position: fixed;
+  bottom: 6.5rem;
+  right: 2rem;
+  width: 340px;
+  height: 460px;
+  background: rgba(12, 18, 14, 0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-premium);
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transform: translateY(20px);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.chatbot-panel.open {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: all;
+}
+
+.chatbot-header {
+  background: var(--primary-green);
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-glass);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chatbot-header h3 {
+  font-size: 1rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.chatbot-close-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.25rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.chatbot-close-btn:hover {
+  color: var(--text-light);
+}
+
+.chatbot-body {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+}
+
+.chat-msg {
+  max-width: 85%;
+  padding: 0.6rem 0.8rem;
+  border-radius: var(--border-radius-sm);
+  line-height: 1.4;
+}
+
+.chat-msg.bot {
+  background: rgba(255,255,255,0.04);
+  align-self: flex-start;
+  border-bottom-left-radius: 0;
+  border-left: 2px solid var(--gold-accent);
+}
+
+.chat-msg.user {
+  background: var(--secondary-green);
+  color: var(--text-light);
+  align-self: flex-end;
+  border-bottom-right-radius: 0;
+}
+
+.chatbot-footer {
+  padding: 0.75rem;
+  border-top: 1px solid var(--border-glass);
+  background: rgba(0,0,0,0.25);
+}
+
+.chatbot-presets {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.preset-query-btn {
+  text-align: left;
+  background: rgba(255,255,255,0.01);
+  border: 1px solid var(--border-glass);
+  border-radius: 6px;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: var(--transition-smooth);
+}
+
+.preset-query-btn:hover {
+  color: var(--text-light);
+  border-color: var(--gold-accent);
+  background: rgba(212, 175, 55, 0.05);
+}
+
+.chatbot-form {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+.chatbot-input {
+  flex: 1;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border-glass);
+  border-radius: 4px;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.8rem;
+  color: var(--text-light);
+  outline: none;
+}
+
+.chatbot-input:focus {
+  border-color: var(--gold-accent);
+}
+
+
+/* =============================================================
+   HOW IT WORKS � Gold step number badge above each card
+   ============================================================= */
+.how-card {
+  text-align: center;
+  position: relative;
+  padding-top: 2rem !important;
+}
+
+.how-card-num {
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 32px;
+  height: 32px;
+  background: var(--gold-accent);
+  color: var(--text-dark);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.25);
+}
+
+
+/* =============================================================
+   HERB CARDS � Image wrapper with hover zoom
+   ============================================================= */
+.herb-card-img-wrap {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--border-glass);
+  background: rgba(0,0,0,0.2);
+}
+
+.herb-card-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: var(--transition-smooth);
+}
+
+.card:hover .herb-card-img-wrap img {
+  transform: scale(1.04);
+}
+
+
+/* =============================================================
+   GSAP SPLIT-WORD REVEAL � Helper Classes
+   
+   How it works:
+     1. JS wraps each word in <span class="word-mask"><span class="reveal-word">word</span></span>
+     2. .word-mask clips the word via overflow:hidden
+     3. .reveal-word starts pushed below (translateY 110%) and rotated
+     4. GSAP animates .reveal-word to y:0, rotate:0, opacity:1 on scroll
+   
+   IMPORTANT: Do NOT add `animation: none` or `opacity: 1 !important`
+   to parent heading elements � that will kill the reveal animation.
+   ============================================================= */
+
+/* Clips the word so slide-up reveal appears to come from behind */
+.word-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
+}
+
+/* Each word starts hidden below the clip and slightly rotated */
+.reveal-word {
+  display: inline-block;
+  transform: none;
+  opacity: 1;
+  transform-origin: left bottom;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+

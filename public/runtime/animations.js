@@ -1,11 +1,16 @@
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
+
 /**
  * =============================================================
- * Farm2Ayur � Animations Module
- * File: assets/js/animations.js
+ * Farm2Ayur – Animations Module
+ * File: runtime/animations.js
  *
  * Contains two independent animation systems:
- *   1. Ambient Background � floating eco-particle canvas + aurora pulse
- *   2. GSAP Split-Word Reveal � staggered heading animations on scroll,
+ *   1. Ambient Background – floating eco-particle canvas + aurora pulse
+ *   2. GSAP Split-Word Reveal – staggered heading animations on scroll,
  *      with a MutationObserver to handle SPA page navigation (sections
  *      that are hidden on page load get animated when they become visible)
  * =============================================================
@@ -13,146 +18,161 @@
 
 
 /* =============================================================
-   SECTION 1 � AMBIENT FLOATING PARTICLES
-   Uses the HTML5 Canvas API and requestAnimationFrame for
-   hardware-accelerated rendering at 60fps.
-   The canvas element (#ambient-canvas) is fixed, full-screen,
-   and pointer-events:none so it never blocks user interaction.
+   SECTION 0 – OPENING INTRO & LEVEL 2 HERO UPWARD TEXT REVEAL
+   Single continuous GSAP Timeline Sequence:
+     1. Leaf logo comes in centered
+     2. Intro title expands out from behind the leaf logo
+     3. Stays for 2 seconds
+     4. Intro title retracts back behind the leaf logo
+     5. Leaf logo re-centers / settles
+     6. Intro overlay curtain slides up to reveal main website hero page
+     7. Hero heading lines, subtitle & CTA rise UPWARD from below
+        inside overflow-hidden masked containers (BeeToGreen style reveal)
    ============================================================= */
+(function initIntroTitleAnimation() {
+  const overlay = document.getElementById('intro-overlay');
+  const iconBox = document.querySelector('.intro-icon-box');
+  const icon = document.querySelector('.intro-icon');
+  const textBox = document.querySelector('.intro-text-box');
 
-(function initAmbientParticles() {
-  const canvas = document.getElementById('ambient-canvas');
-  if (!canvas) return;
+  if (!overlay || !iconBox || !textBox) return;
 
-  const ctx = canvas.getContext('2d');
+  // Temporarily lock body scroll during intro overlay display
+  document.body.style.overflow = 'hidden';
 
-  // Canvas dimensions � use clientWidth to avoid scrollbar-width causing layout shift
-  let width  = canvas.width  = document.documentElement.clientWidth;
-  let height = canvas.height = window.innerHeight;
-
-  // Mouse position � used for gentle particle avoidance
-  const mouse = { x: width / 2, y: height / 2 };
-
-  // Track scroll for mouse-position offset compensation
-  let scrollY = 0;
-
-  // Resize handler � keeps canvas perfectly full-screen
-  window.addEventListener('resize', () => {
-    width  = canvas.width  = document.documentElement.clientWidth;
-    height = canvas.height = window.innerHeight;
-  });
-
-  window.addEventListener('mousemove', (e) => {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
-  });
-
-  window.addEventListener('scroll', () => {
-    scrollY = window.scrollY;
-  });
-
-  /**
-   * Particle class � each instance represents one floating mote.
-   * Particles spawn below the viewport and drift upward with a
-   * natural sine-wave oscillation. 50% randomly glow with a soft
-   * green shadow for extra visual depth.
-   */
-  class Particle {
-    constructor() {
-      this.reset();
-      // On initial creation, spread particles across the full height
-      // so the screen isn't empty before any particles have risen up
-      this.y = Math.random() * height;
-    }
-
-    /**
-     * Reinitialise this particle with new random properties.
-     * Called on construction and whenever the particle leaves the screen.
-     */
-    reset() {
-      this.x             = Math.random() * width;
-      this.y             = height + Math.random() * 200; // spawn below screen
-      this.size          = Math.random() * 3.5 + 2.5;   // radius: 2.5px � 6px
-      this.speedY        = -(Math.random() * 2.2 + 1.2); // upward: 1.2 � 3.4 px/frame
-      this.speedX        = (Math.random() - 0.5) * 1.0; // horizontal drift
-      this.opacity       = Math.random() * 0.3 + 0.6;   // brightness: 0.6 � 0.9
-      this.glow          = Math.random() > 0.5;          // 50% of particles glow
-
-      // Natural oscillation parameters � creates the leaf-drifting feel
-      this.angle           = Math.random() * Math.PI * 2;
-      this.oscillationSpeed = Math.random() * 0.03 + 0.015;
-      this.oscillationAmp   = Math.random() * 1.5 + 0.8;
-    }
-
-    /**
-     * Update position each frame.
-     * Applies upward movement, mouse avoidance within 180px radius,
-     * and sine-wave horizontal oscillation.
-     */
-    update() {
-      // Rise upward
-      this.y += this.speedY;
-
-      // Gentle mouse avoidance � particles push away from cursor
-      const dx       = mouse.x - this.x;
-      const dy       = (mouse.y + scrollY * 0.1) - this.y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-
-      if (distance < 180) {
-        this.x -= dx * 0.008;
-        this.y -= dy * 0.008;
-      }
-
-      // Natural side-to-side oscillation (simulates air movement)
-      this.angle += this.oscillationSpeed;
-      this.x += Math.sin(this.angle) * this.oscillationAmp * 0.5 + this.speedX;
-
-      // Recycle when the particle exits the visible area on any edge
-      if (this.y < -50 || this.x < -50 || this.x > width + 50) {
-        this.reset();
+  // Create GSAP Timeline for pure sequenced control (no setTimeout)
+  const tl = gsap.timeline({
+    defaults: { ease: 'power3.out' },
+    onComplete: () => {
+      overlay.style.display = 'none';
+      document.body.style.overflowX = 'hidden';
+      document.body.style.overflowY = 'auto';
+      if (typeof ScrollTrigger !== 'undefined') {
+        ScrollTrigger.refresh();
       }
     }
+  });
 
-    /**
-     * Draw the particle as a circle.
-     * Glowing particles get a soft emerald shadowBlur for visual depth.
-     */
-    draw() {
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+  // 0. Initial hidden state (Intro + Hero masked elements)
+  tl.set(iconBox, {
+    scale: 0,
+    opacity: 0,
+    rotate: -25
+  })
+  .set(textBox, {
+    y: -40,
+    opacity: 0,
+    scale: 0.85,
+    clipPath: 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)'
+  })
+  .set(overlay, {
+    yPercent: 0,
+    opacity: 1
+  })
+  // Hero elements initial state: positioned below inside masked containers
+  .set('.hero-title-main', {
+    y: 110,
+    opacity: 0,
+    clipPath: 'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)'
+  })
+  .set('.ayurveda-word', {
+    y: 110,
+    opacity: 0,
+    clipPath: 'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)'
+  })
+  .set('.hero-subtitle', {
+    y: 70,
+    opacity: 0,
+    clipPath: 'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)'
+  })
+  .set('.hero-cta-wrap', {
+    y: 50,
+    opacity: 0
+  });
 
-      if (this.glow) {
-        ctx.shadowBlur  = 20;
-        ctx.shadowColor = '#00ff88';
-        ctx.fillStyle   = `rgba(100, 255, 150, ${this.opacity})`;
-      } else {
-        ctx.shadowBlur = 0;
-        ctx.fillStyle  = `rgba(150, 220, 180, ${this.opacity})`;
-      }
+  // STEP 1: Leaf logo comes in centered
+  tl.to(iconBox, {
+    scale: 1,
+    opacity: 1,
+    rotate: 0,
+    duration: 1.0,
+    ease: 'back.out(1.7)'
+  })
 
-      ctx.fill();
-      ctx.shadowBlur = 0; // always reset after draw to avoid bleed into next shape
-    }
-  }
+  // STEP 2: Behind the leaf logo, website title comes in with text animation
+  .to(textBox, {
+    y: 0,
+    opacity: 1,
+    scale: 1,
+    clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
+    duration: 1.2,
+    ease: 'power4.out'
+  }, "-=0.3")
 
-  // Initialise 120 particles spread across the viewport
-  const PARTICLE_COUNT = 120;
-  const particles = [];
-  for (let i = 0; i < PARTICLE_COUNT; i++) {
-    particles.push(new Particle());
-  }
+  // STEP 3: Stays for 2 seconds
+  .to({}, { duration: 2.0 })
 
-  /**
-   * Main animation loop � runs every frame via requestAnimationFrame.
-   * Clears the canvas and redraws every particle.
-   */
-  function animateParticles() {
-    ctx.clearRect(0, 0, width, height);
-    particles.forEach(p => { p.update(); p.draw(); });
-    requestAnimationFrame(animateParticles);
-  }
+  // STEP 4: Title goes back behind logo
+  .to(textBox, {
+    y: -40,
+    opacity: 0,
+    scale: 0.85,
+    clipPath: 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)',
+    duration: 0.9,
+    ease: 'power3.in'
+  })
 
-  animateParticles();
+  // STEP 5: Logo comes center / pulse highlight
+  .to(iconBox, {
+    scale: 1.2,
+    rotateY: 360,
+    duration: 0.8,
+    ease: 'power2.out'
+  })
+  .to(icon, {
+    scale: 1.0,
+    duration: 0.35,
+    ease: 'power2.inOut'
+  }, "-=0.2")
+
+  // STEP 6: CONTINUOUS TRANSITION – Website reveal: Intro overlay curtain slides up
+  .to(overlay, {
+    yPercent: -100,
+    duration: 1.05,
+    ease: 'expo.inOut'
+  }, "-=0.2")
+
+  // STEP 7: HERO TEXT RISING FROM BELOW (BeeToGreen style staggered upward entrance)
+  .to('.hero-title-main', {
+    y: 0,
+    opacity: 1,
+    clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
+    duration: 1.15,
+    ease: 'power4.out'
+  }, "-=0.75") // Begins rising as overlay curtain opens!
+
+  .to('.ayurveda-word', {
+    y: 0,
+    opacity: 1,
+    clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
+    duration: 1.1,
+    ease: 'power4.out'
+  }, "-=0.9") // Staggered line 2
+
+  .to('.hero-subtitle', {
+    y: 0,
+    opacity: 1,
+    clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
+    duration: 1.0,
+    ease: 'power3.out'
+  }, "-=0.8") // Subtitle rising
+
+  .to('.hero-cta-wrap', {
+    y: 0,
+    opacity: 1,
+    duration: 0.85,
+    ease: 'power3.out'
+  }, "-=0.75"); // CTA buttons rising
 })();
 
 

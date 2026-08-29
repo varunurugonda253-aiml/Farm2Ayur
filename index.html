@@ -17,21 +17,36 @@
   <link rel="stylesheet" href="assets/css/components.css">
   <link rel="stylesheet" href="assets/css/overrides.css">
 
-  <!-- GSAP Core & ScrollTrigger CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
-
-  <script src="runtime/app.js" defer></script>
-  <script src="runtime/extensions.js" defer></script>
-  <script src="runtime/animations.js" defer></script>
-  <script src="runtime/cursor-trail.js" defer></script>
+  <!-- Application JS Modules -->
+  <script type="module" src="./public/runtime/app.js"></script>
+  <script type="module" src="./public/runtime/extensions.js"></script>
+  <script type="module" src="./public/runtime/animations.js"></script>
+  <script type="module" src="./public/runtime/cursor-trail.js"></script>
 
   <!-- Custom CSS Overrides for Redesign -->
 </head>
 <body>
 
-  <div class="ambient-aurora" aria-hidden="true"></div>
-  <canvas id="ambient-canvas" aria-hidden="true"></canvas>
+  <!-- BeeToGreen Inspired Opening Intro Overlay -->
+  <div id="intro-overlay" class="intro-overlay" aria-hidden="true">
+    <div class="intro-content">
+      <div class="intro-brand-container">
+        <!-- Step 1: Centered Leaf Logo -->
+        <div class="intro-icon-box">
+          <span class="intro-icon">🌿</span>
+        </div>
+        <!-- Step 2: Title & Subtitle popping out from behind logo -->
+        <div class="intro-text-box">
+          <h1 class="intro-title">
+            <span class="intro-text">Farm<span class="intro-highlight">2</span>Ayur</span>
+          </h1>
+          <p class="intro-subtitle">Ayurvedic Herb Traceability Platform</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ambient canvas removed — replaced by hero video background -->
 
   <!-- Background Blur Overlays for Modern UI -->
   <div class="glow-orb glow-1"></div>
@@ -87,16 +102,36 @@
     <section id="home" class="page-view active">
       <!-- Broad Hero Section -->
       <div class="hero-section">
+        <!-- Fullscreen looping background video -->
+        <video
+          id="hero-bg-video"
+          class="hero-bg-video"
+          src="/hero-bg.mp4"
+          autoplay
+          loop
+          muted
+          playsinline
+          aria-hidden="true"
+        ></video>
+        <div class="hero-bg-overlay" aria-hidden="true"></div>
         <div class="hero-content">
-          <h1 class="hero-title animate-slide-up">
-            <span class="hero-title-main">Discover the Plants Behind</span>
-            <span class="ayurveda-word">Ayurveda</span>
+          <h1 class="hero-title">
+            <div class="hero-line-mask">
+              <span class="hero-title-main">Discover the Plants Behind</span>
+            </div>
+            <div class="hero-line-mask">
+              <span class="ayurveda-word">Ayurveda</span>
+            </div>
           </h1>
-          <p class="hero-subtitle animate-slide-up-delay">Identify medicinal herbs with AI scanning technology, explore authentic botanical properties, and understand crop-to-remedy traceability logs.</p>
+          <div class="hero-line-mask">
+            <p class="hero-subtitle">Identify medicinal herbs with AI scanning technology, explore authentic botanical properties, and understand crop-to-remedy traceability logs.</p>
+          </div>
           
-          <div class="hero-cta-wrap animate-slide-up-delay-2">
-            <a href="#scan" class="btn btn-secondary" id="heroScanBtn">Scan Your Leaf</a>
-            <a href="#explore" class="btn btn-outline">Explore Herbs</a>
+          <div class="hero-line-mask">
+            <div class="hero-cta-wrap">
+              <a href="#scan" class="btn btn-secondary" id="heroScanBtn">Scan Your Leaf</a>
+              <a href="#explore" class="btn btn-outline">Explore Herbs</a>
+            </div>
           </div>
         </div>
       </div>

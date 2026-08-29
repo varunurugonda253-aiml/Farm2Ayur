@@ -17,6 +17,10 @@
   <link rel="stylesheet" href="assets/css/components.css">
   <link rel="stylesheet" href="assets/css/overrides.css">
 
+  <!-- GSAP Core & ScrollTrigger CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
+
   <script src="runtime/app.js" defer></script>
   <script src="runtime/extensions.js" defer></script>
   <script src="runtime/animations.js" defer></script>
@@ -46,6 +50,7 @@
         <ul class="nav-links">
           <li><a href="#home" class="nav-item active" data-view="home">Home</a></li>
           <li><a href="#explore" class="nav-item" data-view="explore">Explore</a></li>
+          <li><a href="#scan" class="nav-item" data-view="scan">Scan</a></li>
           <li><a href="#supply-chain" class="nav-item" data-view="supply-chain">Supply Chain</a></li>
         </ul>
       </nav>
@@ -66,6 +71,7 @@
       <ul class="mobile-nav-links">
         <li><a href="#home" class="mobile-nav-item active" data-view="home">Home</a></li>
         <li><a href="#explore" class="mobile-nav-item" data-view="explore">Explore</a></li>
+        <li><a href="#scan" class="mobile-nav-item" data-view="scan">Scan</a></li>
         <li><a href="#supply-chain" class="mobile-nav-item" data-view="supply-chain">Supply Chain</a></li>
       </ul>
       <div class="mobile-nav-cta">
@@ -81,7 +87,6 @@
     <section id="home" class="page-view active">
       <!-- Broad Hero Section -->
       <div class="hero-section">
-        <div class="hero-overlay"></div>
         <div class="hero-content">
           <h1 class="hero-title animate-slide-up">
             <span class="hero-title-main">Discover the Plants Behind</span>

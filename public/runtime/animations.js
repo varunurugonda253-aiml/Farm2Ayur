@@ -183,32 +183,53 @@ window.addEventListener('load', () => {
    * Recursively split text content of a heading into individual
    * word spans wrapped inside a clip-mask span.
    *
-   * Preserves nested child elements (like <span class="ayurveda-word">)
-   * by recursing into children instead of replacing innerHTML when
-   * child elements are detected. This protects gradient and font styles.
+   * Preserves nested child elements (like <strong> or <span class="ayurveda-word">)
+   * by traversing all child nodes (both text nodes and elements) instead
+   * of just element children. This protects gradient, font, and bold styles.
    *
    * @param {HTMLElement} element - The heading element to process
    */
   function splitIntoWords(element) {
-    // Skip if already processed
-    if (element.classList.contains('words-split')) return;
+    // Skip if already processed or if it's a script/style tag
+    if (element.classList && element.classList.contains('words-split')) return;
 
-    if (element.children.length > 0) {
-      // Element has child tags � recurse into leaf text nodes only
-      Array.from(element.children).forEach(child => splitIntoWords(child));
+    const nodes = Array.from(element.childNodes);
+    nodes.forEach(node => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        const text = node.textContent;
+        // Skip if text is empty/whitespace
+        if (text.trim() === '') return;
+
+        // Split text by whitespace, preserving whitespace elements in the array
+        const words = text.split(/(\s+)/);
+        const fragment = document.createDocumentFragment();
+
+        words.forEach(word => {
+          if (word.trim() === '') {
+            // Keep whitespace as-is
+            fragment.appendChild(document.createTextNode(word));
+          } else {
+            // Wrap words in clip-mask and reveal containers
+            const maskSpan = document.createElement('span');
+            maskSpan.className = 'word-mask';
+            const revealSpan = document.createElement('span');
+            revealSpan.className = 'reveal-word';
+            revealSpan.textContent = word;
+            maskSpan.appendChild(revealSpan);
+            fragment.appendChild(maskSpan);
+          }
+        });
+
+        node.parentNode.replaceChild(fragment, node);
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        // Recurse into child elements
+        splitIntoWords(node);
+      }
+    });
+
+    if (element.classList) {
       element.classList.add('words-split');
-      return;
     }
-
-    const text = element.textContent.trim();
-    if (!text) return;
-
-    // Replace raw text with one word-mask+reveal-word pair per word
-    element.innerHTML = text.split(/\s+/).map(word =>
-      `<span class="word-mask"><span class="reveal-word">${word}</span></span>`
-    ).join(' ');
-
-    element.classList.add('words-split');
   }
 
   /**

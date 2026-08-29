@@ -15,13 +15,14 @@
   document.head.appendChild(cursorStyle);
 
   const context = canvas.getContext('2d');
-  const trail = [];
-  const tailLength = 200;
-  const maxTrailPoints = 32;
-  const tailColors = ['#34d399', '#60a5fa', '#a855f7'];
   const clickRipples = [];
-  let cursor = null;
-  let hideTimer = null;
+  
+  // Easing/Lerping parameters
+  const numPoints = 12;
+  const points = [];
+  const mouse = { x: 0, y: 0 };
+  let isInitialized = false;
+  let isInside = false;
   let pixelRatio = window.devicePixelRatio || 1;
 
   function resizeCanvas() {
@@ -31,13 +32,48 @@
     context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
   }
 
-  function drawTrail() {
+  // Handle mouse moves and initialize coordinates
+  window.addEventListener('mousemove', (event) => {
+    isInside = true;
+    mouse.x = event.clientX;
+    mouse.y = event.clientY;
+
+    if (!isInitialized) {
+      // Initialize all points at the current mouse position
+      for (let i = 0; i < numPoints; i++) {
+        points.push({ x: mouse.x, y: mouse.y });
+      }
+      isInitialized = true;
+    }
+  });
+
+  // Track click ripples
+  window.addEventListener('click', (event) => {
+    clickRipples.push({ x: event.clientX, y: event.clientY, startedAt: performance.now() });
+  });
+
+  document.addEventListener('mouseleave', () => {
+    isInside = false;
+  });
+
+  document.addEventListener('mouseenter', () => {
+    isInside = true;
+  });
+
+  function tick(now) {
+    // Clear canvas
     context.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
-    const now = performance.now();
-    const shimmer = 14 + Math.sin(now / 120) * 5;
-    clickRipples.forEach((ripple) => {
+    // 1. Draw click ripples
+    for (let index = clickRipples.length - 1; index >= 0; index -= 1) {
+      const ripple = clickRipples[index];
       const progress = Math.min((now - ripple.startedAt) / 450, 1);
+      
+      if (progress >= 1) {
+        clickRipples.splice(index, 1);
+        continue;
+      }
+
       const radius = 5 + progress * 28;
       context.beginPath();
       context.arc(ripple.x, ripple.y, radius, 0, Math.PI * 2);
@@ -46,113 +82,71 @@
       context.shadowColor = '#34d399';
       context.shadowBlur = 10;
       context.stroke();
-    });
-
-    if (!cursor) {
-      return;
+      context.shadowBlur = 0; // reset
     }
 
-    const visiblePoints = [cursor];
-    let remainingLength = tailLength;
+    // If initialized and mouse is on screen, update and draw trail
+    if (isInitialized) {
+      // Update trail physics (Point 0 follows mouse, others follow previous point)
+      // Ease factor determines how fast they follow. A smaller factor makes the tail longer and lag behind more.
+      const easeFactor = 0.45;
+      
+      // Update first point
+      points[0].x += (mouse.x - points[0].x) * easeFactor;
+      points[0].y += (mouse.y - points[0].y) * easeFactor;
 
-    for (let index = trail.length - 1; index >= 0 && remainingLength > 0; index -= 1) {
-      const nextPoint = trail[index];
-      const previousPoint = visiblePoints[visiblePoints.length - 1];
-      const distance = Math.hypot(previousPoint.x - nextPoint.x, previousPoint.y - nextPoint.y);
-
-      if (distance <= remainingLength) {
-        visiblePoints.push(nextPoint);
-        remainingLength -= distance;
-      } else {
-        const ratio = remainingLength / distance;
-        visiblePoints.push({
-          x: previousPoint.x + (nextPoint.x - previousPoint.x) * ratio,
-          y: previousPoint.y + (nextPoint.y - previousPoint.y) * ratio,
-        });
-        break;
+      // Update remaining points
+      for (let i = 1; i < numPoints; i++) {
+        points[i].x += (points[i-1].x - points[i].x) * easeFactor;
+        points[i].y += (points[i-1].y - points[i].y) * easeFactor;
       }
-    }
 
-    if (visiblePoints.length > 1) {
-      for (let index = visiblePoints.length - 2; index >= 0; index -= 1) {
-        const start = visiblePoints[index + 1];
-        const end = visiblePoints[index];
+      const shimmer = 14 + Math.sin(now / 120) * 5;
+
+      // Draw the tail segments
+      // We loop backwards to draw the tail ends first (underneath)
+      for (let i = numPoints - 1; i > 0; i--) {
+        const start = points[i];
+        const end = points[i - 1];
+
+        // Check if segments are virtually at the same point to avoid drawing artifacts
+        const dist = Math.hypot(start.x - end.x, start.y - end.y);
+        if (dist < 0.1) continue;
+
+        // Calculate fade and width tapering
+        const ratio = i / numPoints; // 0 (near cursor) to 1 (near tail end)
+        const opacity = 1 - ratio;
+        const width = 2.5 * (1 - ratio);
+
         context.beginPath();
         context.moveTo(start.x, start.y);
         context.lineTo(end.x, end.y);
-        context.lineWidth = 2;
-        context.strokeStyle = tailColors[index % tailColors.length];
-        context.shadowColor = context.strokeStyle;
-        context.shadowBlur = shimmer;
+        context.lineWidth = width;
+        context.strokeStyle = `rgba(52, 211, 153, ${opacity})`;
+        context.shadowColor = '#34d399';
+        context.shadowBlur = shimmer * (1 - ratio);
         context.stroke();
+        context.shadowBlur = 0; // reset
+      }
+
+      // Draw the main cursor dot (only if mouse is inside the window)
+      if (isInside) {
+        context.beginPath();
+        context.arc(mouse.x, mouse.y, 6, 0, Math.PI * 2);
+        context.fillStyle = '#34d399';
+        context.shadowColor = '#34d399';
+        context.shadowBlur = 22;
+        context.fill();
+        context.shadowBlur = 0; // reset
       }
     }
 
-    context.beginPath();
-    context.arc(cursor.x, cursor.y, 6, 0, Math.PI * 2);
-    context.fillStyle = '#34d399';
-    context.shadowColor = '#34d399';
-    context.shadowBlur = 22;
-    context.fill();
-    context.shadowBlur = 0;
+    requestAnimationFrame(tick);
   }
-
-  function clearTrail() {
-    window.clearTimeout(hideTimer);
-    trail.length = 0;
-    cursor = null;
-    context.clearRect(0, 0, window.innerWidth, window.innerHeight);
-  }
-
-  function clearTail() {
-    trail.length = 0;
-    drawTrail();
-  }
-
-  window.addEventListener('mousemove', (event) => {
-    window.clearTimeout(hideTimer);
-    const nextCursor = { x: event.clientX, y: event.clientY };
-
-    if (cursor) {
-      trail.push(cursor);
-    }
-
-    cursor = nextCursor;
-
-    if (trail.length > maxTrailPoints) {
-      trail.shift();
-    }
-
-    drawTrail();
-    hideTimer = window.setTimeout(clearTail, 100);
-  });
-
-  window.addEventListener('click', (event) => {
-    clickRipples.push({ x: event.clientX, y: event.clientY, startedAt: performance.now() });
-    drawTrail();
-    window.requestAnimationFrame(animateRipples);
-  });
-
-  function animateRipples() {
-    const now = performance.now();
-    for (let index = clickRipples.length - 1; index >= 0; index -= 1) {
-      if (now - clickRipples[index].startedAt >= 450) {
-        clickRipples.splice(index, 1);
-      }
-    }
-
-    drawTrail();
-    if (clickRipples.length > 0) {
-      window.requestAnimationFrame(animateRipples);
-    }
-  }
-
-  window.addEventListener('resize', () => {
-    resizeCanvas();
-    drawTrail();
-  });
-
-  document.addEventListener('mouseleave', clearTrail);
 
   resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+  
+  // Start loop
+  requestAnimationFrame(tick);
 })();

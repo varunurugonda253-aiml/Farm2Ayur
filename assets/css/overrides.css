@@ -1,3 +1,6 @@
+/* GSAP Staggered Split-Word Reveal
+   Vibe: Words pop up and rotate into view sequentially from behind an invisible clip path as you scroll into the section.
+   Best For: Scroll-triggered headings across your page sections. */
 /*
  * =============================================================
  * Farm2Ayur � CSS Overrides & Feature Styles
@@ -44,20 +47,11 @@ select option {
   background: var(--bg-dark);
   color: var(--text-light);
 }
-
-
 /* =============================================================
    HERO SECTION
    ============================================================= */
 .hero-section {
   border-bottom: none !important;
-}
-
-.hero-overlay {
-  background: linear-gradient(
-    rgba(12, 18, 14, 0.45) 0%,
-    rgba(12, 18, 14, 1) 100%
-  ) !important;
 }
 
 .hero-cta-wrap {
@@ -95,8 +89,7 @@ select option {
   transform: translateY(-0.06em) rotate(-1.5deg);
   -webkit-text-stroke: 0.3px rgba(255, 255, 255, 0.2);
   filter:
-    drop-shadow(0 4px 12px rgba(52, 211, 153, 0.25))
-    drop-shadow(0 2px 5px rgba(0, 0, 0, 0.8));
+    drop-shadow(0 4px 12px rgba(52, 211, 153, 0.25)) drop-shadow(0 2px 5px rgba(0, 0, 0, 0.8));
 }
 
 
@@ -124,12 +117,10 @@ select option {
   height: 100%;
   pointer-events: none;
   z-index: 0;
-  background: radial-gradient(
-    circle at 50% 50%,
-    rgba(15, 80, 50, 0.55) 0%,
-    rgba(0, 40, 24, 0.15) 50%,
-    transparent 80%
-  );
+  background: radial-gradient(circle at 50% 50%,
+      rgba(15, 80, 50, 0.55) 0%,
+      rgba(0, 40, 24, 0.15) 50%,
+      transparent 80%);
   opacity: 0.85;
   animation: aurora-pulse 8s ease-in-out infinite alternate;
 }
@@ -139,17 +130,28 @@ select option {
 }
 
 /* Keep the visible site above the background without changing fixed overlays. */
-body > .app-header,
-body > .main-content,
-body > .app-footer {
+body>.app-header,
+body>.main-content,
+body>.app-footer {
   position: relative;
   z-index: 2;
 }
 
 @keyframes aurora-pulse {
-  0%   { transform: scale(1)    translate(0, 0);    opacity: 0.7; }
-  50%  { transform: scale(1.15) translate(1%, 1%);  opacity: 0.9; }
-  100% { transform: scale(1)    translate(-1%, -1%); opacity: 0.7; }
+  0% {
+    transform: scale(1) translate(0, 0);
+    opacity: 0.7;
+  }
+
+  50% {
+    transform: scale(1.15) translate(1%, 1%);
+    opacity: 0.9;
+  }
+
+  100% {
+    transform: scale(1) translate(-1%, -1%);
+    opacity: 0.7;
+  }
 }
 
 
@@ -210,9 +212,17 @@ body > .app-footer {
 }
 
 @keyframes laser-scan {
-  0%   { top: 0%; }
-  50%  { top: 100%; }
-  100% { top: 0%; }
+  0% {
+    top: 0%;
+  }
+
+  50% {
+    top: 100%;
+  }
+
+  100% {
+    top: 0%;
+  }
 }
 
 .scanner-grid-overlay {
@@ -222,8 +232,8 @@ body > .app-footer {
   width: 100%;
   height: 100%;
   background:
-    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
   background-size: 24px 24px;
   pointer-events: none;
   opacity: 0.5;
@@ -305,8 +315,15 @@ body > .app-footer {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .result-header {
@@ -381,7 +398,7 @@ body > .app-footer {
   background: var(--primary-green);
   border: 1.5px solid var(--gold-accent);
   color: var(--text-light);
-  box-shadow: 0 5px 25px rgba(0,0,0,0.6), var(--shadow-glow);
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.6), var(--shadow-glow);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -394,7 +411,7 @@ body > .app-footer {
 .chatbot-trigger:hover {
   transform: scale(1.06) rotate(5deg);
   background: var(--secondary-green);
-  box-shadow: 0 5px 25px rgba(0,0,0,0.7), 0 0 20px rgba(212,175,55,0.3);
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.7), 0 0 20px rgba(212, 175, 55, 0.3);
 }
 
 /* Panel is invisible until JS adds .open */
@@ -475,7 +492,7 @@ body > .app-footer {
 }
 
 .chat-msg.bot {
-  background: rgba(255,255,255,0.04);
+  background: rgba(255, 255, 255, 0.04);
   align-self: flex-start;
   border-bottom-left-radius: 0;
   border-left: 2px solid var(--gold-accent);
@@ -491,7 +508,7 @@ body > .app-footer {
 .chatbot-footer {
   padding: 0.75rem;
   border-top: 1px solid var(--border-glass);
-  background: rgba(0,0,0,0.25);
+  background: rgba(0, 0, 0, 0.25);
 }
 
 .chatbot-presets {
@@ -502,7 +519,7 @@ body > .app-footer {
 
 .preset-query-btn {
   text-align: left;
-  background: rgba(255,255,255,0.01);
+  background: rgba(255, 255, 255, 0.01);
   border: 1px solid var(--border-glass);
   border-radius: 6px;
   padding: 0.4rem 0.6rem;
@@ -526,7 +543,7 @@ body > .app-footer {
 
 .chatbot-input {
   flex: 1;
-  background: rgba(0,0,0,0.3);
+  background: rgba(0, 0, 0, 0.3);
   border: 1px solid var(--border-glass);
   border-radius: 4px;
   padding: 0.4rem 0.6rem;
@@ -577,7 +594,7 @@ body > .app-footer {
   overflow: hidden;
   border-radius: var(--border-radius-sm);
   border: 1px solid var(--border-glass);
-  background: rgba(0,0,0,0.2);
+  background: rgba(0, 0, 0, 0.2);
 }
 
 .herb-card-img-wrap img {
@@ -624,6 +641,7 @@ body > .app-footer {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
@@ -633,4 +651,3 @@ body > .app-footer {
     transition-duration: 0.01ms !important;
   }
 }
-

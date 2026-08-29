@@ -398,7 +398,6 @@
 
       // Initial UIs load
       setUserLoggedIn(isUserLoggedIn());
-
       // Action helper for Hero Scan button
       const heroScanBtn = document.getElementById('heroScanBtn');
       if (heroScanBtn) {
@@ -414,7 +413,6 @@
           }
         });
       }
-
       // FAQ accordion trigger fixes (since accordion triggers were already attached in app.js, we don't interfere, but double check)
       
       // SUPPLY CHAIN SHORTCUT REDIRECT FIX (footer)

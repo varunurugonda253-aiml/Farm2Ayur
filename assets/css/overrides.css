@@ -1583,6 +1583,108 @@ body>.app-footer {
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
 }
 
+/* =============================================================
+   FOOTER SLIDE ANIMATED BUTTON & CTA LAYOUT
+   ============================================================= */
+.app-footer .footer-grid {
+  display: grid !important;
+  grid-template-columns: 1.8fr 1fr 1fr 1fr auto !important;
+  align-items: center !important;
+  gap: 1.5rem !important;
+  max-width: 1280px !important;
+}
+
+.footer-cta-col {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding-top: 1.8rem !important; /* Positioned next to Demo Batches, a little lower in the center */
+  white-space: nowrap !important;
+}
+
+.footer-slide-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.4rem;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: #a7f3d0;
+  text-decoration: none;
+  border-radius: 50px;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  background: rgba(10, 26, 20, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  overflow: hidden;
+  z-index: 1;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), 0 0 12px rgba(16, 185, 129, 0.15);
+  transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Sliding liquid overlay fill */
+.footer-slide-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+  transform: translateX(-101%);
+  transition: transform 0.45s cubic-bezier(0.25, 1, 0.5, 1);
+  z-index: -1;
+  border-radius: 50px;
+}
+
+/* Button inner text */
+.footer-slide-btn .btn-text {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: color 0.35s ease;
+}
+
+.footer-slide-btn .btn-arrow {
+  display: inline-block;
+  transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Hover State Effects: Slide in background, change text & border color, radiant green glow */
+.footer-slide-btn:hover {
+  border-color: #34d399 !important;
+  transform: translateY(-3px);
+  box-shadow: 0 0 25px rgba(16, 185, 129, 0.7), 0 0 45px rgba(52, 211, 153, 0.4), 0 10px 25px rgba(0, 0, 0, 0.6) !important;
+}
+
+.footer-slide-btn:hover::before {
+  transform: translateX(0);
+}
+
+.footer-slide-btn:hover .btn-text {
+  color: #022c22 !important;
+}
+
+.footer-slide-btn:hover .btn-arrow {
+  transform: translateX(4px);
+}
+
+@media (max-width: 1024px) {
+  .app-footer .footer-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .footer-cta-col {
+    grid-column: span 2 !important;
+    justify-content: center !important;
+    padding-top: 0.5rem !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
 
   *,

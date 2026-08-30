@@ -1,28 +1,45 @@
+/**
+ * ==========================================================================
+ * FARM2AYUR – BASE DESIGN SYSTEM & TOKENS
+ * File: assets/css/style.css
+ *
+ * TABLE OF CONTENTS:
+ * 1. Design Tokens & Root Variables
+ * 2. Reset & CSS Normalization
+ * 3. Base Layout & Typography
+ * 4. Button & Interaction Utilities
+ * 5. Card Systems & Glassmorphism Surfaces
+ * 6. Responsive Breakpoint Media Queries
+ * ==========================================================================
+ */
+
 /* ==========================================================================
-   DESIGN TOKENS & SYSTEM VARIABLES
+   1. DESIGN TOKENS & SYSTEM VARIABLES
    ========================================================================== */
 :root {
-  /* Colors */
-  --primary-green: #1e3a27;      /* Dark Forest Green */
-  --primary-green-rgb: 30, 58, 39;
-  --secondary-green: #2d5a3c;    /* Medium Sage Green */
-  --light-sage: #8fbc8f;         /* Accent Sage */
-  --gold-accent: #d4af37;        /* Gold Highlight */
-  --gold-accent-rgb: 212, 175, 55;
-  --emerald: #4caf50;            /* Success/Purity Tag */
-  --danger-red: #c62828;         /* Error state */
+  /* Colors - Bio-Tech Emerald (Fresh & Modern) Theme */
+  --primary-green: #06100e;          /* Deep Forest Black */
+  --primary-green-rgb: 6, 16, 14;
+  --secondary-green: #10b981;        /* Neon Emerald Accent */
+  --light-sage: #a7f3d0;             /* Secondary Green-White */
+  --gold-accent: #10b981;            /* Neon Emerald Glow */
+  --gold-accent-rgb: 16, 185, 129;
+  --cyan-accent: #06b6d4;            /* Cyan Glow Accent */
+  --cyan-accent-rgb: 6, 182, 212;
+  --emerald: #10b981;                /* Neon Emerald Tag */
+  --danger-red: #ef4444;             /* Error State */
   
   /* Backgrounds */
-  --bg-dark: #0c120e;            /* Deep Forest Black */
-  --bg-card: rgba(21, 35, 26, 0.7); /* Glassmorphism Base Card */
-  --bg-glass-nav: rgba(12, 18, 14, 0.8);
-  --border-glass: rgba(255, 255, 255, 0.08);
-  --border-glass-focus: rgba(212, 175, 55, 0.3);
+  --bg-dark: #06100e;                /* Deep Forest Black */
+  --bg-card: rgba(10, 30, 24, 0.6);   /* Emerald Glass Card */
+  --bg-glass-nav: rgba(6, 16, 14, 0.88);
+  --border-glass: rgba(16, 185, 129, 0.25);
+  --border-glass-focus: rgba(6, 182, 212, 0.5);
   
   /* Text */
-  --text-light: #f0f4f1;         /* Bright Ivory */
-  --text-muted: #9cafa2;         /* Soft Sage Gray */
-  --text-dark: #0f1812;          /* Near Black for highlights */
+  --text-light: #f1f5f9;             /* Primary White-Slate */
+  --text-muted: #a7f3d0;             /* Secondary Green-White Muted */
+  --text-dark: #06100e;              /* Deep Forest Black contrast */
   
   /* Fonts */
   --font-display: 'Outfit', sans-serif;
@@ -38,8 +55,8 @@
   
   /* Transitions & Shadows */
   --transition-smooth: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
-  --shadow-premium: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
-  --shadow-glow: 0 0 20px rgba(212, 175, 55, 0.15);
+  --shadow-premium: 0 10px 35px -10px rgba(0, 0, 0, 0.9);
+  --shadow-glow: 0 0 25px rgba(16, 185, 129, 0.4);
   --border-radius-sm: 8px;
   --border-radius-md: 16px;
   --border-radius-lg: 24px;
@@ -595,7 +612,7 @@ html:active-view-transition-type(backward)::view-transition-new(root) {
 
 .hero-subtitle {
   font-size: 1.25rem;
-  color: var(--text-muted);
+  color: #ffffff !important;
   max-width: 600px;
   margin: 0 auto 2.5rem;
 }
@@ -1713,10 +1730,11 @@ html:active-view-transition-type(backward)::view-transition-new(root) {
 }
 .footer-links-col a {
   font-size: 0.85rem;
-  color: var(--text-muted);
+  color: #ffffff;
+  transition: color 0.2s ease;
 }
 .footer-links-col a:hover {
-  color: var(--text-light);
+  color: #10b981;
 }
 
 .footer-bottom {
@@ -1724,7 +1742,7 @@ html:active-view-transition-type(backward)::view-transition-new(root) {
   padding: var(--spacing-sm) 0;
   text-align: center;
   font-size: 0.8rem;
-  color: var(--text-muted);
+  color: #ffffff;
 }
 
 /* ==========================================================================

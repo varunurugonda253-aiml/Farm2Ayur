@@ -78,8 +78,8 @@
       context.beginPath();
       context.arc(ripple.x, ripple.y, radius, 0, Math.PI * 2);
       context.lineWidth = 1.5;
-      context.strokeStyle = `rgba(52, 211, 153, ${0.7 * (1 - progress)})`;
-      context.shadowColor = '#34d399';
+      context.strokeStyle = `rgba(16, 185, 129, ${0.7 * (1 - progress)})`;
+      context.shadowColor = '#10b981';
       context.shadowBlur = 10;
       context.stroke();
       context.shadowBlur = 0; // reset
@@ -122,8 +122,8 @@
         context.moveTo(start.x, start.y);
         context.lineTo(end.x, end.y);
         context.lineWidth = width;
-        context.strokeStyle = `rgba(52, 211, 153, ${opacity})`;
-        context.shadowColor = '#34d399';
+        context.strokeStyle = `rgba(16, 185, 129, ${opacity})`;
+        context.shadowColor = '#10b981';
         context.shadowBlur = shimmer * (1 - ratio);
         context.stroke();
         context.shadowBlur = 0; // reset
@@ -133,8 +133,8 @@
       if (isInside) {
         context.beginPath();
         context.arc(mouse.x, mouse.y, 6, 0, Math.PI * 2);
-        context.fillStyle = '#34d399';
-        context.shadowColor = '#34d399';
+        context.fillStyle = '#10b981';
+        context.shadowColor = '#06b6d4';
         context.shadowBlur = 22;
         context.fill();
         context.shadowBlur = 0; // reset

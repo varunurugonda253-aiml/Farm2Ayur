@@ -244,10 +244,8 @@ const nodeDetails = {
 /* Page Navigation Menu Order for Directional Transitions */
 const pageOrder = [
   'home',
-  'explore',
   'herbs',
   'supply-chain',
-  'knowledge',
   'contribute',
   'about',
   'contact'

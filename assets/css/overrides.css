@@ -1,9 +1,25 @@
+/**
+ * ==========================================================================
+ * FARM2AYUR – CSS OVERACTION & ADVANCED COMPONENT STYLES
+ * File: assets/css/overrides.css
+ *
+ * TABLE OF CONTENTS:
+ * 1. Intro Overlay (BeeToGreen Inspired Opening Reveal)
+ * 2. Header & Glass Navigation Bar
+ * 3. Level 2 Hero Title & Upward Masked Reveal
+ * 4. Section 2: Platform Flow 3D Orbit Carousel & Glass Cards
+ * 5. Section 3: Track Your Herb 3D Pop Card Stage
+ * 6. AI Leaf Scanner & Interactive Components
+ * 7. Footer & Typography Overrides
+ * ==========================================================================
+ */
+
 /* GSAP Staggered Split-Word Reveal
    Vibe: Words pop up and rotate into view sequentially from behind an invisible clip path as you scroll into the section.
    Best For: Scroll-triggered headings across your page sections. */
 /*
  * =============================================================
- * Farm2Ayur � CSS Overrides & Feature Styles
+ * Farm2Ayur  CSS Overrides & Feature Styles
  * File: assets/css/overrides.css
  *
  * Extends the base design system (style.css) with component-specific
@@ -22,7 +38,7 @@
   width: 100vw;
   height: 100vh;
   z-index: 999999;
-  background: radial-gradient(circle at center, #0e2014 0%, #050d07 100%);
+  background: radial-gradient(circle at center, #0a241e 0%, #06100e 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -59,7 +75,7 @@
 .intro-icon {
   font-size: clamp(3.5rem, 8vw, 5.5rem);
   line-height: 1;
-  filter: drop-shadow(0 0 30px rgba(46, 204, 113, 0.7));
+  filter: drop-shadow(0 0 30px rgba(56, 189, 248, 0.75));
   display: inline-block;
   will-change: transform, filter;
 }
@@ -91,7 +107,7 @@
 }
 
 .intro-highlight {
-  color: #2ecc71;
+  color: #38bdf8;
 }
 
 .intro-subtitle {
@@ -121,9 +137,14 @@
   will-change: transform, opacity, clip-path;
 }
 
-.hero-subtitle {
+.hero-subtitle,
+p.hero-subtitle,
+.hero-section p {
   display: block;
   will-change: transform, opacity, clip-path;
+  color: #ffffff !important;
+  font-weight: 500 !important;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.95), 0 1px 5px rgba(0, 0, 0, 0.9) !important;
 }
 
 .hero-cta-wrap {
@@ -140,8 +161,8 @@ body {
 
 /* Keep text readable over every dark or translucent surface. */
 :root {
-  --text-muted: #c3d1c8;
-  --border-glass: rgba(255, 255, 255, 0.16);
+  --text-muted: #a7f3d0;
+  --border-glass: rgba(16, 185, 129, 0.25);
 }
 
 p,
@@ -157,13 +178,13 @@ textarea,
 
 input::placeholder,
 textarea::placeholder {
-  color: #b9c9bf;
-  opacity: 1;
+  color: #a7f3d0;
+  opacity: 0.8;
 }
 
 select option {
-  background: var(--bg-dark);
-  color: var(--text-light);
+  background: #06100e;
+  color: #f1f5f9;
 }
 /* =============================================================
    HERO SECTION — FULLSCREEN VIDEO COVERAGE (ZERO UPPER GAP)
@@ -188,7 +209,7 @@ select option {
   border-bottom: none !important;
 }
 
-/* Fullscreen looping background video starting from top 0 */
+/* Fullscreen looping background video with enhanced brightness & sunlight visibility */
 .hero-bg-video {
   position: absolute !important;
   top: 0 !important;
@@ -200,9 +221,12 @@ select option {
   z-index: 0 !important;
   pointer-events: none !important;
   user-select: none !important;
+  will-change: transform !important;
+  transform-origin: center center !important;
+  filter: brightness(1.22) contrast(1.08) saturate(1.15) !important;
 }
 
-/* Darker overlay to ensure text legibility over video */
+/* Light transparent vignette overlay allowing sunlight rays to shine through */
 .hero-bg-overlay {
   position: absolute !important;
   top: 0 !important;
@@ -210,12 +234,13 @@ select option {
   width: 100% !important;
   height: 100% !important;
   z-index: 1 !important;
-  background: linear-gradient(
-    180deg,
-    rgba(2, 8, 4, 0.65) 0%,
-    rgba(2, 8, 4, 0.45) 45%,
-    rgba(2, 8, 4, 0.75) 100%
+  background: radial-gradient(
+    circle at 50% 30%,
+    rgba(6, 16, 14, 0.12) 0%,
+    rgba(6, 16, 14, 0.35) 65%,
+    rgba(6, 16, 14, 0.65) 100%
   ) !important;
+  pointer-events: none !important;
 }
 
 /* Hero content sits above video + overlay */
@@ -231,43 +256,65 @@ select option {
   margin-top: 2rem;
 }
 
-/* inline-block lets GSAP wrap words cleanly */
+/* inline-block lets GSAP wrap words cleanly & handle scroll parallax */
 .hero-title {
   display: inline-block;
+  will-change: transform, opacity !important;
+  transform-origin: center center !important;
 }
 
-/* "Discover the Plants Behind" - soft sage-silver gradient */
+/* "Discover the Plants Behind" - Primary Slate-White heading */
 .hero-title-main {
-  background: linear-gradient(135deg, #ffffff 30%, #d4ede1 75%, #a6dbbf 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #f1f5f9 !important;
   display: inline-block;
   vertical-align: middle;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.95);
+  filter: drop-shadow(0 4px 15px rgba(0, 0, 0, 0.95));
 }
 
-/* "Ayurveda" - hand-lettered calligraphic script with emerald-to-gold gradient */
+/* "Ayurveda" - Radiant Neon Emerald text with crisp glow shadow */
 .ayurveda-word {
-  font-family: 'Pinyon Script', 'Great Vibes', 'Nautilus Pompilius', 'La Parisienne', 'Watermelon', cursive;
-  font-size: 2em;
-  font-weight: 400;
-  background: linear-gradient(135deg, #10b981 0%, #34d399 30%, #fbbf24 65%, #ffe082 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-family: 'Outfit', 'Lora', sans-serif;
+  font-size: 1.8em;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #10b981 !important;
   display: inline-block;
   vertical-align: middle;
   padding: 0 0.1em;
-  transform: translateY(-0.06em) rotate(-1.5deg);
-  -webkit-text-stroke: 0.3px rgba(255, 255, 255, 0.2);
-  filter:
-    drop-shadow(0 4px 12px rgba(52, 211, 153, 0.25)) drop-shadow(0 2px 5px rgba(0, 0, 0, 0.8));
+  text-shadow: 0 0 30px rgba(16, 185, 129, 0.95), 0 0 15px rgba(6, 182, 212, 0.8), 0 4px 20px rgba(0, 0, 0, 0.95);
+  filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.95));
+}
+
+.ayurveda-word .anime-char {
+  color: #10b981 !important;
+  -webkit-text-fill-color: #10b981 !important;
+  text-shadow: 0 0 25px rgba(16, 185, 129, 0.95), 0 0 12px rgba(6, 182, 212, 0.8), 0 4px 16px rgba(0, 0, 0, 0.95) !important;
+}
+
+.hero-line-mask {
+  overflow: visible !important;
+  display: block;
+  position: relative;
+  padding-top: 2rem;
+  margin-top: -2rem;
+}
+
+.anime-char {
+  display: inline-block !important;
+  white-space: pre !important;
+  position: relative !important;
+  transform-origin: center bottom !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 
 /* =============================================================
-   FLOATING NAVBAR (BEETOGREEN INSPIRED) — Positioned Down from Top
+   FLOATING NAVBAR — Ultra Sleek Transparent Glass Header
    ============================================================= */
 
-/* Floating header positioned down from top wall */
+/* Floating 100% see-through transparent header positioned down from top wall */
 .app-header {
   position: fixed !important;
   top: 1.25rem !important;
@@ -276,12 +323,12 @@ select option {
   width: calc(100% - 2.5rem) !important;
   max-width: 1280px !important;
   z-index: 1000 !important;
-  background: rgba(255, 255, 255, 0.95) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
   border-radius: 16px !important;
-  border: 1px solid rgba(255, 255, 255, 0.9) !important;
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  box-shadow: none !important;
   transition: all 0.3s ease !important;
 }
 
@@ -301,22 +348,22 @@ select option {
   font-size: 1.45rem !important;
   font-weight: 800 !important;
   letter-spacing: -0.02em !important;
-  color: #0b2214 !important;
+  color: #ffffff !important;
   text-decoration: none !important;
   display: flex !important;
   align-items: center !important;
   gap: 0.4rem !important;
 }
 
-.logo-icon {
-  font-size: 1.55rem !important;
-  line-height: 1 !important;
-  filter: drop-shadow(0 2px 6px rgba(16, 185, 129, 0.3)) !important;
+.logo-icon,
+.intro-icon {
+  display: inline-block !important;
+  filter: drop-shadow(0 0 15px #10b981) drop-shadow(0 0 25px rgba(6, 182, 212, 0.85)) !important;
 }
 
 .logo-text {
   line-height: 1 !important;
-  color: #0b2214 !important;
+  color: #ffffff !important;
 }
 
 .logo-text > span {
@@ -332,7 +379,7 @@ select option {
 
 .nav-links {
   display: flex !important;
-  gap: 0.4rem !important;
+  gap: 0.6rem !important;
   list-style: none !important;
   margin: 0 !important;
   padding: 0 !important;
@@ -344,31 +391,38 @@ select option {
   font-size: 0.9rem !important;
   font-weight: 600 !important;
   letter-spacing: 0.01em !important;
-  color: #264232 !important;
-  padding: 0.45rem 1rem !important;
-  border-radius: 9px !important;
-  transition: all 0.2s ease !important;
+  color: #ffffff !important;
+  padding: 0.5rem 1.15rem !important;
+  border-radius: 10px !important;
+  background: linear-gradient(135deg, #1f2530 0%, #10141b 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
   text-decoration: none !important;
   position: relative !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8) !important;
+  white-space: nowrap !important;
 }
 
-.nav-item::after {
+.nav-item::after,
+.nav-item::before {
   display: none !important;
 }
 
 .nav-item:hover {
-  color: #041a0d !important;
-  background: rgba(16, 185, 129, 0.12) !important;
+  color: #ffffff !important;
+  background: linear-gradient(135deg, #2c3545 0%, #171c26 100%) !important;
+  border-color: rgba(16, 185, 129, 0.6) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7), 0 0 15px rgba(16, 185, 129, 0.25) !important;
+  transform: translateY(-2px) !important;
 }
 
 .nav-item.active {
-  color: #041a0d !important;
-  background: rgba(16, 185, 129, 0.2) !important;
+  color: #ffffff !important;
+  background: linear-gradient(135deg, #164e3d 0%, #0d2820 100%) !important;
+  border: none !important;
   font-weight: 700 !important;
-}
-
-.nav-item.active::before {
-  display: none !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.65), 0 0 20px rgba(16, 185, 129, 0.3) !important;
 }
 
 /* CTA — right column */
@@ -379,27 +433,33 @@ select option {
   gap: 0.75rem !important;
 }
 
-/* Login button — vibrant green CTA */
-.login-btn {
+/* Login button — Dark Charcoal CTA without border */
+.login-btn,
+.login-btn-mobile,
+.btn-primary {
   font-family: 'Outfit', sans-serif !important;
   font-size: 0.875rem !important;
   font-weight: 700 !important;
   letter-spacing: 0.01em !important;
   padding: 0.55rem 1.4rem !important;
-  border-radius: 9px !important;
-  background: #10b981 !important;
+  border-radius: 10px !important;
+  background: linear-gradient(135deg, #242b35 0%, #12161c 100%) !important;
   color: #ffffff !important;
   border: none !important;
-  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35) !important;
-  transition: all 0.2s ease !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6) !important;
+  transition: all 0.25s ease !important;
   text-decoration: none !important;
   white-space: nowrap !important;
 }
 
-.login-btn:hover {
-  background: #059669 !important;
-  transform: translateY(-1px) !important;
-  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.45) !important;
+.login-btn:hover,
+.login-btn-mobile:hover,
+.btn-primary:hover {
+  background: linear-gradient(135deg, #323b49 0%, #1a2029 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.75) !important;
+  transform: translateY(-2px) !important;
 }
 
 @media (max-width: 900px) {
@@ -441,8 +501,8 @@ select option {
   pointer-events: none;
   z-index: 0;
   background: radial-gradient(circle at 50% 50%,
-      rgba(15, 80, 50, 0.55) 0%,
-      rgba(0, 40, 24, 0.15) 50%,
+      rgba(16, 185, 129, 0.35) 0%,
+      rgba(6, 182, 212, 0.12) 50%,
       transparent 80%);
   opacity: 0.85;
   animation: aurora-pulse 8s ease-in-out infinite alternate;
@@ -961,6 +1021,563 @@ body>.app-footer {
   opacity: 1;
   transform-origin: left bottom;
   will-change: transform, opacity;
+}
+
+/* =============================================================
+   SECTIONS 1 & 2 — INTERACTIVE SCROLL STORYTELLING STYLES
+   ============================================================= */
+
+/* --- PLATFORM FLOW PROCESS (PINNED SECTION) --- */
+.flow-section-wrap {
+  position: relative;
+  z-index: 5;
+}
+
+.flow-track-wrapper {
+  position: relative;
+  margin-top: 2rem;
+  padding: 1rem 0;
+}
+
+
+
+.flow-cards-grid {
+  position: relative;
+  z-index: 2;
+}
+
+.flow-step-card {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+  will-change: transform, opacity, box-shadow;
+  opacity: 1;
+  transform: none;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(18, 18, 20, 0.8);
+}
+
+.flow-step-card.active-step {
+  opacity: 1 !important;
+  transform: scale(1.05) translateY(-6px) !important;
+  border-color: rgba(212, 175, 55, 0.6) !important;
+  box-shadow: 0 16px 40px rgba(212, 175, 55, 0.25), 0 0 20px rgba(212, 175, 55, 0.15) !important;
+  background: rgba(18, 18, 20, 0.9) !important;
+}
+
+.flow-step-card.passed-step {
+  opacity: 0.85 !important;
+  transform: scale(1) !important;
+  border-color: rgba(212, 175, 55, 0.3) !important;
+}
+
+.flow-step-card .how-card-num {
+  transition: all 0.35s ease;
+}
+
+.flow-step-card.active-step .how-card-num {
+  background: #d4af37 !important;
+  color: #000000 !important;
+  transform: scale(1.2) !important;
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.6) !important;
+}
+
+.flow-step-card .card-icon {
+  display: inline-block;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.flow-step-card.active-step .card-icon {
+  transform: scale(1.25) rotate(4deg) !important;
+}
+
+
+/* --- TRACK YOUR HERB SECTION (3D POP EFFECT ON SCROLL REVEAL) --- */
+#popCard,
+.track-herb-stage-wrap {
+  position: relative;
+  width: 100%;
+  padding: 4.5rem 1.5rem;
+  margin: 2rem auto;
+  background: #030712 !important; /* Pure Deep Black Stage Background inside div */
+  border: 1px solid rgba(212, 175, 55, 0.35); /* Thin, elegant gold border */
+  border-radius: 20px; /* Subtle rounded corners */
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), inset 0 0 45px rgba(212, 175, 55, 0.08);
+  overflow: hidden;
+  box-sizing: border-box;
+  z-index: 2;
+
+  /* 3D Pop Scroll Reveal Initial State - Deep 3D tilt & smooth 1.4s coming animation */
+  opacity: 0;
+  transform: perspective(1200px) rotateX(32deg) translateY(110px) scale(0.85);
+  transition: opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1), transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+#popCard.reveal {
+  opacity: 1;
+  transform: perspective(1200px) rotateX(0deg) translateY(0) scale(1);
+}
+
+.track-corners-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* --- GOLD SHINING PULSE ANIMATION --- */
+.track-curves-group path {
+  animation: bluePulseShine 3.2s ease-in-out infinite alternate;
+}
+
+@keyframes bluePulseShine {
+  0% {
+    filter: drop-shadow(0 0 5px #d4af37) drop-shadow(0 0 12px rgba(245, 158, 11, 0.6));
+    opacity: 0.85;
+  }
+  100% {
+    filter: drop-shadow(0 0 12px #fbbf24) drop-shadow(0 0 24px rgba(212, 175, 55, 0.95));
+    opacity: 1;
+  }
+}
+
+.track-herb-container {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.track-herb-content {
+  max-width: 650px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.track-herb-heading {
+  margin-top: 0.5rem !important;
+  margin-bottom: 1.5rem !important;
+  font-family: var(--font-serif, 'Playfair Display', serif);
+  font-size: 3rem;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  min-height: 3.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.typewriter-text {
+  color: #ffffff;
+}
+
+.typewriter-cursor {
+  display: inline-block;
+  color: #d4af37;
+  font-weight: 300;
+  margin-left: 2px;
+  animation: blinkCursor 0.8s infinite;
+}
+
+@keyframes blinkCursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.leaf-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  width: 100%;
+  max-width: 240px;
+}
+
+.leaf-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.6), transparent) !important;
+}
+
+.leaf-icon {
+  font-size: 1.15rem;
+  display: inline-block;
+  filter: drop-shadow(0 0 10px #d4af37) drop-shadow(0 0 18px rgba(245, 158, 11, 0.8)) !important;
+}
+
+.track-btn-wrap {
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+
+/* --- 100% WHITE TRANSFORMATION WAVE BUTTON --- */
+.btn-trace-wave {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 1.05rem 2.75rem !important;
+  background-color: #d4af37 !important; /* Initial Metallic Gold Fill */
+  color: #000000 !important;
+  font-weight: 700 !important;
+  font-size: 1.05rem !important;
+  border-radius: 50px !important;
+  text-decoration: none !important;
+  overflow: hidden !important; /* Clips wave cleanly inside rounded pill */
+  border: 1px solid rgba(212, 175, 55, 0.6) !important;
+  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.35) !important;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.35s ease !important;
+  cursor: pointer !important;
+  z-index: 5 !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+.btn-trace-wave::before {
+  display: none !important;
+}
+
+.btn-trace-wave .btn-wave-bg {
+  position: absolute !important;
+  left: 0 !important;
+  top: -20% !important;
+  width: 100% !important;
+  height: 150% !important;
+  z-index: 8 !important;
+  pointer-events: none !important;
+  transform: translateY(115%) !important;
+  transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  will-change: transform;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.btn-trace-wave:hover .btn-wave-bg {
+  transform: translateY(0%) !important;
+}
+
+.btn-trace-wave:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 14px 40px rgba(255, 255, 255, 0.45), 0 0 30px rgba(212, 175, 55, 0.5) !important;
+  border-color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.btn-trace-wave .btn-text {
+  position: relative !important;
+  z-index: 20 !important;
+  color: #000000 !important;
+  font-weight: 700 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transition: transform 0.35s ease, color 0.35s ease !important;
+  pointer-events: none !important;
+}
+
+.btn-trace-wave:hover .btn-text {
+  color: #000000 !important;
+  transform: translateY(-3px) !important;
+}
+
+.btn-trace-wave .wave-svg {
+  width: 100% !important;
+  height: 30px !important;
+  margin-top: -29px !important;
+  display: block !important;
+}
+
+.btn-trace-wave .wave-white-fill {
+  flex: 1 !important;
+  background-color: #ffffff !important; /* Crisp White Hover Fill */
+  width: 100% !important;
+  min-height: 120px !important;
+  display: block !important;
+}
+
+
+/* =============================================================
+   GLOBAL SLIDING LIQUID COLOR SHIFT FOR ALL BUTTONS, CARDS & INTERACTIVE ELEMENTS
+   - Resting State: Displays original solid background color.
+   - Hover State: A clean white-gold color layer smoothly slides UP from bottom to top.
+   ============================================================= */
+.btn,
+.login-btn,
+.login-btn-mobile,
+.btn-primary,
+.btn-secondary,
+.btn-outline,
+.btn-sm,
+.action-btn,
+.f2a-btn,
+.doc-card,
+.card,
+.flow-step-card,
+.feature-card,
+.sustainability-box,
+.stat-card,
+.hero-badge,
+.tag {
+  position: relative !important;
+  overflow: hidden !important;
+  z-index: 1 !important;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.35s ease, color 0.35s ease !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+.btn::before,
+.login-btn::before,
+.login-btn-mobile::before,
+.btn-primary::before,
+.btn-secondary::before,
+.btn-outline::before,
+.btn-sm::before,
+.action-btn::before,
+.f2a-btn::before,
+.doc-card::before,
+.card::before,
+.flow-step-card::before,
+.feature-card::before,
+.sustainability-box::before,
+.stat-card::before,
+.hero-badge::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: -1 !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(254, 243, 199, 0.95) 100%) !important;
+  transform: translateY(105%) !important;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  border-radius: inherit !important;
+  pointer-events: none !important;
+}
+
+.btn:hover::before,
+.login-btn:hover::before,
+.login-btn-mobile:hover::before,
+.btn-primary:hover::before,
+.btn-secondary:hover::before,
+.btn-outline:hover::before,
+.btn-sm:hover::before,
+.action-btn:hover::before,
+.f2a-btn:hover::before,
+.doc-card:hover::before,
+.card:hover::before,
+.flow-step-card:hover::before,
+.feature-card:hover::before,
+.sustainability-box:hover::before,
+.stat-card:hover::before,
+.hero-badge:hover::before {
+  transform: translateY(0%) !important;
+}
+
+.btn:hover,
+.login-btn:hover,
+.login-btn-mobile:hover,
+.btn-primary:hover,
+.btn-secondary:hover,
+.btn-outline:hover,
+.btn-sm:hover,
+.action-btn:hover,
+.f2a-btn:hover,
+.doc-card:hover,
+.card:hover,
+.feature-card:hover,
+.sustainability-box:hover,
+.stat-card:hover,
+.hero-badge:hover {
+  color: #000000 !important;
+  transform: translateY(-3px) !important;
+  box-shadow: 0 12px 32px rgba(255, 255, 255, 0.4), 0 0 25px rgba(212, 175, 55, 0.45) !important;
+  border-color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.btn > *,
+.login-btn > *,
+.btn-primary > *,
+.btn-secondary > *,
+.doc-card > *,
+.card > *,
+.flow-step-card > *,
+.feature-card > *,
+.stat-card > * {
+  position: relative !important;
+  z-index: 2 !important;
+  transition: color 0.35s ease !important;
+}
+
+.doc-card:hover h4,
+.doc-card:hover p,
+.card:hover h3,
+.card:hover p,
+.feature-card:hover h3,
+.feature-card:hover p,
+.stat-card:hover p {
+  color: #000000 !important;
+}
+
+
+/* =============================================================
+   ULTRA-HIGH VISIBILITY BUTTON HOVER TEXT MOTION & COLOR SWEEP
+   - Text & Icons: Sit at z-index: 20 so they are 100% VISIBLE AT ALL TIMES!
+   - As liquid white-gold background fill slides UP on hover:
+     1. Text smoothly glides UP (translateY(-3px)) with the rising color fill.
+     2. Text color shifts cleanly to deep high-contrast black (#000000).
+   - On mouse leave:
+     1. Liquid background fill slides back DOWN to bottom.
+     2. Text glides back down to translateY(0) with original text color.
+   ============================================================= */
+.btn-text,
+.btn > span,
+.login-btn > span,
+.login-btn-mobile > span,
+.btn-primary > span,
+.btn-secondary > span,
+.btn-outline > span,
+.btn-trace-wave .btn-text {
+  position: relative !important;
+  z-index: 20 !important; /* Always sits above liquid background fill */
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: inline-block !important;
+  transform: translateY(0) !important;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), color 0.35s ease !important;
+  will-change: transform, color;
+  pointer-events: none !important;
+}
+
+.btn:hover .btn-text,
+.btn:hover > span,
+.login-btn:hover .btn-text,
+.login-btn:hover > span,
+.login-btn-mobile:hover .btn-text,
+.login-btn-mobile:hover > span,
+.btn-primary:hover .btn-text,
+.btn-primary:hover > span,
+.btn-secondary:hover .btn-text,
+.btn-secondary:hover > span,
+.btn-outline:hover .btn-text,
+.btn-outline:hover > span,
+.btn-trace-wave:hover .btn-text {
+  color: #ffffff !important; /* Pure white text contrast on charcoal */
+  font-weight: 700 !important;
+  transform: translateY(-3px) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+
+@media (max-width: 768px) {
+  .flow-svg-line {
+    display: none;
+  }
+}
+
+/* =============================================================
+   3D ORBIT CAROUSEL & GLASSMORPHISM WITH SHINY PARTICLES
+   ============================================================= */
+
+#flow-process-section .flow-track-wrapper {
+  perspective: 1200px;
+  perspective-origin: 50% 50%;
+  min-height: 480px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  overflow: visible;
+  padding: 2rem 0;
+  touch-action: pan-y;
+}
+
+#flow-process-section .flow-cards-grid {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  transform-style: preserve-3d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#flow-process-section .flow-step-card {
+  position: absolute !important;
+  width: 290px;
+  height: 350px;
+  top: 25px;
+  margin: 0 auto;
+  user-select: none;
+  transform-style: preserve-3d;
+  cursor: grab;
+  border-radius: 24px;
+  padding: 2.2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  
+  /* Bio-Tech Emerald Glassmorphism */
+  background: linear-gradient(145deg, rgba(16, 185, 129, 0.12) 0%, rgba(6, 182, 212, 0.04) 50%, rgba(10, 30, 24, 0.6) 100%) !important;
+  backdrop-filter: blur(28px) saturate(210%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(210%) !important;
+  border: 1px solid rgba(16, 185, 129, 0.28) !important;
+  box-shadow: inset 0 1px 2px 0 rgba(167, 243, 208, 0.4), inset 0 -1px 2px 0 rgba(0, 0, 0, 0.5), 0 25px 50px -10px rgba(0, 0, 0, 0.75) !important;
+  transition: border-color 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
+}
+
+#flow-process-section .flow-step-card:active {
+  cursor: grabbing;
+}
+
+/* Active front glass card emphasis */
+#flow-process-section .flow-step-card.active-front-card {
+  border-color: rgba(16, 185, 129, 0.85) !important;
+  background: linear-gradient(145deg, rgba(16, 185, 129, 0.22) 0%, rgba(6, 182, 212, 0.1) 40%, rgba(10, 30, 24, 0.85) 100%) !important;
+  box-shadow: inset 0 1px 3px 0 rgba(167, 243, 208, 0.6), 0 35px 70px rgba(0, 0, 0, 0.8), 0 0 45px rgba(16, 185, 129, 0.5) !important;
+}
+
+.how-card-num,
+#flow-process-section .flow-step-card .how-card-num {
+  display: none !important;
+}
+
+#flow-process-section .flow-step-card .card-icon {
+  position: relative;
+  z-index: 3;
+  font-size: 3.2rem;
+  margin-bottom: 0.6rem;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.5));
+}
+
+#flow-process-section .flow-step-card h3 {
+  position: relative;
+  z-index: 3;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0.4rem 0;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+#flow-process-section .flow-step-card p {
+  position: relative;
+  z-index: 3;
+  font-size: 0.93rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
 }
 
 @media (prefers-reduced-motion: reduce) {

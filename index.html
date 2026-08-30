@@ -64,15 +64,14 @@
       <nav class="desktop-nav">
         <ul class="nav-links">
           <li><a href="#home" class="nav-item active" data-view="home">Home</a></li>
-          <li><a href="#explore" class="nav-item" data-view="explore">Explore</a></li>
-          <li><a href="#scan" class="nav-item" data-view="scan">Scan</a></li>
-          <li><a href="#supply-chain" class="nav-item" data-view="supply-chain">Supply Chain</a></li>
+          <li><a href="#scan" class="nav-item active" data-view="scan">Scan</a></li>
+          <li><a href="#supply-chain" class="nav-item active" data-view="supply-chain">Supply Chain</a></li>
         </ul>
       </nav>
 
       <!-- Right Side CTA -->
       <div class="header-right">
-        <a href="#login" class="btn btn-primary login-btn" id="headerLoginBtn" data-view="login">Login / Register</a>
+        <a href="login.html" class="btn btn-primary login-btn" id="headerLoginBtn" data-view="login"><span class="btn-text" data-text="Login / Register">Login / Register</span></a>
         <button class="mobile-menu-toggle" aria-label="Toggle Menu" id="mobileMenuBtn">
           <span class="bar"></span>
           <span class="bar"></span>
@@ -84,13 +83,12 @@
     <!-- Mobile Navigation Drawer -->
     <div class="mobile-nav-drawer" id="mobileDrawer">
       <ul class="mobile-nav-links">
-        <li><a href="#home" class="mobile-nav-item active" data-view="home">Home</a></li>
-        <li><a href="#explore" class="mobile-nav-item" data-view="explore">Explore</a></li>
-        <li><a href="#scan" class="mobile-nav-item" data-view="scan">Scan</a></li>
+        <li><a href="#home" class="mobile-nav-item" data-view="home">Home</a></li>
+        <li><a href="#scan" class="mobile-nav-item active" data-view="scan">Scan</a></li>
         <li><a href="#supply-chain" class="mobile-nav-item" data-view="supply-chain">Supply Chain</a></li>
       </ul>
       <div class="mobile-nav-cta">
-        <a href="#login" class="btn btn-primary login-btn-mobile" id="mobileHeaderLoginBtn" data-view="login">Login / Register</a>
+        <a href="#login" class="btn btn-primary login-btn-mobile" id="mobileHeaderLoginBtn" data-view="login"><span class="btn-text" data-text="Login / Register">Login / Register</span></a>
       </div>
     </div>
   </header>
@@ -129,136 +127,115 @@
           
           <div class="hero-line-mask">
             <div class="hero-cta-wrap">
-              <a href="#scan" class="btn btn-secondary" id="heroScanBtn">Scan Your Leaf</a>
-              <a href="#explore" class="btn btn-outline">Explore Herbs</a>
+              <a href="#scan" class="btn btn-secondary" id="heroScanBtn"><span class="btn-text" data-text="Scan Your Leaf">Scan Your Leaf</span></a>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- How Farm2Ayur Works -->
-      <div class="container section-padding">
-        <div class="section-header">
+      <!-- How Farm2Ayur Works (Platform Flow Process) -->
+      <div class="container section-padding flow-section-wrap" id="flow-process-section">
+        <div class="section-header flow-header">
           <span class="section-tagline">How It Works</span>
           <h2 class="section-heading">Platform Flow Process</h2>
         </div>
-        <div class="grid grid-4">
-          <div class="card how-card">
-            <div class="how-card-num">1</div>
-            <div class="card-icon f2a-inline-1">📱</div>
-            <h3>1. Scan</h3>
-            <p>Identify a medicinal plant using the AI leaf scanner on your mobile or desktop camera.</p>
-          </div>
-          <div class="card how-card">
-            <div class="how-card-num">2</div>
-            <div class="card-icon f2a-inline-2">📖</div>
-            <h3>2. Discover</h3>
-            <p>Learn authentic pharmacological details, traditional properties, and active constituents.</p>
-          </div>
-          <div class="card how-card">
-            <div class="how-card-num">3</div>
-            <div class="card-icon f2a-inline-3">🔬</div>
-            <h3>3. Verify</h3>
-            <p>Understand crop location, cooperative harvesting details, and laboratory testing logs.</p>
-          </div>
-          <div class="card how-card">
-            <div class="how-card-num">4</div>
-            <div class="card-icon f2a-inline-4">🤝</div>
-            <h3>4. Trust</h3>
-            <p>Rely on verified ledger entries and authentic analytical data to ensure safety and potency.</p>
-          </div>
-        </div>
-      </div>
 
-      <!-- Core Features/Positioning Section -->
-      <div class="container section-padding bg-section-light">
-        <div class="section-header">
-          <span class="section-tagline">Three Capabilities</span>
-          <h2 class="section-heading">Core Ecosystem Pillars</h2>
-        </div>
-        <div class="grid grid-3">
-          <div class="card">
-            <div class="card-icon">🧠</div>
-            <h3>AI Identification</h3>
-            <p>Instantly match leaf venation and morphology to prevent adulteration, species substitution, or incorrect botanical sourcing.</p>
-          </div>
-          <div class="card">
-            <div class="card-icon">📚</div>
-            <h3>Botanical Encyclopedia</h3>
-            <p>Access authentic classical properties (Rasa, Guna, Virya, Vipaka) mapped to modern phytochemical assays and laboratory checks.</p>
-          </div>
-          <div class="card">
-            <div class="card-icon">⛓️</div>
-            <h3>Logistics Transparency</h3>
-            <p>Trace raw materials through secure digital records from farm soil, collection center, processing mill, lab tests, to formulations.</p>
-          </div>
-        </div>
-      </div>
-
-
-      <!-- Supply Chain Summary section -->
-      <div class="container section-padding bg-section-light">
-        <div class="section-header">
-          <span class="section-tagline">Blockchain Tracking</span>
-          <h2 class="section-heading">Sourced Ledger Transparency</h2>
-        </div>
-        <div class="grid grid-2 f2a-inline-5">
-          <div>
-            <p>Farm2Ayur logs environmental telemetry, harvest dates, transport logs, and lab analysis reports. By tracing batch serial codes or scanning QR tags, users can see the exact hands the herbs passed through from soil to formulation.</p>
-            <p>This prevents counterfeit substitutions, guarantees organic compliance, and ensures complete safety against heavy metals and toxic pesticide residues.</p>
-            <div class="f2a-inline-6">
-              <a href="#supply-chain" class="btn btn-secondary">Trace Active Batch</a>
+        <div class="flow-track-wrapper">
+          <div class="grid grid-4 flow-cards-grid">
+            <div class="card how-card flow-step-card glass-card" data-step="1">
+              <div class="card-icon f2a-inline-1">📱</div>
+              <h3>1. Scan</h3>
+              <p>Identify a medicinal plant using the AI leaf scanner on your mobile or desktop camera.</p>
+            </div>
+            <div class="card how-card flow-step-card glass-card" data-step="2">
+              <div class="card-icon f2a-inline-2">📖</div>
+              <h3>2. Discover</h3>
+              <p>Learn authentic pharmacological details, traditional properties, and active constituents.</p>
+            </div>
+            <div class="card how-card flow-step-card glass-card" data-step="3">
+              <div class="card-icon f2a-inline-3">🔬</div>
+              <h3>3. Verify</h3>
+              <p>Understand crop location, cooperative harvesting details, and laboratory testing logs.</p>
+            </div>
+            <div class="card how-card flow-step-card glass-card" data-step="4">
+              <div class="card-icon f2a-inline-4">🤝</div>
+              <h3>4. Trust</h3>
+              <p>Rely on verified ledger entries and authentic analytical data to ensure safety and potency.</p>
             </div>
           </div>
-          <div class="card f2a-inline-7">
-            <div class="f2a-inline-8">📦</div>
-            <h3>Verify Sourced Herbs</h3>
-            <p class="f2a-inline-9">Try our batch registry search, simulate a mobile QR code scan, and review interactive purity timeline maps.</p>
-            <a href="#supply-chain" class="btn btn-outline btn-sm">Go to Supply Chain Panel</a>
+        </div>
+      </div>
+
+
+
+
+      <!-- Track Your Herb Section (Rectangular Stage with Top-Left Corner Organic Curves) -->
+      <div class="container track-herb-stage-wrap" id="popCard" data-section="track-herb-section">
+        <!-- SVG Dual Nested Perimeter Curves Framing Stage (Gold & Shining Glow Effect) -->
+        <svg class="track-corners-svg" viewBox="0 0 1000 360" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="trackBlueGradMain" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#d4af37" stop-opacity="1" />
+              <stop offset="40%" stop-color="#fbbf24" stop-opacity="0.9" />
+              <stop offset="80%" stop-color="#f59e0b" stop-opacity="0.5" />
+              <stop offset="100%" stop-color="#d4af37" stop-opacity="0.15" />
+            </linearGradient>
+            <linearGradient id="trackBlueGradSub" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#fef08a" stop-opacity="0.85" />
+              <stop offset="60%" stop-color="#eab308" stop-opacity="0.5" />
+              <stop offset="100%" stop-color="#d4af37" stop-opacity="0.1" />
+            </linearGradient>
+
+            <filter id="blueShineGlow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="3" result="blur1" />
+              <feGaussianBlur stdDeviation="7" result="blur2" />
+              <feMerge>
+                <feMergeNode in="blur2" />
+                <feMergeNode in="blur1" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+          <g class="track-curves-group" filter="url(#blueShineGlow)">
+            <!-- Upper-Left 4 Nested Curves (Light Blue & Glowing) -->
+            <path class="track-curve-ul-1" d="M 0 240 C 0 90, 50 15, 250 0" stroke="url(#trackBlueGradMain)" stroke-width="2.5" stroke-linecap="round" fill="none" />
+            <path class="track-curve-ul-2" d="M 0 190 C 0 75, 40 25, 190 0" stroke="url(#trackBlueGradSub)" stroke-width="1.8" stroke-linecap="round" fill="none" />
+            <path class="track-curve-ul-3" d="M 0 140 C 0 60, 30 35, 140 0" stroke="url(#trackBlueGradSub)" stroke-width="1.3" stroke-linecap="round" fill="none" />
+            <path class="track-curve-ul-4" d="M 0 90 C 0 45, 20 45, 90 0" stroke="url(#trackBlueGradSub)" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.6" />
+
+            <!-- Lower-Right 4 Nested Curves (Light Blue & Glowing) -->
+            <path class="track-curve-lr-1" d="M 1000 120 C 1000 270, 950 345, 750 360" stroke="url(#trackBlueGradMain)" stroke-width="2.5" stroke-linecap="round" fill="none" />
+            <path class="track-curve-lr-2" d="M 1000 170 C 1000 285, 960 335, 810 360" stroke="url(#trackBlueGradSub)" stroke-width="1.8" stroke-linecap="round" fill="none" />
+            <path class="track-curve-lr-3" d="M 1000 220 C 1000 300, 970 325, 860 360" stroke="url(#trackBlueGradSub)" stroke-width="1.3" stroke-linecap="round" fill="none" />
+            <path class="track-curve-lr-4" d="M 1000 270 C 1000 315, 980 315, 910 360" stroke="url(#trackBlueGradSub)" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.6" />
+          </g>
+        </svg>
+
+        <div class="container track-herb-container">
+          <div class="track-herb-content">
+            <h2 class="section-heading track-herb-heading" id="typewriter-heading"><span class="typewriter-text"></span><span class="typewriter-cursor">|</span></h2>
+
+            <div class="leaf-divider">
+              <span class="leaf-line"></span>
+              <span class="leaf-icon">🍃</span>
+              <span class="leaf-line"></span>
+            </div>
+
+            <div class="track-btn-wrap">
+              <a href="#supply-chain" class="btn-trace-wave" id="btn-trace-active">
+                <span class="btn-wave-bg">
+                  <svg class="wave-svg" viewBox="0 0 200 40" preserveAspectRatio="none">
+                    <path class="wave-path" d="M 0 20 Q 50 0 100 20 T 200 20 L 200 80 L 0 80 Z" fill="#ffffff" />
+                  </svg>
+                  <span class="wave-white-fill"></span>
+                </span>
+                <span class="btn-text">Trace Active Batch</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Knowledge Center brief -->
-      <div class="container section-padding">
-        <div class="section-header">
-          <span class="section-tagline">Authentic Science</span>
-          <h2 class="section-heading">Ayurvedic Standards & Publications</h2>
-        </div>
-        <div class="grid grid-3 doc-downloads">
-          <a href="#knowledge" class="doc-card f2a-inline-10">
-            <div class="doc-icon f2a-inline-11">📄</div>
-            <h4 class="f2a-inline-12">WHO GACP Guidelines</h4>
-            <p class="f2a-inline-13">Good agricultural and collection practices standard manual for medicinal plants.</p>
-          </a>
-          <a href="#knowledge" class="doc-card f2a-inline-14">
-            <div class="doc-icon f2a-inline-15">📄</div>
-            <h4 class="f2a-inline-16">AYUSH Premium Standard Checklist</h4>
-            <p class="f2a-inline-17">Accreditation requirements and check criteria for high-quality botanical exports.</p>
-          </a>
-          <a href="#knowledge" class="doc-card f2a-inline-18">
-            <div class="doc-icon f2a-inline-19">📄</div>
-            <h4 class="f2a-inline-20">Ledger Integration Manual</h4>
-            <p class="f2a-inline-21">Technical documentation detailing how labs and mills upload secure testing logs.</p>
-          </a>
-        </div>
-        <div class="center-cta f2a-inline-22">
-          <a href="#knowledge" class="btn btn-outline">Go to Knowledge Center</a>
-        </div>
-      </div>
-    </section>
-
-    <section id="explore" class="page-view">
-      <!-- Featured Herbs -->
-      <div class="container section-padding">
-        <div class="section-header">
-          <span class="section-tagline">Featured Selection</span>
-          <h2 class="section-heading">Featured Ayurvedic Herbs</h2>
-        </div>
-        <div class="grid grid-3" id="featuredHerbsGrid">
-          <!-- Dynamically populated via JS, using real botanical images -->
-        </div>
-      </div>
     </section>
 
     <!-- SCAN VIEW -->
@@ -559,77 +536,7 @@
       </div>
     </section>
 
-    <!-- KNOWLEDGE / RESOURCES VIEW -->
-    <section id="knowledge" class="page-view">
-      <div class="container section-padding">
-        <div class="view-intro">
-          <h1>Ayurvedic Knowledge Center</h1>
-          <p>Scientific publications, classical Ayurvedic pharmacopoeias, cultivation guides, and standards.</p>
-        </div>
 
-        <div class="knowledge-grid">
-          <!-- Encyclopedia -->
-          <div class="card knowledge-block">
-            <h2>Ayurvedic Herb Encyclopedia</h2>
-            <p>Access pharmacological properties mapped directly to the classical Ayurvedic theory of Rasa-Panchaka (Taste, Quality, Potency, Post-digestive taste, and Special Action).</p>
-            <div class="encyclopedia-preview">
-              <div class="property-table-mini">
-                <div class="row"><strong>Rasa (Taste):</strong> Tikta (Bitter), Madhura (Sweet), Katu (Pungent)</div>
-                <div class="row"><strong>Guna (Qualities):</strong> Laghu (Light), Snigdha (Unctuous), Guru (Heavy)</div>
-                <div class="row"><strong>Virya (Potency):</strong> Ushna (Hot potency), Sheeta (Cold potency)</div>
-                <div class="row"><strong>Vipaka (Post-digestive):</strong> Madhura (Sweet), Katu (Pungent)</div>
-              </div>
-            </div>
-            <a href="#explore" class="btn btn-outline btn-sm">Explore Encyclopedia Profiles</a>
-          </div>
-
-          <!-- Cultivation Guides -->
-          <div class="card knowledge-block">
-            <h2>Cultivation & Harvesting Guides</h2>
-            <p>Step-by-step manuals on climate profiles, soil compositions, and harvesting windows for optimal phytochemical expression (e.g. harvesting roots in Sharad Ritu, leaves in Varsha Ritu).</p>
-            <div class="guides-list">
-              <div class="guide-item">
-                <span>📖</span>
-                <div>
-                  <h4>Ashwagandha GACP Guidelines</h4>
-                  <p>Optimal spacing, moisture control, and alkaloid preservation parameters.</p>
-                </div>
-              </div>
-              <div class="guide-item">
-                <span>📖</span>
-                <div>
-                  <h4>Organic Turmeric Soil Prep</h4>
-                  <p>Curcumin optimization guidelines via biodynamic composting methods.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Downloadable documents -->
-          <div class="card knowledge-block w-100-col">
-            <h2>AYUSH Standards & Downloads</h2>
-            <p>Download certified standards, regulatory frameworks, and template files for audits.</p>
-            <div class="grid grid-3 doc-downloads">
-              <a href="#" class="doc-card" download>
-                <div class="doc-icon">📄</div>
-                <h4>WHO GACP Guidelines</h4>
-                <span class="file-info">PDF · 2.4 MB</span>
-              </a>
-              <a href="#" class="doc-card" download>
-                <div class="doc-icon">📄</div>
-                <h4>AYUSH Premium Certification Checklist</h4>
-                <span class="file-info">PDF · 1.2 MB</span>
-              </a>
-              <a href="#" class="doc-card" download>
-                <div class="doc-icon">📄</div>
-                <h4>Traceability Ledger Integration Manual</h4>
-                <span class="file-info">PDF · 3.1 MB</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
     <!-- LOGIN / REGISTER VIEW [NEW] -->
     <section id="login" class="page-view">
@@ -878,7 +785,6 @@
         <h4>Navigation</h4>
         <ul>
           <li><a href="#home">Home</a></li>
-          <li><a href="#explore">Explore Herbs</a></li>
           <li><a href="#supply-chain">Supply Chain Trace</a></li>
         </ul>
       </div>
@@ -887,7 +793,6 @@
         <h4>Company & Tech</h4>
         <ul>
           <li><a href="#about">About Our Mission</a></li>
-          <li><a href="#knowledge">Knowledge Center</a></li>
           <li><a href="#contact">Contact Support</a></li>
         </ul>
       </div>

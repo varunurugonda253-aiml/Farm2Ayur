@@ -60,7 +60,10 @@ gsap.registerPlugin(ScrollTrigger);
       yPercent: -100,
       duration: 1.05,
       ease: 'expo.inOut',
-      onStart: () => { initHeroTitleAnimeBounce(); },
+      onStart: () => { 
+        initHeroTitleAnimeBounce();
+        initNavbarAnimation();
+      },
       onComplete: () => {
         overlay.style.display = 'none';
         overlay.style.pointerEvents = 'none';
@@ -69,6 +72,87 @@ gsap.registerPlugin(ScrollTrigger);
     .to('.hero-subtitle', { y: 0, opacity: 1, clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)', duration: 1.0, ease: 'power3.out' }, "-=0.8")
     .to('.hero-cta-wrap', { y: 0, opacity: 1, duration: 0.85, ease: 'power3.out' }, "-=0.75");
 })();
+
+/* ==========================================================================
+   NAVBAR POP-IN & EXPAND GSAP TIMELINE ANIMATION
+   ========================================================================== */
+function initNavbarAnimation() {
+  const navbar = document.getElementById('navbar');
+  const navLinks = document.getElementById('navLinks');
+  const authBtn = document.getElementById('authBtn');
+  const logoIcon = document.getElementById('logoIcon');
+  const logoText = document.getElementById('logoText');
+
+  if (!navbar) return;
+
+  // Set initial collapsed box state before timeline plays
+  const initialWidth = window.innerWidth < 600 ? "210px" : "240px";
+  gsap.set(navbar, {
+    width: initialWidth,
+    opacity: 0,
+    y: -100,
+    scale: 0.8,
+    overflow: "hidden"
+  });
+
+  // Keep logo icon & text visible together inside the box so they pop in simultaneously as one unit
+  if (logoIcon) gsap.set(logoIcon, { opacity: 1, scale: 1, y: 0 });
+  if (logoText) gsap.set(logoText, { opacity: 1, scale: 1, y: 0 });
+  if (navLinks) gsap.set(navLinks, { opacity: 0 });
+  if (authBtn) gsap.set(authBtn, { opacity: 0 });
+
+  // Target the GSAP timeline with a 1.2s delay so both apper together a little late
+  const tl = gsap.timeline({
+    delay: 1.2,
+    defaults: { ease: "power3.out" },
+    onStart: () => {
+      gsap.set(navbar, { visibility: "visible" });
+    },
+    onComplete: () => {
+      gsap.set(navbar, { overflow: "visible", width: "100%" });
+    }
+  });
+
+  // 1. Pop-in the central logo box with Farm2Ayur logo TOGETHER from top with a spring/bounce effect
+  tl.fromTo("#navbar", 
+    { 
+      y: -100, 
+      opacity: 0, 
+      scale: 0.8 
+    }, 
+    { 
+      y: 0, 
+      opacity: 1, 
+      scale: 1, 
+      duration: 0.8, 
+      ease: "back.out(1.7)" 
+    }
+  )
+
+  // 2. Brief loading glow/pulse animation
+  .to("#navbar", {
+    boxShadow: "0 0 25px rgba(139, 195, 74, 0.6)",
+    duration: 0.35,
+    yoyo: true,
+    repeat: 1
+  })
+
+  // 3. Expand the small box horizontally into the full-width navbar
+  .to("#navbar", {
+    width: "100%",
+    duration: 0.8,
+    ease: "power4.inOut"
+  })
+
+  // 4. Reveal and fade in the nav links and login button inside the navbar
+  .to(["#navLinks", "#authBtn"], {
+    opacity: 1,
+    duration: 0.4,
+    stagger: 0.1
+  });
+
+  return tl;
+}
 
 function prepareTextChars(element) {
   if (!element || element.dataset.animeSplit) return element ? Array.from(element.querySelectorAll('.anime-char')) : [];
@@ -124,9 +208,13 @@ function initHeroTitleAnimeBounce() {
 const introOverlay = document.getElementById('intro-overlay');
 if (!introOverlay) {
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initHeroTitleAnimeBounce);
+    document.addEventListener('DOMContentLoaded', () => {
+      initHeroTitleAnimeBounce();
+      initNavbarAnimation();
+    });
   } else {
     initHeroTitleAnimeBounce();
+    initNavbarAnimation();
   }
 }
 

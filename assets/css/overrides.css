@@ -274,7 +274,7 @@ select option {
 
 /* "Ayurveda" - Radiant Neon Emerald text with crisp glow shadow */
 .ayurveda-word {
-  font-family: 'Outfit', 'Lora', sans-serif;
+  font-family: 'Cormorant Garamond', serif;
   font-size: 1.8em;
   font-weight: 800;
   letter-spacing: -0.02em;
@@ -283,7 +283,6 @@ select option {
   vertical-align: middle;
   padding: 0 0.1em;
   text-shadow: 0 0 30px rgba(16, 185, 129, 0.95), 0 0 15px rgba(6, 182, 212, 0.8), 0 4px 20px rgba(0, 0, 0, 0.95);
-  filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.95));
 }
 
 .ayurveda-word .anime-char {

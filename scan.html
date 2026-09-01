@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Farm2Ayur — AI Leaf Camera Scanner</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="scan.css">
+  <script type="module" src="./public/runtime/cursor-trail.js"></script>
+</head>
+<body>
+
+  <!-- Full-Screen AI Camera Scanner Container -->
+  <main class="scan-page-container">
+    <div class="camera-scanner-wrapper" id="cameraScannerWrapper">
+      
+      <!-- Top Navigation Bar -->
+      <header class="scanner-top-bar">
+        <a href="index.html" class="scanner-nav-btn" id="scanBackBtn" aria-label="Go Back to Home">
+          <span class="nav-btn-icon">←</span>
+        </a>
+        <div class="scanner-header-text">
+          <h1>Scan Medicinal Leaf</h1>
+        </div>
+        <button type="button" class="scanner-nav-btn" id="scanInfoBtn" aria-label="Best Practices Guide">
+          <span class="nav-btn-icon">ℹ️</span>
+        </button>
+      </header>
+
+      <!-- Camera Viewport & Stream Stage -->
+      <section class="scanner-viewport-stage" id="scannerViewportStage">
+        
+        <!-- Live Camera Video Feed (Active only when camera started) -->
+        <video id="scanVideoElement" class="camera-live-feed" autoplay playsinline muted style="display:none;"></video>
+        <canvas id="scanCanvasElement" class="camera-capture-canvas" style="display:none;"></canvas>
+        
+        <!-- Ambient Simulated Camera Feed (Shown by default until camera starts) -->
+        <div class="camera-ambient-feed" id="cameraAmbientFeed">
+          <div class="ambient-leaf-specimen" id="ambientLeafSpecimen">🌱</div>
+        </div>
+
+        <!-- Flashlight / Torch Beam Overlay -->
+        <div class="camera-torch-glow" id="cameraTorchGlow"></div>
+
+        <!-- Start Camera Permission Banner (If user hasn't clicked start yet) -->
+        <div class="camera-activation-overlay" id="cameraActivationOverlay">
+          <div class="activation-card">
+            <span class="activation-icon">📸</span>
+            <h3>Enable Live Camera Scan</h3>
+            <p>Allow camera access to instantly identify leaf morphology and active phytochemicals.</p>
+            <button type="button" class="btn-gold" id="startLiveCameraBtn">Start Live Camera</button>
+          </div>
+        </div>
+
+        <!-- Smart UI Feedback Badges -->
+        <div class="scanner-smart-badges" id="scanFeedbackBadges">
+          <span class="smart-badge badge-lighting" id="scanBadgeLighting">
+            <span class="badge-dot"></span> Lighting: Optimal
+          </span>
+          <span class="smart-badge badge-distance" id="scanBadgeDistance">
+            <span class="badge-dot"></span> Distance: Ready
+          </span>
+          <span class="smart-badge badge-focus" id="scanBadgeFocus">
+            <span class="badge-dot"></span> AI Focus: Locked
+          </span>
+        </div>
+
+        <!-- Dynamic Instructional Header -->
+        <div class="scanner-instruction-wrap">
+          <h2 class="instruction-main" id="scanInstructionMain">Position leaf within the frame</h2>
+        </div>
+
+        <!-- Central Organic Leaf Glassmorphic Reticle Frame (Warm Gold & Cream) -->
+        <div class="leaf-reticle-frame" id="scanReticleFrame">
+          <!-- Glowing Warm Gold & Cream Corner Brackets -->
+          <div class="reticle-corner top-left"></div>
+          <div class="reticle-corner top-right"></div>
+          <div class="reticle-corner bottom-left"></div>
+          <div class="reticle-corner bottom-right"></div>
+
+          <!-- Sweeping Golden Amber Laser Line -->
+          <div class="reticle-laser-line" id="scanLaserLine">
+            <div class="laser-beam-core"></div>
+            <div class="laser-beam-flare"></div>
+          </div>
+
+          <!-- Center Target Focus Crosshair -->
+          <div class="reticle-center-target">
+            <div class="target-crosshair"></div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Bottom Controls Action Bar -->
+      <footer class="scanner-bottom-controls">
+        <!-- Torch / Flashlight Toggle -->
+        <button type="button" class="control-action-btn" id="scanTorchBtn" aria-label="Toggle Flashlight Torch">
+          <div class="action-btn-circle">
+            <span class="action-btn-icon">🔦</span>
+          </div>
+          <span class="action-btn-label">Torch</span>
+        </button>
+
+        <!-- Digital Zoom Toggle (1x / 2x) -->
+        <button type="button" class="control-action-btn" id="scanZoomBtn" aria-label="Toggle Camera Zoom">
+          <div class="action-btn-circle">
+            <span class="action-btn-icon zoom-level" id="scanZoomLevel">1x</span>
+          </div>
+          <span class="action-btn-label">Zoom</span>
+        </button>
+
+        <!-- Central Shutter Capture Button -->
+        <div class="shutter-btn-wrap">
+          <button type="button" class="scanner-shutter-btn" id="scanShutterBtn" aria-label="Capture and Scan Leaf">
+            <div class="shutter-pulse-ring"></div>
+            <div class="shutter-inner-core">
+              <span class="shutter-icon">🍃</span>
+            </div>
+          </button>
+        </div>
+
+        <!-- Gallery / File Upload Button -->
+        <button type="button" class="control-action-btn" id="scanGalleryBtn" aria-label="Upload Photo from Gallery">
+          <div class="action-btn-circle">
+            <span class="action-btn-icon">🖼️</span>
+          </div>
+          <span class="action-btn-label">Gallery</span>
+        </button>
+        <input type="file" id="scanFileInput" accept="image/*" capture="environment" style="display:none;">
+      </footer>
+
+      <!-- Slide-up Botanical Analysis Drawer -->
+      <div class="scan-result-drawer" id="scanResultDrawer">
+        <div class="drawer-handle-bar" id="scanDrawerHandle">
+          <div class="drawer-pill-handle"></div>
+        </div>
+        <div class="drawer-content" id="scanDrawerContent">
+          <!-- Dynamically populated by scan.js -->
+        </div>
+      </div>
+
+      <!-- Info / Best Practices Modal -->
+      <div class="scan-info-modal" id="scanInfoModal">
+        <div class="info-modal-backdrop" id="scanInfoModalBackdrop"></div>
+        <div class="info-modal-card">
+          <div class="info-modal-header">
+            <h3>🌿 Botanical Scanning Tips</h3>
+            <button type="button" class="info-modal-close" id="scanInfoCloseBtn">&times;</button>
+          </div>
+          <div class="info-modal-body">
+            <div class="tip-item">
+              <span class="tip-icon">☀️</span>
+              <div>
+                <strong>Natural Lighting</strong>
+                <p>Hold leaf under clear lighting or toggle Torch for high-contrast venation visibility.</p>
+              </div>
+            </div>
+            <div class="tip-item">
+              <span class="tip-icon">📐</span>
+              <div>
+                <strong>Center Leaf Contour</strong>
+                <p>Keep the full blade and stem aligned inside the gold glowing reticle frame.</p>
+              </div>
+            </div>
+            <div class="tip-item">
+              <span class="tip-icon">🔬</span>
+              <div>
+                <strong>Spectroscopy Analysis</strong>
+                <p>Our neural model extracts morphological venation and matches active Ayurvedic markers.</p>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="btn-gold w-100" id="scanInfoGotItBtn">Got It, Start Scanning</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script type="module" src="scan.js"></script>
+</body>
+</html>

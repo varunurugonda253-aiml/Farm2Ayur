@@ -24,6 +24,491 @@
   <script type="module" src="./public/runtime/cursor-trail.js"></script>
 
   <!-- Custom CSS Overrides for Redesign -->
+  <style>
+    /* Herbal Information & Knowledge Cards Styling (Full Width Sequential Slides - White Theme) */
+    .herbal-info-section {
+      padding-top: 4rem;
+      padding-bottom: 5rem;
+    }
+
+    .herbal-info-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+      margin-top: 2.5rem;
+    }
+
+    .herbal-info-card {
+      position: relative;
+      background: #ffffff;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 20px;
+      padding: 2.2rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.03);
+      transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .herbal-info-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(16, 185, 129, 0.55);
+      box-shadow: 0 15px 35px rgba(16, 185, 129, 0.15);
+    }
+
+    .card-badge {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.35rem 0.85rem;
+      border-radius: 50px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #047857;
+    }
+
+    .card-header-icon {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .card-header-icon .info-icon {
+      font-size: 1.8rem;
+      line-height: 1;
+    }
+
+    .card-header-icon h3 {
+      font-family: var(--font-display, 'Outfit', sans-serif);
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0;
+      padding-right: 5rem;
+    }
+
+    .info-lead {
+      color: #334155;
+      font-size: 1.02rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Card 1 Enriched Layout */
+    .card-two-col-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.8rem;
+      margin-top: 0.5rem;
+    }
+
+    @media (max-width: 850px) {
+      .card-two-col-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .plant-parts-box h4,
+    .herbal-prep-box h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #047857;
+      margin-bottom: 0.75rem;
+    }
+
+    .parts-pills-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .part-pill {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #166534;
+      padding: 0.4rem 0.85rem;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: all 0.25s ease;
+    }
+
+    .part-pill:hover {
+      background: #dcfce7;
+      border-color: #86efac;
+      transform: translateY(-2px);
+    }
+
+    .prep-items-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.6rem;
+      margin-bottom: 1.2rem;
+    }
+
+    @media (max-width: 500px) {
+      .prep-items-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .prep-item {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 0.55rem 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-size: 0.85rem;
+      color: #1e293b;
+    }
+
+    .prep-item strong {
+      color: #047857;
+    }
+
+    .ayush-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      background: #f0fdf4;
+      border-left: 3px solid #059669;
+      padding: 1rem 1.1rem;
+      border-radius: 0 12px 12px 0;
+    }
+
+    .ayush-note .note-icon {
+      font-size: 1.3rem;
+    }
+
+    .ayush-note p {
+      font-size: 0.9rem;
+      color: #1e293b;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .ayush-note strong {
+      color: #047857;
+    }
+
+    .sourcing-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      background: #fffbeb;
+      border-left: 3px solid #d97706;
+      padding: 1rem 1.1rem;
+      border-radius: 0 12px 12px 0;
+    }
+
+    .sourcing-note .note-icon {
+      font-size: 1.2rem;
+    }
+
+    .sourcing-note p {
+      font-size: 0.88rem;
+      color: #78350f;
+      margin: 0;
+      line-height: 1.45;
+    }
+
+    .sourcing-note strong {
+      color: #b45309;
+    }
+
+    /* Concept items in Card 2 */
+    .ayurvedic-concepts-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+
+    @media (max-width: 850px) {
+      .ayurvedic-concepts-list {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .concept-item {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 1.1rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .concept-title {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .concept-name {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #047857;
+    }
+
+    .concept-subtitle {
+      font-size: 0.82rem;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .concept-item p {
+      font-size: 0.93rem;
+      color: #334155;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .concept-subtext {
+      margin-top: 0.5rem !important;
+      font-size: 0.85rem !important;
+      color: #64748b !important;
+      font-style: italic;
+    }
+
+    .rasa-pills-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+      margin: 0.75rem 0;
+    }
+
+    @media (max-width: 480px) {
+      .rasa-pills-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .rasa-pill {
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      border-radius: 8px;
+      padding: 0.4rem 0.65rem;
+      font-size: 0.86rem;
+      color: #065f46;
+    }
+
+    .rasa-pill strong {
+      color: #047857;
+    }
+
+    /* Panchamahabhuta Card */
+    .pancha-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 600px) {
+      .pancha-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .pancha-card {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 0.95rem 0.5rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+      transition: all 0.25s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+
+    .pancha-card:hover {
+      border-color: #059669;
+      background: #f0fdf4;
+      transform: translateY(-3px);
+    }
+
+    .element-icon {
+      font-size: 1.4rem;
+    }
+
+    .element-name {
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: #0f172a;
+    }
+
+    .element-trans {
+      font-size: 0.75rem;
+      color: #64748b;
+    }
+
+    .pancha-explanation {
+      margin-top: 1rem;
+    }
+
+    .pancha-explanation p {
+      font-size: 0.94rem;
+      color: #334155;
+      line-height: 1.5;
+    }
+
+    .pancha-summary-box {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      background: #fffbeb;
+      border-left: 3px solid #d97706;
+      padding: 0.9rem 1.1rem;
+      border-radius: 0 12px 12px 0;
+      margin-top: 1rem;
+    }
+
+    .pancha-summary-box .summary-icon {
+      font-size: 1.2rem;
+    }
+
+    .pancha-summary-box p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #78350f;
+      line-height: 1.5;
+    }
+
+    /* Dosha Card */
+    .dosha-cards-wrap {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    @media (max-width: 600px) {
+      .dosha-cards-wrap {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dosha-item {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 1.1rem 0.95rem;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+
+    .dosha-item.vata { border-top: 3px solid #0284c7; }
+    .dosha-item.pitta { border-top: 3px solid #ea580c; }
+    .dosha-item.kapha { border-top: 3px solid #059669; }
+
+    .dosha-icon { font-size: 1.6rem; display: block; margin-bottom: 0.4rem; }
+
+    .dosha-item h4 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0 0 0.25rem 0;
+    }
+
+    .dosha-item p {
+      font-size: 0.78rem;
+      color: #64748b;
+      margin: 0;
+      line-height: 1.35;
+    }
+
+    .dosha-note {
+      font-size: 0.92rem;
+      color: #334155;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Ayurvedic Relationship Framework Flow Pipeline */
+    .ayurveda-flow-box {
+      margin-top: 1rem;
+      background: #f0fdf4;
+      border: 1px dashed rgba(16, 185, 129, 0.4);
+      border-radius: 16px;
+      padding: 1.25rem 1rem;
+    }
+
+    .ayurveda-flow-box h4 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #047857;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .flow-pipeline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .pipeline-step {
+      background: #ffffff;
+      border: 1px solid #a7f3d0;
+      border-radius: 10px;
+      padding: 0.6rem 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex: 1;
+      min-width: 140px;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .pipeline-step .step-icon {
+      font-size: 1.1rem;
+    }
+
+    .pipeline-step .step-text {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #0f172a;
+      white-space: nowrap;
+    }
+
+    .pipeline-arrow {
+      color: #059669;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    @media (max-width: 768px) {
+      .flow-pipeline {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .pipeline-arrow {
+        text-align: center;
+        transform: rotate(90deg);
+        margin: 0.2rem 0;
+      }
+    }
+  </style>
 </head>
 <body>
 
@@ -46,8 +531,6 @@
     </div>
   </div>
 
-  <!-- Ambient canvas removed — replaced by hero video background -->
-
   <!-- Background Blur Overlays for Modern UI -->
   <div class="glow-orb glow-1"></div>
   <div class="glow-orb glow-2"></div>
@@ -64,14 +547,13 @@
       <nav class="desktop-nav" id="navLinks">
         <ul class="nav-links">
           <li><a href="#home" class="nav-item active" data-view="home">Home</a></li>
-          <li><a href="#scan" class="nav-item active" data-view="scan">Scan</a></li>
-          <li><a href="#supply-chain" class="nav-item active" data-view="supply-chain">Supply Chain</a></li>
+          <li><a href="#supply-chain" class="nav-item" data-view="supply-chain">Supply Chain</a></li>
         </ul>
       </nav>
 
       <!-- Right Side CTA -->
       <div class="header-right" id="authBtn">
-        <a href="login.html" class="btn btn-primary login-btn" id="headerLoginBtn" data-view="login"><span class="btn-text" data-text="Login / Register">Login / Register</span></a>
+        <a href="login.html" class="btn btn-primary login-btn" id="headerLoginBtn"><span class="btn-text" data-text="Login / Register">Login / Register</span></a>
         <button class="mobile-menu-toggle" aria-label="Toggle Menu" id="mobileMenuBtn">
           <span class="bar"></span>
           <span class="bar"></span>
@@ -84,11 +566,10 @@
     <div class="mobile-nav-drawer" id="mobileDrawer">
       <ul class="mobile-nav-links">
         <li><a href="#home" class="mobile-nav-item" data-view="home">Home</a></li>
-        <li><a href="#scan" class="mobile-nav-item active" data-view="scan">Scan</a></li>
         <li><a href="#supply-chain" class="mobile-nav-item" data-view="supply-chain">Supply Chain</a></li>
       </ul>
       <div class="mobile-nav-cta">
-        <a href="#login" class="btn btn-primary login-btn-mobile" id="mobileHeaderLoginBtn" data-view="login"><span class="btn-text" data-text="Login / Register">Login / Register</span></a>
+        <a href="login.html" class="btn btn-primary login-btn-mobile" id="mobileHeaderLoginBtn"><span class="btn-text" data-text="Login / Register">Login / Register</span></a>
       </div>
     </div>
   </header>
@@ -127,44 +608,46 @@
           
           <div class="hero-line-mask">
             <div class="hero-cta-wrap">
-              <a href="#scan" class="btn btn-secondary" id="heroScanBtn"><span class="btn-text" data-text="Scan Your Leaf">Scan Your Leaf</span></a>
+              <a href="scan.html" class="btn btn-secondary" id="heroScanBtn"><span class="btn-text" data-text="Scan Your Leaf">Scan Your Leaf</span></a>
             </div>
           </div>
         </div>
       </div>
 
       <!-- How Farm2Ayur Works (Platform Flow Process) -->
-      <div class="container section-padding flow-section-wrap" id="flow-process-section">
-        <div class="section-header flow-header">
-          <span class="section-tagline">How It Works</span>
-          <h2 class="section-heading">Platform Flow Process</h2>
-        </div>
+      <section class="section-padding flow-section-wrap" id="flow-process-section">
+        <div class="container">
+          <div class="section-header flow-header">
+            <span class="section-tagline">How It Works</span>
+            <h2 class="section-heading">Platform Flow Process</h2>
+          </div>
 
-        <div class="flow-track-wrapper">
-          <div class="grid grid-4 flow-cards-grid">
-            <div class="card how-card flow-step-card glass-card" data-step="1">
-              <div class="card-icon f2a-inline-1">📱</div>
-              <h3>1. Scan</h3>
-              <p>Identify a medicinal plant using the AI leaf scanner on your mobile or desktop camera.</p>
-            </div>
-            <div class="card how-card flow-step-card glass-card" data-step="2">
-              <div class="card-icon f2a-inline-2">📖</div>
-              <h3>2. Discover</h3>
-              <p>Learn authentic pharmacological details, traditional properties, and active constituents.</p>
-            </div>
-            <div class="card how-card flow-step-card glass-card" data-step="3">
-              <div class="card-icon f2a-inline-3">🔬</div>
-              <h3>3. Verify</h3>
-              <p>Understand crop location, cooperative harvesting details, and laboratory testing logs.</p>
-            </div>
-            <div class="card how-card flow-step-card glass-card" data-step="4">
-              <div class="card-icon f2a-inline-4">🤝</div>
-              <h3>4. Trust</h3>
-              <p>Rely on verified ledger entries and authentic analytical data to ensure safety and potency.</p>
+          <div class="flow-track-wrapper">
+            <div class="grid grid-4 flow-cards-grid">
+              <div class="card how-card flow-step-card glass-card" data-step="1">
+                <div class="card-icon f2a-inline-1">📱</div>
+                <h3>1. Scan</h3>
+                <p>Identify a medicinal plant using the AI leaf scanner on your mobile or desktop camera.</p>
+              </div>
+              <div class="card how-card flow-step-card glass-card" data-step="2">
+                <div class="card-icon f2a-inline-2">📖</div>
+                <h3>2. Discover</h3>
+                <p>Learn authentic pharmacological details, traditional properties, and active constituents.</p>
+              </div>
+              <div class="card how-card flow-step-card glass-card" data-step="3">
+                <div class="card-icon f2a-inline-3">🔬</div>
+                <h3>3. Verify</h3>
+                <p>Understand crop location, cooperative harvesting details, and laboratory testing logs.</p>
+              </div>
+              <div class="card how-card flow-step-card glass-card" data-step="4">
+                <div class="card-icon f2a-inline-4">🤝</div>
+                <h3>4. Trust</h3>
+                <p>Rely on verified ledger entries and authentic analytical data to ensure safety and potency.</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
 
 
@@ -236,21 +719,266 @@
         </div>
       </div>
 
-    </section>
-
-    <!-- SCAN VIEW -->
-    <section id="scan" class="page-view">
-      <div class="container section-padding scanner-section f2a-inline-23">
-        <div class="section-header">
-          <span class="section-tagline">AI Plant Identifier</span>
-          <h2 class="section-heading">Scan Your Leaf</h2>
+      <!-- Herbal Information & Knowledge Cards Section -->
+      <div class="container section-padding herbal-info-section" id="herbal-info-section">
+        <div class="section-header text-center">
+          <span class="section-tagline">Ayurvedic Wisdom & Botanical Science</span>
+          <h2 class="section-heading">Information & Content</h2>
         </div>
-        <div class="scanner-container">
-          <div class="scanner-box" id="scannerBox">
-            <!-- Content will be rendered dynamically by custom JS based on logged in state -->
+
+        <div class="herbal-info-grid">
+          <!-- Card 1: What is a Medicinal Herb? -->
+          <div class="herbal-info-card">
+            <div class="card-badge">Botanical Basics</div>
+            <div class="card-header-icon">
+              <span class="info-icon">🌿</span>
+              <h3>What is a Medicinal Herb?</h3>
+            </div>
+            <p class="info-lead">
+              A medicinal herb or plant is a plant whose parts may be used as raw material in traditional medicine or herbal preparations. Different parts of a plant may be used, depending on the particular medicinal plant and traditional preparation.
+            </p>
+
+            <div class="card-two-col-layout">
+              <!-- Left Sub-Column: Plant Parts & Regulatory Guidance -->
+              <div class="plant-parts-box">
+                <h4>Plant Parts Used:</h4>
+                <div class="parts-pills-wrap">
+                  <span class="part-pill">🌱 Root</span>
+                  <span class="part-pill">🪵 Stem</span>
+                  <span class="part-pill">🌳 Bark</span>
+                  <span class="part-pill">🍃 Leaf</span>
+                  <span class="part-pill">🌸 Flower</span>
+                  <span class="part-pill">🍎 Fruit</span>
+                  <span class="part-pill">🌾 Seed</span>
+                  <span class="part-pill">🥔 Rhizome</span>
+                  <span class="part-pill">💧 Gum or resin</span>
+                  <span class="part-pill">🌿 Whole plant</span>
+                </div>
+                <div class="ayush-note">
+                  <span class="note-icon">🏛️</span>
+                  <p>Official <strong>Ministry of Ayush</strong> resources maintain lists of medicinal plants along with the specific plant parts used.</p>
+                </div>
+              </div>
+
+              <!-- Right Sub-Column: Traditional Preparation & Potency Factors -->
+              <div class="herbal-prep-box">
+                <h4>Traditional Preparation Forms (Pancha Kalpana):</h4>
+                <div class="prep-items-grid">
+                  <div class="prep-item">
+                    <span class="prep-icon">🍵</span>
+                    <div>
+                      <strong>Swarasa</strong> — Fresh Juice
+                    </div>
+                  </div>
+                  <div class="prep-item">
+                    <span class="prep-icon">🪵</span>
+                    <div>
+                      <strong>Kwatha</strong> — Decoction
+                    </div>
+                  </div>
+                  <div class="prep-item">
+                    <span class="prep-icon">🌾</span>
+                    <div>
+                      <strong>Churna</strong> — Herbal Powder
+                    </div>
+                  </div>
+                  <div class="prep-item">
+                    <span class="prep-icon">🍯</span>
+                    <div>
+                      <strong>Avaleha</strong> — Confection
+                    </div>
+                  </div>
+                  <div class="prep-item">
+                    <span class="prep-icon">💧</span>
+                    <div>
+                      <strong>Taila & Ghrita</strong> — Medicated Oils
+                    </div>
+                  </div>
+                </div>
+
+                <div class="sourcing-note">
+                  <span class="note-icon">📍</span>
+                  <p><strong>Potency Factors:</strong> Medicinal potency depends on <em>Ritu</em> (Harvesting Season) and <em>Desha</em> (Geographical Origin) to preserve active bio-compounds.</p>
+                </div>
+              </div>
+            </div>
           </div>
+
+          <!-- Card 2: Herbal Knowledge in Ayurveda -->
+          <div class="herbal-info-card">
+            <div class="card-badge">Ayurvedic Concepts</div>
+            <div class="card-header-icon">
+              <span class="info-icon">📖</span>
+              <h3>Herbal Knowledge in Ayurveda</h3>
+            </div>
+            <p class="info-lead">
+              Ayurvedic herbal knowledge is not limited to simply knowing the name of a plant. A medicinal substance is traditionally understood through multiple characteristics.
+            </p>
+            <p style="font-size: 0.93rem; color: #a7f3d0; margin-bottom: 0.8rem; font-weight: 600;">Important Ayurvedic concepts used to describe medicinal substances include:</p>
+            <div class="ayurvedic-concepts-list">
+              <div class="concept-item">
+                <div class="concept-title">
+                  <span class="concept-name">Dravya</span>
+                  <span class="concept-subtitle">The Substance</span>
+                </div>
+                <p>Refers to the substance itself—the medicinal material or entity being studied. <em>For example, a particular plant or herb can be considered a Dravya within Ayurvedic study.</em></p>
+              </div>
+
+              <div class="concept-item">
+                <div class="concept-title">
+                  <span class="concept-name">Rasa</span>
+                  <span class="concept-subtitle">Taste (6 Rasas)</span>
+                </div>
+                <p>Refers to taste. Ayurveda traditionally recognizes six Rasas:</p>
+                <div class="rasa-pills-grid">
+                  <span class="rasa-pill">🍯 <strong>Madhura</strong> — Sweet</span>
+                  <span class="rasa-pill">🍋 <strong>Amla</strong> — Sour</span>
+                  <span class="rasa-pill">🧂 <strong>Lavana</strong> — Salty</span>
+                  <span class="rasa-pill">🌶️ <strong>Katu</strong> — Pungent</span>
+                  <span class="rasa-pill">☕ <strong>Tikta</strong> — Bitter</span>
+                  <span class="rasa-pill">🍵 <strong>Kashaya</strong> — Astringent</span>
+                </div>
+                <p class="concept-subtext">These tastes are traditionally connected with the Panchamahabhuta framework and are used to understand the properties of substances.</p>
+              </div>
+
+              <div class="concept-item">
+                <div class="concept-title">
+                  <span class="concept-name">Guna</span>
+                  <span class="concept-subtitle">Qualities</span>
+                </div>
+                <p>Refers to the qualities or characteristics traditionally used to describe a substance. These qualities help Ayurveda explain the nature and behavior of a medicinal substance.</p>
+              </div>
+
+              <div class="concept-item">
+                <div class="concept-title">
+                  <span class="concept-name">Virya</span>
+                  <span class="concept-subtitle">Potency</span>
+                </div>
+                <p>Refers to the potency or active energetic characteristic of a substance in the traditional Ayurvedic framework.</p>
+              </div>
+
+              <div class="concept-item">
+                <div class="concept-title">
+                  <span class="concept-name">Vipaka</span>
+                  <span class="concept-subtitle">Post-Digestive Effect</span>
+                </div>
+                <p>Refers to the post-digestive effect of a substance according to Ayurveda.</p>
+              </div>
+
+              <div class="concept-item">
+                <div class="concept-title">
+                  <span class="concept-name">Prabhava</span>
+                  <span class="concept-subtitle">Specific Action</span>
+                </div>
+                <p>Refers to a specific or distinctive effect traditionally attributed to a substance that may not be fully explained solely through its other described properties.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Connection Between Herbs and Panchamahabhuta -->
+          <div class="herbal-info-card">
+            <div class="card-badge">5 Elements</div>
+            <div class="card-header-icon">
+              <span class="info-icon">🌌</span>
+              <h3>Connection Between Herbs & Panchamahabhuta</h3>
+            </div>
+            <p class="info-lead">
+              According to the Ayurvedic framework, substances are understood in relation to the Panchamahabhuta principle:
+            </p>
+            <div class="pancha-grid">
+              <div class="pancha-card">
+                <span class="element-icon">✨</span>
+                <span class="element-name">Akasha</span>
+                <span class="element-trans">Space</span>
+              </div>
+              <div class="pancha-card">
+                <span class="element-icon">💨</span>
+                <span class="element-name">Vayu</span>
+                <span class="element-trans">Air</span>
+              </div>
+              <div class="pancha-card">
+                <span class="element-icon">🔥</span>
+                <span class="element-name">Agni</span>
+                <span class="element-trans">Fire</span>
+              </div>
+              <div class="pancha-card">
+                <span class="element-icon">💧</span>
+                <span class="element-name">Jala</span>
+                <span class="element-trans">Water</span>
+              </div>
+              <div class="pancha-card">
+                <span class="element-icon">⛰️</span>
+                <span class="element-name">Prithvi</span>
+                <span class="element-trans">Earth</span>
+              </div>
+            </div>
+            <div class="pancha-explanation">
+              <p>Official Ayurvedic material explains that, in relation to drugs, the Panchamahabhuta framework is represented through characteristics such as <strong>Rasa, Guna, Virya, and Vipaka</strong>.</p>
+              <div class="pancha-summary-box">
+                <span class="summary-icon">💡</span>
+                <p>Therefore, herbs are generally better understood through their Ayurvedic properties and elemental associations, rather than assigning every herb to only one element.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4: Connection Between Herbs and Doshas -->
+          <div class="herbal-info-card">
+            <div class="card-badge">Dosha Dynamics</div>
+            <div class="card-header-icon">
+              <span class="info-icon">⚖️</span>
+              <h3>Connection Between Herbs & Doshas</h3>
+            </div>
+            <p class="info-lead">
+              The properties of a medicinal substance are traditionally used to understand its relationship with:
+            </p>
+            <div class="dosha-cards-wrap">
+              <div class="dosha-item vata">
+                <span class="dosha-icon">🌬️</span>
+                <h4>Vata</h4>
+                <p>Governs movement & vitality</p>
+              </div>
+              <div class="dosha-item pitta">
+                <span class="dosha-icon">🔥</span>
+                <h4>Pitta</h4>
+                <p>Governs metabolism & digestion</p>
+              </div>
+              <div class="dosha-item kapha">
+                <span class="dosha-icon">🌊</span>
+                <h4>Kapha</h4>
+                <p>Governs structure & lubrication</p>
+              </div>
+            </div>
+            <p class="dosha-note">Different herbs may traditionally be described as having effects that influence one or more Doshas.</p>
+
+            <div class="ayurveda-flow-box">
+              <h4>Herb to Dosha Relationship Flow</h4>
+              <div class="flow-pipeline">
+                <div class="pipeline-step">
+                  <span class="step-icon">🌿</span>
+                  <span class="step-text">Herb</span>
+                </div>
+                <span class="pipeline-arrow">➔</span>
+                <div class="pipeline-step">
+                  <span class="step-icon">📜</span>
+                  <span class="step-text">Ayurvedic Properties</span>
+                </div>
+                <span class="pipeline-arrow">➔</span>
+                <div class="pipeline-step">
+                  <span class="step-icon">🌌</span>
+                  <span class="step-text">Panchamahabhuta</span>
+                </div>
+                <span class="pipeline-arrow">➔</span>
+                <div class="pipeline-step">
+                  <span class="step-icon">⚖️</span>
+                  <span class="step-text">Dosha Relationship</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
+
     </section>
 
     <!-- SUPPLY CHAIN VIEW (INCLUDES TRACE SEARCH & ECOSYSTEM MAP) -->
@@ -746,26 +1474,58 @@
   </div>
 
   <!-- Chatbot Widget markup -->
-  <button type="button" class="chatbot-trigger" id="chatbotTrigger" aria-label="Ask Farm2Ayur Assistant">💬</button>
+  <button type="button" class="chatbot-trigger" id="chatbotTrigger" aria-label="Ask Farm2Ayur Assistant">
+    <span class="chatbot-trigger-icon">💬</span>
+    <span class="chatbot-badge" id="chatbotBadge">1</span>
+  </button>
   <div class="chatbot-panel" id="chatbotPanel">
-    <div class="chatbot-header">
-      <h3>🌿 Ask Farm2Ayur</h3>
-      <button type="button" class="chatbot-close-btn" id="chatbotClose">&times;</button>
+    <!-- Drag & Drop Overlay Dropzone -->
+    <div class="chatbot-dropzone" id="chatbotDropzone">
+      <div class="dropzone-content">
+        <span class="dropzone-icon">🍃</span>
+        <p>Drop leaf photo here for instant AI scan</p>
+      </div>
     </div>
+
+    <!-- Header with action controls -->
+    <div class="chatbot-header">
+      <div class="chatbot-title-wrap">
+        <span class="bot-status-dot"></span>
+        <h3>🌿 Ask Farm2Ayur AI</h3>
+      </div>
+      <div class="chatbot-header-actions">
+        <button type="button" class="chatbot-action-btn" id="chatbotClear" title="Clear Chat">🗑️</button>
+        <button type="button" class="chatbot-action-btn" id="chatbotExpand" title="Expand Modal">⛶</button>
+        <button type="button" class="chatbot-action-btn chatbot-close-btn" id="chatbotClose" title="Close">&times;</button>
+      </div>
+    </div>
+
+    <!-- Chat Body -->
     <div class="chatbot-body" id="chatbotBody">
       <div class="chat-msg bot">
-        Namaste! I am your Farm2Ayur virtual botanical guide. Feel free to ask me questions about medicinal herbs, our AI leaf identifier, or how to search crop-to-remedy tracing logs!
+        <div class="msg-header">
+          <span>Farm2Ayur AI</span>
+          <button type="button" class="tts-btn" title="Listen to message">🔊</button>
+        </div>
+        Namaste! I am your Farm2Ayur virtual botanical guide. Ask me about medicinal herbs, AI leaf scanning, or batch tracing logs!
       </div>
     </div>
+
+    <!-- Quick Action Suggestion Chips -->
+    <div class="chatbot-chips" id="chatbotChips">
+      <button type="button" class="chip-btn" data-query="Identify a Leaf">🌿 Identify a Leaf</button>
+      <button type="button" class="chip-btn" data-query="Check Batch Traceability">📜 Check Traceability</button>
+      <button type="button" class="chip-btn" data-query="Find Herbs for My Dosha">🧘 Dosha Herbs</button>
+    </div>
+
+    <!-- Chat Input Form -->
     <div class="chatbot-footer">
-      <div class="chatbot-presets">
-        <button type="button" class="preset-query-btn" data-query="How does the leaf scanner work?">How does the leaf scanner work?</button>
-        <button type="button" class="preset-query-btn" data-query="How is herb purity verified?">How is herb purity verified?</button>
-        <button type="button" class="preset-query-btn" data-query="Tell me about Ashwagandha certifications.">Tell me about Ashwagandha certifications.</button>
-      </div>
       <form id="chatbotForm" class="chatbot-form">
-        <input type="text" id="chatbotInput" class="chatbot-input" placeholder="Type a question..." required>
-        <button type="submit" class="btn btn-secondary btn-sm f2a-inline-28">Send</button>
+        <input type="file" id="chatbotFileInput" accept="image/*" style="display:none;">
+        <button type="button" class="chatbot-input-tool-btn" id="chatbotUploadBtn" title="Upload / Scan Leaf Photo">📷</button>
+        <button type="button" class="chatbot-input-tool-btn" id="chatbotMicBtn" title="Voice Input">🎙️</button>
+        <input type="text" id="chatbotInput" class="chatbot-input" placeholder="Ask a question or scan a leaf..." required>
+        <button type="submit" class="btn btn-secondary btn-sm chatbot-send-btn">Send</button>
       </form>
     </div>
   </div>

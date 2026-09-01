@@ -229,16 +229,11 @@ if (!introOverlay) {
 
   if (!heroSection || !heroVideo || !heroTitle) return;
 
-  gsap.to(heroVideo, {
-    yPercent: -15,
-    scale: 1.08,
-    ease: 'none',
-    scrollTrigger: {
-      trigger: heroSection,
-      start: 'top top',
-      end: 'bottom top',
-      scrub: true
-    }
+  // Keep video fixed in position without upward parallax gaps
+  gsap.set(heroVideo, {
+    yPercent: 0,
+    scale: 1,
+    transformOrigin: 'center center'
   });
 
   gsap.to(heroTitle, {
@@ -257,7 +252,7 @@ if (!introOverlay) {
 
 
 /* ==========================================================================
-   3. PLATFORM FLOW PROCESS — 3D ORBIT CAROUSEL
+   3. PLATFORM FLOW PROCESS — 3D CYLINDRICAL ORBIT CAROUSEL (Pic 2 Style)
    ========================================================================== */
 (function initPlatformFlow3DOrbit() {
   const container = document.querySelector('#flow-process-section');
@@ -272,13 +267,11 @@ if (!introOverlay) {
   let isDragging = false;
   let dragDelta = 0;
 
-  const floatOffsets = [0, -12, 10, -6];
-
   function getRadiusX() {
     return window.innerWidth < 768 ? Math.min(window.innerWidth * 0.38, 160) : 340;
   }
   function getRadiusZ() {
-    return window.innerWidth < 768 ? 130 : 220;
+    return window.innerWidth < 768 ? 120 : 200;
   }
 
   function animateOrbit() {
@@ -288,77 +281,74 @@ if (!introOverlay) {
     const radiusZ = getRadiusZ();
 
     cards.forEach((card, index) => {
-      const baseAngle = (index * (360 / totalCards));
-      const angleRad = ((baseAngle + currentAngle) * Math.PI) / 180;
+      // 0 deg baseAngle so card 0 is centered at currentAngle = 0
+      const baseAngle = index * (360 / totalCards);
+      let angle = (baseAngle + currentAngle) % 360;
+      if (angle < 0) angle += 360;
+      const angleRad = (angle * Math.PI) / 180;
 
       const x = Math.sin(angleRad) * radiusX;
       const z = Math.cos(angleRad) * radiusZ - radiusZ;
-      const rotateY = -x * 0.08;
+      
+      // rotateY curves cards inward along the 3D cylinder ring (like Pic 2)
+      const rotateY = -Math.sin(angleRad) * 26;
 
       const depthFactor = (z + radiusZ * 2) / (radiusZ * 2); 
-      const opacity = Math.max(0.35, depthFactor);
+      const opacity = Math.max(0.2, depthFactor);
+      const scale = 0.85 + (depthFactor * 0.15); 
       const zIndex = Math.round(depthFactor * 100);
-      const floatY = floatOffsets[index % floatOffsets.length];
 
-      card.style.transform = `translate3d(${x}px, ${floatY}px, ${z}px) rotateY(${rotateY}deg)`;
+      card.style.transform = `translate3d(${x}px, 0px, ${z}px) rotateY(${rotateY}deg) scale(${scale})`;
       card.style.opacity = opacity;
       card.style.zIndex = zIndex;
 
-      if (z > -40) {
+      // When z is near 0 (front featured card showcased in middle)
+      if (z > -30) {
         card.classList.add('active-front-card');
-        card.style.borderColor = 'rgba(16, 185, 129, 0.85)';
-        card.style.boxShadow = '0 30px 65px rgba(0,0,0,0.75), 0 0 40px rgba(16, 185, 129, 0.45), inset 0 0 25px rgba(6, 182, 212, 0.25)';
+        card.style.borderColor = 'rgba(16, 185, 129, 0.95)';
+        card.style.boxShadow = '0 30px 70px rgba(0, 0, 0, 0.8), 0 0 50px rgba(16, 185, 129, 0.55), inset 0 0 25px rgba(6, 182, 212, 0.3)';
       } else {
         card.classList.remove('active-front-card');
-        card.style.borderColor = 'rgba(255, 255, 255, 0.18)';
-        card.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.6)';
+        card.style.borderColor = 'rgba(16, 185, 129, 0.45)';
+        card.style.boxShadow = '0 15px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(16, 185, 129, 0.2)';
       }
     });
 
     requestAnimationFrame(animateOrbit);
   }
 
-  function onStart(e) {
-    isDragging = true;
-    startX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
-    dragDelta = 0;
+  // Smooth rotation by simply moving mouse over section (no click required!)
+  const trackWrap = document.querySelector('#flow-process-section .flow-track-wrapper') || container;
+
+  function handleMouseMove(e) {
+    const rect = trackWrap.getBoundingClientRect();
+    if (!rect.width) return;
+    
+    // Normalized cursor position from -0.5 (left) to +0.5 (right)
+    const normalizedX = (e.clientX - rect.left) / rect.width - 0.5;
+    
+    // Smoothly map cursor position across section to rotate cylinder angle
+    // Mouse left -> rotates to show earlier cards
+    // Mouse right -> rotates to show later cards
+    targetAngle = -normalizedX * 360;
   }
 
-  function onMove(e) {
-    if (!isDragging) return;
-    const currentX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
-    dragDelta = currentX - startX;
-    startX = currentX;
-    targetAngle += dragDelta * 0.45;
-  }
-
-  function onEnd() {
-    if (!isDragging) return;
-    isDragging = false;
-    const step = 360 / totalCards;
-    targetAngle = Math.round(targetAngle / step) * step;
-  }
-
-  const trackWrap = document.querySelector('#flow-process-section .flow-track-wrapper');
   if (trackWrap) {
-    trackWrap.addEventListener('mousedown', onStart);
-    trackWrap.addEventListener('touchstart', onStart, { passive: true });
+    trackWrap.addEventListener('mousemove', handleMouseMove);
+    
+    // Mobile touch move support
+    trackWrap.addEventListener('touchmove', (e) => {
+      if (e.touches && e.touches[0]) {
+        handleMouseMove(e.touches[0]);
+      }
+    }, { passive: true });
   }
 
-  window.addEventListener('mousemove', onMove);
-  window.addEventListener('mouseup', onEnd);
-  window.addEventListener('touchmove', onMove, { passive: true });
-  window.addEventListener('touchend', onEnd);
-
+  // Click any card to directly snap it into center view
   cards.forEach((card, index) => {
-    card.addEventListener('click', (e) => {
-      if (Math.abs(dragDelta) > 5) return;
+    card.addEventListener('click', () => {
       const step = 360 / totalCards;
-      const targetCardAngle = -index * step;
-      let diff = (targetCardAngle - targetAngle) % 360;
-      if (diff < -180) diff += 360;
-      if (diff > 180) diff -= 360;
-      targetAngle += diff;
+      targetAngle = -index * step;
     });
   });
 

@@ -1,23 +1,71 @@
 gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
 /* =====================================
-   INTRO CINEMATIC ANIMATION
+   COOL KINETIC INTRO HERO ANIMATION
 ===================================== */
 const introTimeline = gsap.timeline({
-    defaults: { ease: "power4.out" }
+    defaults: { ease: "power3.out" }
 });
 
 introTimeline
-    .from(".intro-small", { opacity: 0, y: 30, duration: 0.8 })
-    .from(".intro-title span", { opacity: 0, letterSpacing: "30px", duration: 0.8 }, "-=0.4")
-    .from(".intro-title", { opacity: 0, scale: 0.12, filter: "blur(30px)", duration: 1.5 }, "-=0.2")
-    .to(".lightning", { opacity: 0.9, duration: 0.05 })
-    .to(".lightning", { opacity: 0, duration: 0.15 })
-    .to(".intro-content", { x: 15, duration: 0.05 })
-    .to(".intro-content", { x: -15, duration: 0.05 })
-    .to(".intro-content", { x: 0, duration: 0.1 })
-    .to(".intro-title", { scale: 1.05, duration: 0.2 })
-    .to(".intro-title", { scale: 1, duration: 0.5 });
+    .fromTo(".intro-badge", 
+        { opacity: 0, y: -25, scale: 0.9 }, 
+        { opacity: 1, y: 0, scale: 1, duration: 0.9, ease: "back.out(1.7)" }
+    )
+    .fromTo(".title-word", 
+        { 
+            opacity: 0, 
+            y: 50, 
+            scale: 0.88, 
+            filter: "blur(18px)",
+            rotationX: 20
+        }, 
+        { 
+            opacity: 1, 
+            y: 0, 
+            scale: 1, 
+            filter: "blur(0px)",
+            rotationX: 0,
+            duration: 1.3, 
+            stagger: 0.18, 
+            ease: "power3.out" 
+        }, 
+        "-=0.5"
+    )
+    .fromTo(".intro-bottom", 
+        { opacity: 0, y: 20 }, 
+        { opacity: 1, y: 0, duration: 0.8 }, 
+        "-=0.6"
+    );
+
+// Interactive 3D Cursor Spotlight & Tilt Reactor on Hero
+const introSection = document.querySelector(".intro");
+const introTitle = document.querySelector(".intro-title");
+const introSpotlight = document.getElementById("introSpotlight");
+
+if (introSection && introTitle) {
+    introSection.addEventListener("mousemove", (e) => {
+        const rect = introSection.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+
+        if (introSpotlight) {
+            introSpotlight.style.left = `${mouseX}px`;
+            introSpotlight.style.top = `${mouseY}px`;
+        }
+
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const tiltX = (centerY - mouseY) / 25;
+        const tiltY = (mouseX - centerX) / 30;
+
+        introTitle.style.transform = `perspective(1000px) rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg)`;
+    });
+
+    introSection.addEventListener("mouseleave", () => {
+        introTitle.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
+    });
+}
 
 /* SCROLL INTRO EXIT */
 gsap.to(".intro", {
@@ -145,15 +193,6 @@ document.querySelectorAll(".member").forEach((member) => {
     canvas.addEventListener("mousemove", startHoverSequence);
     canvas.addEventListener("touchmove", startHoverSequence);
 });
-
-/* ATMOSPHERIC LIGHTNING FLASHES */
-setInterval(() => {
-    if (Math.random() > 0.65) {
-        gsap.timeline()
-            .to(".lightning", { opacity: 0.3, duration: 0.04 })
-            .to(".lightning", { opacity: 0, duration: 0.12 });
-    }
-}, 6500);
 
 /* =====================================
    COMIC-STYLE STAGGERED POP-UP ANIMATIONS FOR CARDS

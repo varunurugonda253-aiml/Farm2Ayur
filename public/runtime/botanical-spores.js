@@ -5,12 +5,15 @@
  */
 
 (function initBotanicalSpores() {
-  // 1. Strict guard: Exclude dedicated login page (login.html) and about page (about.html)
+  // 1. Strict guard: Exclude home/traceability page (index.html), login page, and about page
   const isExcludedPage = 
     window.location.pathname.toLowerCase().endsWith('login.html') ||
     window.location.pathname.toLowerCase().endsWith('/login') ||
     window.location.pathname.toLowerCase().endsWith('about.html') ||
     window.location.pathname.toLowerCase().endsWith('/about') ||
+    window.location.pathname.toLowerCase().endsWith('index.html') ||
+    window.location.pathname === '/' ||
+    window.location.pathname.endsWith('/') ||
     document.body.classList.contains('login-page') ||
     document.body.classList.contains('about-page');
 

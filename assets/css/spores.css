@@ -1,0 +1,140 @@
+/* ==========================================================================
+   FARM2AYUR — FLOATING BOTANICAL SPORES BACKGROUND ANIMATION
+   Ambient, organic floating green particles for Ayurvedic atmosphere
+   ========================================================================== */
+
+/* Main layout containers must NOT trap child cards in low stacking contexts */
+body > .main-content,
+.main-content,
+.scan-page-container {
+  position: static !important;
+  z-index: auto !important;
+}
+
+/* Section transparent backdrops so body background and spores show through */
+section.page-view,
+#home,
+#supply-chain,
+#about,
+#contact,
+#flow-process-section,
+.flow-section-wrap,
+.scan-page-container {
+  background-color: transparent !important;
+}
+
+/* Background floating spores layer (z-index: 2) */
+.botanical-spores-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  pointer-events: none !important;
+  z-index: 2 !important;
+  overflow: hidden !important;
+}
+
+.spore-particle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.65) 0%, rgba(5, 150, 105, 0.2) 65%, transparent 100%);
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+  animation-name: spore-float;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+@keyframes spore-float {
+  0% {
+    transform: translateY(105vh) translateX(0) scale(0.6);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.8;
+  }
+  88% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-10vh) translateX(30px) scale(1.1);
+    opacity: 0;
+  }
+}
+
+/* ==========================================================================
+   CARD & CONTENT ELEVATION HIERARCHY
+   All content cards, panels, headers, and UI elements sit at z-index: 10
+   with opaque surfaces so spores float strictly BEHIND them in the background.
+   ========================================================================== */
+.hero-section,
+.herbal-info-card,
+.flow-step-card,
+.how-card,
+.glass-card,
+.track-herb-stage-wrap,
+.track-herb-container,
+.track-herb-content,
+.feature-card,
+.knowledge-card,
+.trace-hero-container,
+.trace-pipeline-section,
+.milestones-container,
+.station-detail-card,
+.telemetry-card,
+.authenticity-card,
+.specifications-card,
+.flow-station-node,
+.camera-scanner-wrapper,
+.scanner-viewport-stage,
+.member-image,
+.member-info,
+.member,
+.member-tags,
+.intro-content,
+.about-content,
+.section-header,
+.flow-header,
+.herbal-info-header {
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+/* Ensure card surfaces are completely solid & opaque so spores cannot show through them */
+.herbal-info-card,
+.camera-scanner-wrapper,
+.milestones-container,
+.telemetry-card,
+.authenticity-card,
+.specifications-card,
+.station-detail-card {
+  background-color: #ffffff !important;
+}
+
+.flow-step-card {
+  background-color: #111827 !important;
+}
+
+.track-herb-stage-wrap {
+  background-color: #0b111e !important;
+}
+
+.app-header,
+.mobile-nav-drawer {
+  position: fixed !important;
+  z-index: 1000 !important;
+}
+
+.app-footer {
+  position: relative !important;
+  z-index: 100 !important;
+}
+
+.chatbot-trigger,
+.chat-window {
+  z-index: 99999 !important;
+}

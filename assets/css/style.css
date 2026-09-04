@@ -61,9 +61,8 @@
   --border-radius-lg: 24px;
 }
 
-/* ==========================================================================
-   GLOBAL RESET & INITIAL SETUP
-   ========================================================================== */
+/* GLOBAL RESET & INITIAL SETUP */
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -121,9 +120,8 @@ ul {
   list-style: none;
 }
 
-/* ==========================================================================
-   LAYOUT CONTAINERS & HELPER CLASSES
-   ========================================================================== */
+/* LAYOUT CONTAINERS & HELPER CLASSES */
+
 .container {
   width: 100%;
   max-width: 1200px;
@@ -157,7 +155,7 @@ ul {
   background: rgba(30, 58, 39, 0.15);
   border-top: 1px solid var(--border-glass);
   border-bottom: 1px solid var(--border-glass);
-}
+} 
 
 .divider {
   display: flex;

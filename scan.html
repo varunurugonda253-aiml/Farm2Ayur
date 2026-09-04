@@ -8,12 +8,26 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="scan.css">
+  <link rel="stylesheet" href="assets/css/footer.css">
+  <link rel="stylesheet" href="assets/css/spores.css">
   <script type="module" src="./public/runtime/cursor-trail.js"></script>
+  <script type="module" src="./public/runtime/footer.js"></script>
+  <script type="module" src="./public/runtime/botanical-spores.js"></script>
 </head>
 <body>
+
+  <!-- Reactive Mouse Ambient Glow Source -->
+  <div class="cursor-ambient-glow" id="cursorAmbientGlow" aria-hidden="true"></div>
+
+  <!-- Background Animated Organic Mesh Elements -->
+  <div class="mesh-bg-overlay" aria-hidden="true">
+    <div class="mesh-blob blob-1"></div>
+    <div class="mesh-blob blob-2"></div>
+    <div class="mesh-blob blob-3"></div>
+  </div>
 
   <!-- Full-Screen AI Camera Scanner Container -->
   <main class="scan-page-container">
@@ -21,19 +35,20 @@
       
       <!-- Top Navigation Bar -->
       <header class="scanner-top-bar">
-        <a href="index.html" class="scanner-nav-btn" id="scanBackBtn" aria-label="Go Back to Home">
+        <a href="index.html" class="scanner-nav-btn" id="scanBackBtn" aria-label="Go Back to Home" title="Return to Dashboard">
           <span class="nav-btn-icon">←</span>
         </a>
         <div class="scanner-header-text">
-          <h1>Scan Medicinal Leaf</h1>
+          <h1 class="shimmer-title">Scan Medicinal Leaf</h1>
+          <span class="scanner-subtext">Neural Ayurvedic Phytochemical Classifier</span>
         </div>
-        <button type="button" class="scanner-nav-btn" id="scanInfoBtn" aria-label="Best Practices Guide">
+        <button type="button" class="scanner-nav-btn" id="scanInfoBtn" aria-label="Scanning Best Practices Guide" title="Scanning Tips">
           <span class="nav-btn-icon">ℹ️</span>
         </button>
       </header>
 
-      <!-- Camera Viewport & Stream Stage -->
-      <section class="scanner-viewport-stage" id="scannerViewportStage">
+      <!-- Camera Viewport & Stream Stage (Acts as Drag & Drop Zone) -->
+      <section class="scanner-viewport-stage" id="scannerViewportStage" tabindex="0" role="region" aria-label="Camera scanner viewfinder and dropzone">
         
         <!-- Live Camera Video Feed (Active only when camera started) -->
         <video id="scanVideoElement" class="camera-live-feed" autoplay playsinline muted style="display:none;"></video>
@@ -41,57 +56,97 @@
         
         <!-- Ambient Simulated Camera Feed (Shown by default until camera starts) -->
         <div class="camera-ambient-feed" id="cameraAmbientFeed">
-          <div class="ambient-leaf-specimen" id="ambientLeafSpecimen">🌱</div>
+          <div class="ambient-leaf-specimen" id="ambientLeafSpecimen" title="Sample Leaf Specimen">🌿</div>
         </div>
 
         <!-- Flashlight / Torch Beam Overlay -->
         <div class="camera-torch-glow" id="cameraTorchGlow"></div>
 
-        <!-- Start Camera Permission Banner (If user hasn't clicked start yet) -->
-        <div class="camera-activation-overlay" id="cameraActivationOverlay">
-          <div class="activation-card">
-            <span class="activation-icon">📸</span>
-            <h3>Enable Live Camera Scan</h3>
-            <p>Allow camera access to instantly identify leaf morphology and active phytochemicals.</p>
-            <button type="button" class="btn-gold" id="startLiveCameraBtn">Start Live Camera</button>
+        <!-- Real-Time Translucent Diagnostic Stats HUD Strip -->
+        <div class="scanner-hud-strip" id="scannerHudStrip" aria-live="polite">
+          <div class="hud-stat-pill" id="hudLightingStat" title="Ambient illumination sensor">
+            <span class="hud-dot dot-emerald"></span>
+            <span class="hud-label">Lighting:</span>
+            <span class="hud-value" id="hudLightingValue">Optimal (480 Lux)</span>
+          </div>
+          <div class="hud-stat-pill" id="hudFocusStat" title="Neural edge detection & focus stability">
+            <span class="hud-dot dot-cyan"></span>
+            <span class="hud-label">Focus:</span>
+            <span class="hud-value" id="hudFocusValue">Locked (98.6%)</span>
+          </div>
+          <div class="hud-stat-pill hud-stat-resolution" id="hudConfidenceStat" title="Phytochemical extraction confidence">
+            <span class="hud-dot dot-teal"></span>
+            <span class="hud-label">AI Sensor:</span>
+            <span class="hud-value" id="hudConfidenceValue">Ready</span>
           </div>
         </div>
 
-        <!-- Smart UI Feedback Badges -->
-        <div class="scanner-smart-badges" id="scanFeedbackBadges">
-          <span class="smart-badge badge-lighting" id="scanBadgeLighting">
-            <span class="badge-dot"></span> Lighting: Optimal
-          </span>
-          <span class="smart-badge badge-distance" id="scanBadgeDistance">
-            <span class="badge-dot"></span> Distance: Ready
-          </span>
-          <span class="smart-badge badge-focus" id="scanBadgeFocus">
-            <span class="badge-dot"></span> AI Focus: Locked
-          </span>
-        </div>
-
-        <!-- Dynamic Instructional Header -->
+        <!-- Dynamic Instructional Bar -->
         <div class="scanner-instruction-wrap">
-          <h2 class="instruction-main" id="scanInstructionMain">Position leaf within the frame</h2>
+          <h2 class="instruction-main" id="scanInstructionMain">Position leaf blade within frame</h2>
         </div>
 
-        <!-- Central Organic Leaf Glassmorphic Reticle Frame (Warm Gold & Cream) -->
-        <div class="leaf-reticle-frame" id="scanReticleFrame">
-          <!-- Glowing Warm Gold & Cream Corner Brackets -->
+        <!-- Start Camera Glassmorphism Permission Overlay & Drag-Drop Landing -->
+        <div class="camera-activation-overlay" id="cameraActivationOverlay">
+          <div class="activation-card" id="activationCard">
+            <!-- Animated HUD Scan Reticle Brackets around Prompt Card -->
+            <div class="hud-reticle-corner corner-tl"></div>
+            <div class="hud-reticle-corner corner-tr"></div>
+            <div class="hud-reticle-corner corner-bl"></div>
+            <div class="hud-reticle-corner corner-br"></div>
+            <div class="hud-reticle-scan-line"></div>
+
+            <div class="activation-icon-wrapper">
+              <div class="activation-icon-halo"></div>
+              <span class="activation-icon">📷</span>
+            </div>
+
+            <h3 class="activation-title">Enable Live Camera Scan</h3>
+            <p class="activation-desc">
+              Allow camera access to instantly analyze leaf morphology, venation patterns, and active Ayurvedic phytochemicals.
+            </p>
+
+            <button type="button" class="btn-emerald" id="startLiveCameraBtn" aria-label="Start Live Camera Scanner">
+              <span class="btn-pulse-glow"></span>
+              <span class="btn-icon">⚡</span> Start Live Camera
+            </button>
+
+            <!-- Drag and Drop Quick Hint -->
+            <div class="dropzone-hint" id="dropzoneHint">
+              <span class="drop-icon">🍃</span>
+              <span>or drag & drop a leaf image here</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Central Organic Leaf Glassmorphic Reticle Frame (Emerald & Cyan HUD) -->
+        <div class="leaf-reticle-frame" id="scanReticleFrame" aria-hidden="true">
+          <!-- Glowing Emerald & Cyan Corner Brackets -->
           <div class="reticle-corner top-left"></div>
           <div class="reticle-corner top-right"></div>
           <div class="reticle-corner bottom-left"></div>
           <div class="reticle-corner bottom-right"></div>
 
-          <!-- Sweeping Golden Amber Laser Line -->
+          <!-- Sweeping Emerald Laser Line Visualizer -->
           <div class="reticle-laser-line" id="scanLaserLine">
             <div class="laser-beam-core"></div>
             <div class="laser-beam-flare"></div>
+            <div class="laser-particle-sparks"></div>
           </div>
 
-          <!-- Center Target Focus Crosshair -->
+          <!-- Center Target Focus Crosshair with venation grid ring -->
           <div class="reticle-center-target">
             <div class="target-crosshair"></div>
+            <div class="target-grid-ring"></div>
+          </div>
+        </div>
+
+        <!-- Interactive Drag-and-Drop Active Overlay -->
+        <div class="drag-drop-active-overlay" id="dragDropOverlay">
+          <div class="drag-drop-box">
+            <span class="drag-drop-icon">🌿</span>
+            <p class="drag-drop-text">Release to analyze leaf specimen</p>
+            <span class="drag-drop-sub">JPEG, PNG, WEBP supported</span>
           </div>
         </div>
 
@@ -100,7 +155,7 @@
       <!-- Bottom Controls Action Bar -->
       <footer class="scanner-bottom-controls">
         <!-- Torch / Flashlight Toggle -->
-        <button type="button" class="control-action-btn" id="scanTorchBtn" aria-label="Toggle Flashlight Torch">
+        <button type="button" class="control-action-btn" id="scanTorchBtn" aria-label="Toggle Flashlight Torch" title="Toggle Flashlight (T)">
           <div class="action-btn-circle">
             <span class="action-btn-icon">🔦</span>
           </div>
@@ -108,17 +163,18 @@
         </button>
 
         <!-- Digital Zoom Toggle (1x / 2x) -->
-        <button type="button" class="control-action-btn" id="scanZoomBtn" aria-label="Toggle Camera Zoom">
+        <button type="button" class="control-action-btn" id="scanZoomBtn" aria-label="Toggle Camera Zoom" title="Toggle Zoom (Z)">
           <div class="action-btn-circle">
             <span class="action-btn-icon zoom-level" id="scanZoomLevel">1x</span>
           </div>
           <span class="action-btn-label">Zoom</span>
         </button>
 
-        <!-- Central Shutter Capture Button -->
+        <!-- Central Emerald Shutter Capture Button -->
         <div class="shutter-btn-wrap">
-          <button type="button" class="scanner-shutter-btn" id="scanShutterBtn" aria-label="Capture and Scan Leaf">
+          <button type="button" class="scanner-shutter-btn" id="scanShutterBtn" aria-label="Capture and Scan Leaf Specimen" title="Capture & Analyze (Space)">
             <div class="shutter-pulse-ring"></div>
+            <div class="shutter-pulse-ring-outer"></div>
             <div class="shutter-inner-core">
               <span class="shutter-icon">🍃</span>
             </div>
@@ -126,18 +182,18 @@
         </div>
 
         <!-- Gallery / File Upload Button -->
-        <button type="button" class="control-action-btn" id="scanGalleryBtn" aria-label="Upload Photo from Gallery">
+        <button type="button" class="control-action-btn" id="scanGalleryBtn" aria-label="Upload Photo from Gallery" title="Upload Leaf Photo">
           <div class="action-btn-circle">
             <span class="action-btn-icon">🖼️</span>
           </div>
           <span class="action-btn-label">Gallery</span>
         </button>
-        <input type="file" id="scanFileInput" accept="image/*" capture="environment" style="display:none;">
+        <input type="file" id="scanFileInput" accept="image/*" style="display:none;" aria-label="Upload Leaf Image">
       </footer>
 
       <!-- Slide-up Botanical Analysis Drawer -->
-      <div class="scan-result-drawer" id="scanResultDrawer">
-        <div class="drawer-handle-bar" id="scanDrawerHandle">
+      <div class="scan-result-drawer" id="scanResultDrawer" role="dialog" aria-labelledby="drawerHerbName" aria-modal="false">
+        <div class="drawer-handle-bar" id="scanDrawerHandle" title="Toggle Result Drawer">
           <div class="drawer-pill-handle"></div>
         </div>
         <div class="drawer-content" id="scanDrawerContent">
@@ -145,43 +201,187 @@
         </div>
       </div>
 
-      <!-- Info / Best Practices Modal -->
-      <div class="scan-info-modal" id="scanInfoModal">
+      <!-- Slide-Over Botanical Info / Best Practices Modal -->
+      <div class="scan-info-modal" id="scanInfoModal" role="dialog" aria-labelledby="modalTitle" aria-modal="true">
         <div class="info-modal-backdrop" id="scanInfoModalBackdrop"></div>
         <div class="info-modal-card">
           <div class="info-modal-header">
-            <h3>🌿 Botanical Scanning Tips</h3>
-            <button type="button" class="info-modal-close" id="scanInfoCloseBtn">&times;</button>
+            <div class="info-modal-title-wrap">
+              <span class="info-header-icon">🌿</span>
+              <h3 id="modalTitle">Botanical Scanning Tips</h3>
+            </div>
+            <button type="button" class="info-modal-close" id="scanInfoCloseBtn" aria-label="Close Information Modal">&times;</button>
           </div>
           <div class="info-modal-body">
             <div class="tip-item">
-              <span class="tip-icon">☀️</span>
+              <div class="tip-icon-box">🔍</div>
               <div>
-                <strong>Natural Lighting</strong>
-                <p>Hold leaf under clear lighting or toggle Torch for high-contrast venation visibility.</p>
+                <strong>Clear Vein Patterns</strong>
+                <p>Ensure macro venation (reticulate/parallel veins) is sharply focused without motion blur.</p>
               </div>
             </div>
             <div class="tip-item">
-              <span class="tip-icon">📐</span>
+              <div class="tip-icon-box">☀️</div>
+              <div>
+                <strong>Avoid Harsh Shadows</strong>
+                <p>Use diffused natural daylight or engage the built-in Torch for uniform high-contrast illumination.</p>
+              </div>
+            </div>
+            <div class="tip-item">
+              <div class="tip-icon-box">📐</div>
               <div>
                 <strong>Center Leaf Contour</strong>
-                <p>Keep the full blade and stem aligned inside the gold glowing reticle frame.</p>
+                <p>Fit both the leaf apex and petiole securely inside the animated emerald reticle frame.</p>
               </div>
             </div>
             <div class="tip-item">
-              <span class="tip-icon">🔬</span>
+              <div class="tip-icon-box">🧪</div>
               <div>
-                <strong>Spectroscopy Analysis</strong>
-                <p>Our neural model extracts morphological venation and matches active Ayurvedic markers.</p>
+                <strong>AI Spectral Phytochemistry</strong>
+                <p>Our neural model correlates morphological biomarkers with standardized Ayurvedic pharmacopeia.</p>
               </div>
             </div>
           </div>
-          <button type="button" class="btn-gold w-100" id="scanInfoGotItBtn">Got It, Start Scanning</button>
+          <button type="button" class="btn-emerald w-100" id="scanInfoGotItBtn">Got It, Start Scanning</button>
         </div>
       </div>
 
     </div>
   </main>
+
+  <!-- Universal High-Tech Floating Dock Footer -->
+  <footer class="app-footer floating-dock-footer" id="appFooter">
+    <!-- Dynamic Holographic Isometric Grid Backdrop -->
+    <div class="footer-holo-grid" id="footerHoloGrid" aria-hidden="true"></div>
+    <div class="footer-glow-aura" id="footerGlowAura" aria-hidden="true"></div>
+
+    <div class="container footer-dock-inner">
+      
+      <!-- Top status bar with Node Online pulse badge -->
+      <div class="footer-top-status-row">
+        <div class="footer-node-status" title="Real-time AYUSH Blockchain Network Connectivity">
+          <span class="sonar-beacon">
+            <span class="sonar-wave"></span>
+            <span class="sonar-wave sonar-delay"></span>
+            <span class="sonar-core"></span>
+          </span>
+          <span class="node-text">AYUSH TraceNet: <strong class="node-online-badge">Node #409 Online</strong></span>
+        </div>
+        <div class="footer-sync-time">
+          <span class="sync-dot"></span>
+          <span id="footerLatency">Latency: 14ms (Encrypted)</span>
+        </div>
+      </div>
+
+      <!-- Main Footer Grid -->
+      <div class="footer-grid" id="footerGridNav">
+        <!-- Fluid Liquid Magnetic Hover Pill -->
+        <div class="magnetic-hover-pill" id="magneticHoverPill" aria-hidden="true"></div>
+
+        <!-- Brand Column -->
+        <div class="footer-brand">
+          <a href="index.html#home" class="footer-logo-wrap" aria-label="Farm2Ayur Home">
+            <!-- Holographic Arc-Reactor Pulse Logo -->
+            <div class="footer-arc-reactor">
+              <div class="reactor-pulse-halo"></div>
+              <div class="reactor-pulse-halo-outer"></div>
+              <svg class="reactor-leaf-svg" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path class="leaf-outline" d="M18 3C9 3 4 11 4 20C4 28 11 33 18 33C25 33 32 28 32 20C32 11 27 3 18 3Z" stroke="#10b981" stroke-width="2" fill="rgba(16, 185, 129, 0.15)"/>
+                <path class="leaf-stem" d="M18 33V7" stroke="#34d399" stroke-width="2" stroke-linecap="round"/>
+                <path class="leaf-vein vein-1" d="M18 13L24 9" stroke="#6ee7b7" stroke-width="1.5" stroke-linecap="round"/>
+                <path class="leaf-vein vein-2" d="M18 18L11 14" stroke="#6ee7b7" stroke-width="1.5" stroke-linecap="round"/>
+                <path class="leaf-vein vein-3" d="M18 23L25 19" stroke="#6ee7b7" stroke-width="1.5" stroke-linecap="round"/>
+                <path class="leaf-vein vein-4" d="M18 28L12 24" stroke="#6ee7b7" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span class="logo-text">Farm<span>2</span>Ayur</span>
+          </a>
+          <p class="footer-tagline">
+            A digital platform verifying Ayurvedic purity from soil to shelf. Enhancing identification safety, authentic botanical records, and fair farm pricing.
+          </p>
+        </div>
+
+        <!-- Navigation Column -->
+        <div class="footer-links-col">
+          <h4>Navigation</h4>
+          <ul class="magnetic-nav-list">
+            <li><a href="index.html#home" class="magnetic-link">Home Dashboard</a></li>
+            <li><a href="index.html#supply-chain" class="magnetic-link">Traceability</a></li>
+            <li><a href="scan.html" class="magnetic-link">AI Leaf Scanner</a></li>
+          </ul>
+        </div>
+
+        <!-- Company & Tech Column -->
+        <div class="footer-links-col">
+          <h4>Company & Tech</h4>
+          <ul class="magnetic-nav-list">
+            <li><a href="about.html" class="magnetic-link">About Our Mission</a></li>
+            <li><a href="login.html" class="magnetic-link">Portal Access / Auth</a></li>
+            <li><a href="index.html#contact" class="magnetic-link">Contact Support</a></li>
+          </ul>
+        </div>
+
+        <!-- Demo Batches Column with Interactive Batch Tag Badges -->
+        <div class="footer-links-col footer-batches-col">
+          <h4>Demo Batches</h4>
+          <div class="footer-batch-tags">
+            <a href="index.html#supply-chain" class="footer-batch-pill trace-shortcut-footer" data-batch="ASH-2026-08" title="Inspect Ashwagandha batch">
+              <span class="batch-scanlines" aria-hidden="true"></span>
+              <span class="batch-id-tag">ASH-2026-08</span>
+              <span class="batch-name">Ashwa</span>
+            </a>
+            <a href="index.html#supply-chain" class="footer-batch-pill trace-shortcut-footer" data-batch="TUR-2026-09" title="Inspect Turmeric batch">
+              <span class="batch-scanlines" aria-hidden="true"></span>
+              <span class="batch-id-tag">TUR-2026-09</span>
+              <span class="batch-name">Turmeric</span>
+            </a>
+            <a href="index.html#supply-chain" class="footer-batch-pill trace-shortcut-footer" data-batch="TUL-2026-07" title="Inspect Tulsi batch">
+              <span class="batch-scanlines" aria-hidden="true"></span>
+              <span class="batch-id-tag">TUL-2026-07</span>
+              <span class="batch-name">Tulsi</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- CTA Column with Arrow Launch & Glowing Laser Border -->
+        <div class="footer-cta-col">
+          <a href="about.html" class="footer-laser-cta-btn" id="footerDevsCtaBtn" aria-label="Explore Developer Team">
+            <span class="cta-laser-beam" aria-hidden="true"></span>
+            <span class="cta-inner-content">
+              <span class="cta-label">About Developers</span>
+              <span class="cta-launch-arrow">
+                <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 10H16M16 10L10 4M16 10L10 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </span>
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Cyber-Grid Footer Divider Line with Traveling Energy Packet -->
+      <div class="footer-cyber-divider" aria-hidden="true">
+        <div class="cyber-line-core"></div>
+        <div class="cyber-energy-packet"></div>
+      </div>
+
+      <!-- Bottom Copyright & Compliance Strip -->
+      <div class="footer-bottom-row">
+        <p class="copyright-text">
+          &copy; 2026 Farm2Ayur. All rights reserved. Under AYUSH Digital Sourcing Guidelines.
+        </p>
+        <div class="footer-legal-links">
+          <a href="#" class="legal-link">Privacy Policy</a>
+          <span class="legal-sep">•</span>
+          <a href="#" class="legal-link">Terms of Service</a>
+          <span class="legal-sep">•</span>
+          <a href="#" class="legal-link">Security Audit</a>
+        </div>
+      </div>
+
+    </div>
+  </footer>
 
   <script type="module" src="scan.js"></script>
 </body>

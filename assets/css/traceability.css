@@ -1,0 +1,1134 @@
+/* ==========================================================================
+   UNIVERSAL SPRING ELASTIC POP-UP MOTION SYSTEM (3-PHASE PHYSICS)
+   Phase 1: Initial State (Scale 0.55, translateY 32px, 0% opacity)
+   Phase 2: Scale Expansion Peak Bounce (Scale 1.06, translateY -6px, elevation shadow)
+   Phase 3: Elastic Settling (Scale 1.0, translateY 0, 100% opacity)
+   ========================================================================== */
+@keyframes spring-elastic-popup {
+  0% {
+    opacity: 0;
+    transform: scale(0.55) translateY(32px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.06) translateY(-6px);
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.25), 0 0 40px rgba(16, 185, 129, 0.3);
+  }
+  82% {
+    transform: scale(0.985) translateY(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Base class for elements waiting to reveal on scroll or load */
+.spring-pop-target {
+  opacity: 0;
+  transform: scale(0.55) translateY(32px);
+  will-change: transform, opacity, box-shadow;
+}
+
+/* Triggered State */
+.spring-pop-target.spring-popped {
+  animation: spring-elastic-popup 0.75s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation-delay: var(--spring-delay, 0s);
+}
+
+/* Supply Chain Section Container */
+#supply-chain.page-view {
+  position: relative;
+  background-color: #FAF3E2;
+  color: #1e293b;
+  overflow: hidden;
+  padding-top: 6.75rem !important;
+}
+
+/* Floating Botanical Spores Background Canvas */
+.botanical-spores-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.spore-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, rgba(5, 150, 105, 0.05) 70%, transparent 100%);
+  animation: spore-float 16s infinite linear;
+  pointer-events: none;
+}
+
+@keyframes spore-float {
+  0% {
+    transform: translateY(105vh) translateX(0) scale(0.8);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.65;
+  }
+  85% {
+    opacity: 0.65;
+  }
+  100% {
+    transform: translateY(-10vh) translateX(40px) scale(1.2);
+    opacity: 0;
+  }
+}
+
+/* ==========================================================================
+   1. HERO TRACKING COMMAND CENTER
+   ========================================================================== */
+.trace-hero-container {
+  max-width: 1200px;
+  margin: 1rem auto 3rem auto;
+  text-align: center;
+  position: relative;
+  z-index: 10;
+}
+
+.trace-hero-header {
+  margin-bottom: 2.2rem;
+  padding-top: 0.5rem;
+}
+
+.trace-hero-header h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.75rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #0f2027;
+  margin-bottom: 0.6rem;
+}
+
+.trace-hero-header p {
+  font-size: 1.08rem;
+  color: #475569;
+  max-width: 680px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Pulsing Scanline Laser Border Search Box */
+.trace-search-command-wrapper {
+  position: relative;
+  max-width: 820px;
+  margin: 0 auto 1.5rem auto;
+  border-radius: 26px;
+  padding: 2px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.4), rgba(6, 182, 212, 0.4));
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2), 0 0 35px rgba(16, 185, 129, 0.15);
+  overflow: hidden;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.trace-search-command-wrapper::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(transparent, transparent, #10b981, #34d399, #06b6d4, transparent);
+  animation: laser-border-sweep 4s linear infinite;
+  z-index: 0;
+}
+
+@keyframes laser-border-sweep {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.trace-search-command-bar {
+  position: relative;
+  z-index: 1;
+  background: #ffffff;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-radius: 24px;
+  padding: 0.65rem 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.08);
+}
+
+.trace-search-icon {
+  font-size: 1.4rem;
+  padding-left: 0.8rem;
+  color: #059669;
+  animation: search-icon-pulse 3s infinite ease-in-out;
+}
+
+@keyframes search-icon-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); color: #10b981; text-shadow: 0 0 10px rgba(16, 185, 129, 0.4); }
+}
+
+.trace-search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #0f2027;
+  padding: 0.6rem 0.4rem;
+}
+
+.trace-search-input::placeholder {
+  color: #64748b;
+  font-weight: 400;
+  transition: opacity 0.2s ease;
+}
+
+/* Action buttons inside search bar */
+.trace-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-paste-id {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.55rem 0.9rem;
+  border-radius: 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.btn-paste-id:hover {
+  background: #ecfdf5;
+  border-color: #10b981;
+  color: #065f46;
+  transform: translateY(-1px);
+}
+
+.btn-trace-submit {
+  background: linear-gradient(135deg, #10b981 0%, #059669 60%, #047857 100%);
+  color: #ffffff;
+  border: none;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 0.65rem 1.4rem;
+  border-radius: 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  white-space: nowrap;
+}
+
+.btn-trace-submit:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6);
+}
+
+.btn-qr-scan-trigger {
+  background: #ecfeff;
+  border: 1px solid #a5f3fc;
+  color: #0891b2;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.btn-qr-scan-trigger:hover {
+  background: #cffafe;
+  transform: scale(1.08);
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+}
+
+/* Dynamic Live Status Feedback Bar */
+.trace-status-feedback-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: #ecfdf5;
+  border: 1.5px solid rgba(16, 185, 129, 0.35);
+  padding: 0.4rem 1.2rem;
+  border-radius: 50px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #065f46;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.1);
+  margin-bottom: 1.3rem;
+  transition: all 0.3s ease;
+}
+
+.feedback-status-pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  animation: pulse-dot 1.8s infinite;
+}
+
+/* Badge Bounce & Metallic Shimmer Sweep */
+.trace-demo-chips-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.demo-chips-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.demo-chip-btn {
+  position: relative;
+  background: #ffffff;
+  border: 1.5px solid rgba(16, 185, 129, 0.3);
+  border-radius: 50px;
+  padding: 0.38rem 0.95rem;
+  font-family: 'Outfit', monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #065f46;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.25s ease, box-shadow 0.3s ease;
+}
+
+.demo-chip-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+  transform: skewX(-20deg);
+  pointer-events: none;
+}
+
+.demo-chip-btn:hover {
+  transform: translateY(-4px) scale(1.04);
+  background: #10b981;
+  color: #ffffff;
+  border-color: #059669;
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+}
+
+.demo-chip-btn:hover::after {
+  animation: chip-shimmer 0.75s ease-in-out;
+}
+
+@keyframes chip-shimmer {
+  0% { left: -100%; }
+  100% { left: 200%; }
+}
+
+.demo-chip-btn.active {
+  background: #10b981;
+  color: #ffffff;
+  border-color: #059669;
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
+}
+
+.demo-chip-btn .herb-sub {
+  color: #64748b;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 500;
+  font-size: 0.72rem;
+}
+
+.demo-chip-btn:hover .herb-sub,
+.demo-chip-btn.active .herb-sub {
+  color: #ecfdf5;
+}
+
+/* ==========================================================================
+   2. INTERACTIVE 3D/2D LIVE ROUTE & NODE MAP (CENTRAL VIEWPORT)
+   ========================================================================== */
+.trace-main-viewport-card {
+  position: relative;
+  max-width: 1240px;
+  margin: 0 auto 3rem auto;
+  background: #ffffff;
+  border: 1.5px solid rgba(16, 185, 129, 0.25);
+  border-radius: 32px;
+  box-shadow: 0 20px 60px rgba(16, 185, 129, 0.08), 0 4px 20px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  color: #1e293b;
+  z-index: 5;
+}
+
+.viewport-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.4rem 1.8rem;
+  background: linear-gradient(180deg, #f0fdf4 0%, #ffffff 100%);
+  border-bottom: 1px solid rgba(16, 185, 129, 0.15);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.viewport-batch-title {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.batch-live-tag {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  font-family: 'Outfit', monospace;
+  font-weight: 800;
+  font-size: 0.82rem;
+  padding: 0.3rem 0.85rem;
+  border-radius: 50px;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+}
+
+.viewport-batch-title h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: #064e3b;
+  margin: 0;
+}
+
+.viewport-batch-title .botanical-latin {
+  font-size: 0.84rem;
+  color: #64748b;
+  font-style: italic;
+}
+
+.viewport-telemetry-quickbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.telemetry-badge {
+  background: #ffffff;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: 10px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #475569;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.telemetry-badge strong {
+  color: #059669;
+}
+
+/* Interactive Map Canvas Stage */
+.route-map-stage {
+  position: relative;
+  min-height: 420px;
+  background: radial-gradient(circle at center, #f4fbf7 0%, #e6f4ea 100%);
+  overflow: hidden;
+  padding: 2.5rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Background Isometric Laboratory Grid Overlay */
+.route-map-grid-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background-image: 
+    linear-gradient(rgba(16, 185, 129, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 185, 129, 0.12) 1px, transparent 1px);
+  background-size: 36px 36px;
+  opacity: 0.8;
+}
+
+/* SVG Live Connecting Route Line & Traveling Energy Pulses */
+.route-svg-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.route-path-base {
+  stroke: rgba(16, 185, 129, 0.25);
+  stroke-width: 3.5;
+  fill: none;
+  stroke-linecap: round;
+}
+
+.route-path-pulse {
+  stroke: url(#emeraldNeonGradient);
+  stroke-width: 3.5;
+  fill: none;
+  stroke-dasharray: 18 120;
+  stroke-dashoffset: 0;
+  animation: svg-route-flow 4.5s linear infinite;
+  filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.7));
+}
+
+@keyframes svg-route-flow {
+  from { stroke-dashoffset: 200; }
+  to { stroke-dashoffset: -200; }
+}
+
+/* Supply Chain Route Nodes Grid */
+.route-nodes-flex {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1100px;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+}
+
+/* Individual Route Node Station with Staggered Spring Pop-in */
+.route-node-card {
+  background: #ffffff;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(16, 185, 129, 0.25);
+  border-radius: 20px;
+  padding: 1rem 0.9rem;
+  width: 160px;
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+  transform-origin: center center;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Staggered Pop-in Animation */
+.route-node-card.stagger-pop {
+  animation: node-pop-spring 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes node-pop-spring {
+  0% {
+    opacity: 0;
+    transform: scale(0.4) translateY(20px);
+  }
+  70% {
+    transform: scale(1.08) translateY(-4px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.route-node-card:hover,
+.route-node-card.active {
+  transform: translateY(-6px) scale(1.05);
+  border-color: #10b981;
+  background: #ecfdf5;
+  box-shadow: 0 0 25px rgba(16, 185, 129, 0.25), 0 15px 30px rgba(16, 185, 129, 0.12);
+}
+
+.node-icon-circle {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #f8fafc;
+  border: 1.5px solid rgba(16, 185, 129, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 0.6rem;
+  transition: all 0.3s ease;
+}
+
+.route-node-card.active .node-icon-circle {
+  background: #d1fae5;
+  border-color: #10b981;
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.4);
+}
+
+/* Continuous Dual-Ring Sonar Ping Pulse on Active Station */
+.node-active-sonar {
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  right: -8px;
+  bottom: -8px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(16, 185, 129, 0.85);
+  animation: sonar-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.node-active-sonar-2 {
+  position: absolute;
+  top: -16px;
+  left: -16px;
+  right: -16px;
+  bottom: -16px;
+  border-radius: 50%;
+  border: 1px solid rgba(6, 182, 212, 0.6);
+  animation: sonar-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite 0.7s;
+}
+
+@keyframes sonar-ping {
+  0% {
+    transform: scale(0.85);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.45);
+    opacity: 0;
+  }
+}
+
+.route-node-card h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #064e3b;
+  margin-bottom: 0.2rem;
+}
+
+.node-location-sub {
+  font-size: 0.72rem;
+  color: #64748b;
+  line-height: 1.3;
+}
+
+.node-status-pill {
+  margin-top: 0.5rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: 50px;
+  background: #e6f4ea;
+  color: #047857;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+/* ==========================================================================
+   3. EXPANDABLE FACILITY & OPERATOR HOLOGRAPHIC MODAL / DRAWER
+   ========================================================================== */
+.facility-node-inspector {
+  padding: 1.6rem 2rem;
+  background: #f8faf9;
+  border-top: 1.5px solid rgba(16, 185, 129, 0.2);
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 1.6rem;
+  align-items: center;
+  animation: facility-slide-down 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes facility-slide-down {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.facility-main-info h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #065f46;
+  margin-bottom: 0.4rem;
+}
+
+.facility-main-info p {
+  font-size: 0.84rem;
+  color: #334155;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.facility-cert-tags {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  font-size: 0.78rem;
+}
+
+.cert-badge {
+  background: #ffffff;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  padding: 0.35rem 0.75rem;
+  border-radius: 8px;
+  color: #1e293b;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+}
+
+.cert-badge strong {
+  color: #d97706;
+}
+
+.facility-signature-card {
+  background: #ffffff;
+  border: 1px dashed rgba(16, 185, 129, 0.4);
+  border-radius: 12px;
+  padding: 0.8rem;
+  font-size: 0.76rem;
+}
+
+.signature-name {
+  font-weight: 700;
+  color: #065f46;
+  display: block;
+}
+
+.signature-hash {
+  font-family: monospace;
+  color: #64748b;
+  font-size: 0.7rem;
+  word-break: break-all;
+}
+
+/* ==========================================================================
+   4. ACTIVE PROGRESSION TIMELINE STEPPER WITH DYNAMIC FILL BAR
+   ========================================================================== */
+.trace-timeline-stepper-section {
+  max-width: 1200px;
+  margin: 0 auto 3rem auto;
+  background: #ffffff;
+  border-radius: 28px;
+  padding: 2.2rem 2.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.06);
+  position: relative;
+  z-index: 5;
+}
+
+.stepper-header {
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.stepper-header h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0f2027;
+  margin: 0;
+}
+
+.stepper-header-tag {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #059669;
+  background: #ecfdf5;
+  padding: 0.35rem 0.85rem;
+  border-radius: 50px;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+/* Horizontal Stepper Progress Bar */
+.stepper-progress-track {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+/* Background Gray Bar */
+.stepper-progress-track::before {
+  content: '';
+  position: absolute;
+  top: 24px;
+  left: 5%;
+  width: 90%;
+  height: 4px;
+  background: #e2e8f0;
+  border-radius: 50px;
+  z-index: 1;
+}
+
+/* Animated Dynamic Filling Progress Line */
+.stepper-active-fill-bar {
+  position: absolute;
+  top: 24px;
+  left: 5%;
+  height: 4px;
+  background: linear-gradient(90deg, #10b981 0%, #06b6d4 100%);
+  border-radius: 50px;
+  z-index: 2;
+  width: 0%;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+  transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.stepper-node-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  z-index: 3;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+.stepper-node-item:hover {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.stepper-node-item:hover .stepper-icon-ring {
+  transform: scale(1.18);
+}
+
+.stepper-icon-ring {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  border: 2px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  margin-bottom: 0.6rem;
+  z-index: 3;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: step-drop-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes step-drop-in {
+  0% { transform: translateY(-20px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+.stepper-node-item.completed .stepper-icon-ring {
+  background: #10b981;
+  border-color: #059669;
+  color: #ffffff;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.5);
+}
+
+.stepper-node-item.active .stepper-icon-ring {
+  background: #06b6d4;
+  border-color: #0891b2;
+  color: #ffffff;
+  box-shadow: 0 0 22px rgba(6, 182, 212, 0.6);
+  transform: scale(1.15);
+}
+
+.stepper-step-label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.2rem;
+  animation: caption-reveal 0.5s ease forwards;
+}
+
+.stepper-date-sub {
+  font-size: 0.72rem;
+  color: #64748b;
+  font-weight: 500;
+  animation: caption-reveal 0.6s ease forwards;
+}
+
+@keyframes caption-reveal {
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   5. PARCEL DETAILS GRID & 3D PARALLAX TILT CARDS
+   ========================================================================== */
+.parcel-details-analytics-grid {
+  max-width: 1200px;
+  margin: 0 auto 3rem auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.6rem;
+  position: relative;
+  z-index: 5;
+  perspective: 1000px;
+}
+
+.analytics-glass-card {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 1.8rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: transform 0.15s ease-out, box-shadow 0.3s ease;
+}
+
+.analytics-glass-card:hover {
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.12), 0 0 25px rgba(16, 185, 129, 0.15);
+}
+
+.analytics-glass-card h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0f2027;
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.spec-list-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  font-size: 0.84rem;
+}
+
+.spec-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px dashed #e2e8f0;
+}
+
+.spec-row .lbl {
+  color: #64748b;
+}
+
+.spec-row .val {
+  font-weight: 700;
+  color: #0f2027;
+}
+
+/* Live Telemetry Sensor Meter */
+.telemetry-meters-flex {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sensor-meter-box {
+  background: #f8fafc;
+  border-radius: 14px;
+  padding: 0.85rem 1rem;
+  border: 1px solid #e2e8f0;
+}
+
+.meter-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+.meter-bar-track {
+  width: 100%;
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 50px;
+  overflow: hidden;
+}
+
+.meter-bar-fill {
+  height: 100%;
+  border-radius: 50px;
+  background: linear-gradient(90deg, #10b981 0%, #06b6d4 100%);
+  width: 0%;
+  transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Authenticity Ledger Card with One-Click Copy & Terminal Hash */
+.authenticity-hash-box {
+  background: #f8fafc;
+  color: #0f172a;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.hash-label {
+  font-size: 0.7rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
+.hash-code-text {
+  font-family: 'SF Mono', monospace;
+  font-size: 0.78rem;
+  color: #047857;
+  word-break: break-all;
+  display: block;
+  margin-bottom: 0.6rem;
+  min-height: 2.2em;
+}
+
+.btn-copy-hash {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  font-size: 0.74rem;
+  font-weight: 600;
+  padding: 0.35rem 0.8rem;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.btn-copy-hash:hover {
+  background: #10b981;
+  border-color: #059669;
+  color: #ffffff;
+}
+
+/* Interactive COA Download Button with Loader State */
+.btn-open-coa {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 0.88rem;
+  border: none;
+  padding: 0.75rem 1.2rem;
+  border-radius: 50px;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+  transition: all 0.25s ease;
+}
+
+.btn-open-coa:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6);
+}
+
+.btn-open-coa.loading {
+  background: #064e3b;
+  cursor: wait;
+}
+
+.coa-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #34d399;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   6. RESPONSIVE BREAKPOINTS
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .route-nodes-flex {
+    justify-content: center;
+  }
+  .route-node-card {
+    width: 140px;
+  }
+  .parcel-details-analytics-grid {
+    grid-template-columns: 1fr;
+  }
+  .stepper-progress-track {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .stepper-progress-track::before,
+  .stepper-active-fill-bar {
+    display: none;
+  }
+  .facility-node-inspector {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .trace-search-command-bar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1rem;
+  }
+  .trace-bar-actions {
+    justify-content: flex-end;
+  }
+  .viewport-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

@@ -7,23 +7,23 @@
     <title>Horcrux Hunters | About</title>
 
     <!-- GOOGLE FONTS -->
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Metal+Mania&family=Bebas+Neue&family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- CSS -->
     <link rel="stylesheet" href="about.css">
+    <link rel="stylesheet" href="assets/css/footer.css">
 
     <!-- GSAP & PLUGINS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/TextPlugin.min.js"></script>
     <script type="module" src="./public/runtime/cursor-trail.js"></script>
+    <script type="module" src="./public/runtime/footer.js"></script>
 </head>
 
 <body>
 
-    <!-- =====================================
-         CINEMATIC INTRO
-    ====================================== -->
+    <!-- CINEMATIC INTRO -->
     <section class="intro">
         <div class="intro-noise"></div>
         <div class="lightning"></div>
@@ -41,9 +41,8 @@
         </div>
     </section>
 
-    <!-- =====================================
-         ABOUT HERO
-    ====================================== -->
+    <!-- 
+    ABOUT HERO -->
     <section class="about-hero">
         <div class="about-content">
             <p class="eyebrow">THE TEAM BEHIND THE CHAOS</p>
@@ -57,40 +56,17 @@
         </div>
     </section>
 
-    <!-- =====================================
-         TEAM
-    ====================================== -->
+    <!-- TEAM -->
     <section class="team">
 
-         <!-- ========== MEMBER 01 (N. NARASIMHA RAO) ========== -->
-        <div class="member" id="member-01">
-            <div class="member-image">
-                <img class="real-face" src="photos/nnr pic.jpeg" alt="N. Narasimha Rao">
-                <canvas class="reveal-canvas" data-mask="photos/nnr masked.png"></canvas>
-                <div class="hover-text">HOVER TO ERASE MASK</div>
-            </div>
-
-            <div class="member-info">
-                <p class="member-role">FRONT MAN / FRONTEND DEVELOPER</p>
-                <h2 class="member-name">N NARASIMHA RAO</h2>
-                <div class="name-line"></div>
-
-                <p class="member-description" data-text="N. Narasimha Rao | 2nd Year B-Tech AI & ML Student at ITM University.  Frontend architecture, and scalable database systems. Pioneering new Aniamtions in this project, Always ready to learn, adapt, and master the next frontier."></p>
-
-                <div class="member-tags">
-                    <span>2ND YEAR AI & ML</span>
-                    <span>ITM UNIVERSITY</span>
-                    <span>FRONTEND</span>
-                    <span>DATABASE ARCHITECT</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- ========== MEMBER 02 (Y. ANUDEEP) ========== -->
+        <!-- ========== MEMBER 01 (Y. ANUDEEP) ========== -->
         <div class="member reverse" id="member-02">
             <div class="member-image">
                 <img class="real-face" src="photos/anudeep pic.jpeg" alt="Y. Anudeep">
                 <canvas class="reveal-canvas" data-mask="photos/anudeep masked.jpeg"></canvas>
+                <div class="cyber-scan-perimeter" aria-hidden="true">
+                    <div class="cyber-scan-laser"></div>
+                </div>
                 <div class="hover-text">HOVER TO ERASE MASK</div>
             </div>
 
@@ -110,35 +86,41 @@
             </div>
         </div>
 
-        <!-- ========== MEMBER 03 (U. VARSHITHA) ========== -->
-        <div class="member" id="member-03">
+        <!-- ========== MEMBER 02 (N. NARASIMHA RAO) ========== -->
+        <div class="member" id="member-01">
             <div class="member-image">
-                <img class="real-face" src="photos/varshitha pic.jpeg" alt="U. Varshitha">
-                <canvas class="reveal-canvas" data-mask="photos/varshitha masked.jpeg"></canvas>
+                <img class="real-face" src="photos/nnr pic.jpeg" alt="N. Narasimha Rao">
+                <canvas class="reveal-canvas" data-mask="photos/nnr masked.png"></canvas>
+                <div class="cyber-scan-perimeter" aria-hidden="true">
+                    <div class="cyber-scan-laser"></div>
+                </div>
                 <div class="hover-text">HOVER TO ERASE MASK</div>
             </div>
 
             <div class="member-info">
-                <p class="member-role">BLOCKCHAIN ARCHITECT / DATA SCIENCE</p>
-                <h2 class="member-name">U. VARSHITHA</h2>
+                <p class="member-role">FRONT MAN / FRONTEND DEVELOPER</p>
+                <h2 class="member-name">N NARASIMHA RAO</h2>
                 <div class="name-line"></div>
 
-                <p class="member-description" data-text="U. Varshitha | 2nd Year B-Tech Data Science Student at ITM University. Specializing in blockchain tech and data-driven security models to engineer robust, decentralized web solutions."></p>
+                <p class="member-description" data-text="N. Narasimha Rao | 2nd Year B-Tech AI & ML Student at ITM University.  Frontend architecture, and scalable database systems. Pioneering new Aniamtions in this project, Always ready to learn, adapt, and master the next frontier."></p>
 
                 <div class="member-tags">
-                    <span>2ND YEAR DATA SCIENCE</span>
+                    <span>2ND YEAR AI & ML</span>
                     <span>ITM UNIVERSITY</span>
-                    <span>BLOCKCHAIN</span>
-                    <span>DATA ANALYTICS</span>
+                    <span>FRONTEND</span>
+                    <span>DATABASE ARCHITECT</span>
                 </div>
             </div>
         </div>
 
-        <!-- ========== MEMBER 04 (KARTHIK) ========== -->
+        <!-- ========== MEMBER 03 (KARTHIK) ========== -->
         <div class="member reverse" id="member-06">
             <div class="member-image">
                 <img class="real-face" src="photos/karthik pic.jpeg" alt="Karthik">
                 <canvas class="reveal-canvas" data-mask="photos/karthik masked.jpeg"></canvas>
+                <div class="cyber-scan-perimeter" aria-hidden="true">
+                    <div class="cyber-scan-laser"></div>
+                </div>
                 <div class="hover-text">HOVER TO ERASE MASK</div>
             </div>
 
@@ -158,35 +140,41 @@
             </div>
         </div>
 
-        <!-- ========== MEMBER 05 (U. VARUN) ========== -->
-        <div class="member" id="member-05">
+        <!-- ========== MEMBER 04 (U. VARSHITHA) ========== -->
+        <div class="member" id="member-03">
             <div class="member-image">
-                <img class="real-face" src="photos/varun pic.jpeg" alt="U. Varun">
-                <canvas class="reveal-canvas" data-mask="photos/varun masked.jpeg"></canvas>
+                <img class="real-face" src="photos/varshitha pic.jpeg" alt="U. Varshitha">
+                <canvas class="reveal-canvas" data-mask="photos/varshitha masked.jpeg"></canvas>
+                <div class="cyber-scan-perimeter" aria-hidden="true">
+                    <div class="cyber-scan-laser"></div>
+                </div>
                 <div class="hover-text">HOVER TO ERASE MASK</div>
             </div>
 
             <div class="member-info">
-                <p class="member-role">PROMPT ENGINEER & DOCUMENTATION</p>
-                <h2 class="member-name">U. VARUN</h2>
+                <p class="member-role">BLOCKCHAIN ARCHITECT / DATA SCIENCE</p>
+                <h2 class="member-name">U. VARSHITHA</h2>
                 <div class="name-line"></div>
 
-                <p class="member-description" data-text="U. Varun | 2nd Year B-Tech AI & ML Student at ITM University. Optimizing LLM prompt strategies, system workflows, and technical documentation to streamline complex engineering pipelines."></p>
+                <p class="member-description" data-text="U. Varshitha | 2nd Year B-Tech Data Science Student at ITM University. Specializing in blockchain tech and data-driven security models to engineer robust, decentralized web solutions."></p>
 
                 <div class="member-tags">
-                    <span>2ND YEAR AI & ML</span>
+                    <span>2ND YEAR DATA SCIENCE</span>
                     <span>ITM UNIVERSITY</span>
-                    <span>PROMPT ENG</span>
-                    <span>DOCUMENTATION</span>
+                    <span>BLOCKCHAIN</span>
+                    <span>DATA ANALYTICS</span>
                 </div>
             </div>
         </div>
 
-        <!-- ========== MEMBER 06 (K. VENKAT) ========== -->
+        <!-- ========== MEMBER 05 (K. VENKAT) ========== -->
         <div class="member reverse" id="member-04">
             <div class="member-image">
                 <img class="real-face" src="photos/venkat pic.jpeg" alt="K. Venkat">
                 <canvas class="reveal-canvas" data-mask="photos/venkat masked.jpeg"></canvas>
+                <div class="cyber-scan-perimeter" aria-hidden="true">
+                    <div class="cyber-scan-laser"></div>
+                </div>
                 <div class="hover-text">HOVER TO ERASE MASK</div>
             </div>
 
@@ -206,22 +194,168 @@
             </div>
         </div>
 
-        
+        <!-- ========== MEMBER 06 (U. VARUN) ========== -->
+        <div class="member" id="member-05">
+            <div class="member-image">
+                <img class="real-face" src="photos/varun pic.jpeg" alt="U. Varun">
+                <canvas class="reveal-canvas" data-mask="photos/varun masked.jpeg"></canvas>
+                <div class="cyber-scan-perimeter" aria-hidden="true">
+                    <div class="cyber-scan-laser"></div>
+                </div>
+                <div class="hover-text">HOVER TO ERASE MASK</div>
+            </div>
 
-        
+            <div class="member-info">
+                <p class="member-role">DOCUMENTATION</p>
+                <h2 class="member-name">U. VARUN</h2>
+                <div class="name-line"></div>
 
+                <p class="member-description" data-text="U. Varun | 2nd Year B-Tech AI & ML Student at ITM University. Technical documentatioand presentations to streamline complex engineering pipelines."></p>
+
+                <div class="member-tags">
+                    <span>2ND YEAR AI & ML</span>
+                    <span>ITM UNIVERSITY</span>
+                    <span>PROMPT ENG</span>
+                    <span>DOCUMENTATION</span>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <!-- =====================================
-                  FINAL
-    ====================================== -->
-    <section class="final-section">
-        <p>THE HUNT NEVER ENDS</p>
-        <h2>
-            WE DON'T JUST BUILD.<br>
-            <span>WE HUNT.</span>
-        </h2>
-    </section>
+    <!-- FINAL -->
+    <!-- Universal High-Tech Floating Dock Footer -->
+    <footer class="app-footer floating-dock-footer" id="appFooter">
+      <!-- Dynamic Holographic Isometric Grid Backdrop -->
+      <div class="footer-holo-grid" id="footerHoloGrid" aria-hidden="true"></div>
+      <div class="footer-glow-aura" id="footerGlowAura" aria-hidden="true"></div>
+
+      <div class="container footer-dock-inner">
+        
+        <!-- Top status bar with Node Online pulse badge -->
+        <div class="footer-top-status-row">
+          <div class="footer-node-status" title="Real-time AYUSH Blockchain Network Connectivity">
+            <span class="sonar-beacon">
+              <span class="sonar-wave"></span>
+              <span class="sonar-wave sonar-delay"></span>
+              <span class="sonar-core"></span>
+            </span>
+            <span class="node-text">AYUSH TraceNet: <strong class="node-online-badge">Node #409 Online</strong></span>
+          </div>
+          <div class="footer-sync-time">
+            <span class="sync-dot"></span>
+            <span id="footerLatency">Latency: 14ms (Encrypted)</span>
+          </div>
+        </div>
+
+        <!-- Main Footer Grid -->
+        <div class="footer-grid" id="footerGridNav">
+          <!-- Fluid Liquid Magnetic Hover Pill -->
+          <div class="magnetic-hover-pill" id="magneticHoverPill" aria-hidden="true"></div>
+
+          <!-- Brand Column -->
+          <div class="footer-brand">
+            <a href="index.html#home" class="footer-logo-wrap" aria-label="Farm2Ayur Home">
+              <!-- Holographic Arc-Reactor Pulse Logo -->
+              <div class="footer-arc-reactor">
+                <div class="reactor-pulse-halo"></div>
+                <div class="reactor-pulse-halo-outer"></div>
+                <svg class="reactor-leaf-svg" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path class="leaf-outline" d="M18 3C9 3 4 11 4 20C4 28 11 33 18 33C25 33 32 28 32 20C32 11 27 3 18 3Z" stroke="#10b981" stroke-width="2" fill="rgba(16, 185, 129, 0.15)"/>
+                  <path class="leaf-stem" d="M18 33V7" stroke="#34d399" stroke-width="2" stroke-linecap="round"/>
+                  <path class="leaf-vein vein-1" d="M18 13L24 9" stroke="#6ee7b7" stroke-width="1.5" stroke-linecap="round"/>
+                  <path class="leaf-vein vein-2" d="M18 18L11 14" stroke="#6ee7b7" stroke-width="1.5" stroke-linecap="round"/>
+                  <path class="leaf-vein vein-3" d="M18 23L25 19" stroke="#6ee7b7" stroke-width="1.5" stroke-linecap="round"/>
+                  <path class="leaf-vein vein-4" d="M18 28L12 24" stroke="#6ee7b7" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <span class="logo-text">Farm<span>2</span>Ayur</span>
+            </a>
+            <p class="footer-tagline">
+              A digital platform verifying Ayurvedic purity from soil to shelf. Enhancing identification safety, authentic botanical records, and fair farm pricing.
+            </p>
+          </div>
+
+          <!-- Navigation Column -->
+          <div class="footer-links-col">
+            <h4>Navigation</h4>
+            <ul class="magnetic-nav-list">
+              <li><a href="index.html#home" class="magnetic-link">Home Dashboard</a></li>
+              <li><a href="index.html#supply-chain" class="magnetic-link">Traceability</a></li>
+              <li><a href="scan.html" class="magnetic-link">AI Leaf Scanner</a></li>
+            </ul>
+          </div>
+
+          <!-- Company & Tech Column -->
+          <div class="footer-links-col">
+            <h4>Company & Tech</h4>
+            <ul class="magnetic-nav-list">
+              <li><a href="about.html" class="magnetic-link">About Our Mission</a></li>
+              <li><a href="login.html" class="magnetic-link">Portal Access / Auth</a></li>
+              <li><a href="index.html#contact" class="magnetic-link">Contact Support</a></li>
+            </ul>
+          </div>
+
+          <!-- Demo Batches Column with Interactive Batch Tag Badges -->
+          <div class="footer-links-col footer-batches-col">
+            <h4>Demo Batches</h4>
+            <div class="footer-batch-tags">
+              <a href="index.html#supply-chain" class="footer-batch-pill trace-shortcut-footer" data-batch="ASH-2026-08" title="Inspect Ashwagandha batch">
+                <span class="batch-scanlines" aria-hidden="true"></span>
+                <span class="batch-id-tag">ASH-2026-08</span>
+                <span class="batch-name">Ashwa</span>
+              </a>
+              <a href="index.html#supply-chain" class="footer-batch-pill trace-shortcut-footer" data-batch="TUR-2026-09" title="Inspect Turmeric batch">
+                <span class="batch-scanlines" aria-hidden="true"></span>
+                <span class="batch-id-tag">TUR-2026-09</span>
+                <span class="batch-name">Turmeric</span>
+              </a>
+              <a href="index.html#supply-chain" class="footer-batch-pill trace-shortcut-footer" data-batch="TUL-2026-07" title="Inspect Tulsi batch">
+                <span class="batch-scanlines" aria-hidden="true"></span>
+                <span class="batch-id-tag">TUL-2026-07</span>
+                <span class="batch-name">Tulsi</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- CTA Column with Arrow Launch & Glowing Laser Border -->
+          <div class="footer-cta-col">
+            <a href="about.html" class="footer-laser-cta-btn" id="footerDevsCtaBtn" aria-label="Explore Developer Team">
+              <span class="cta-laser-beam" aria-hidden="true"></span>
+              <span class="cta-inner-content">
+                <span class="cta-label">About Developers</span>
+                <span class="cta-launch-arrow">
+                  <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 10H16M16 10L10 4M16 10L10 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+              </span>
+            </a>
+          </div>
+
+        </div>
+
+        <!-- Cyber-Grid Footer Divider Line with Traveling Energy Packet -->
+        <div class="footer-cyber-divider" aria-hidden="true">
+          <div class="cyber-line-core"></div>
+          <div class="cyber-energy-packet"></div>
+        </div>
+
+        <!-- Bottom Copyright & Compliance Strip -->
+        <div class="footer-bottom-row">
+          <p class="copyright-text">
+            &copy; 2026 Farm2Ayur. All rights reserved. Under AYUSH Digital Sourcing Guidelines.
+          </p>
+          <div class="footer-legal-links">
+            <a href="#" class="legal-link">Privacy Policy</a>
+            <span class="legal-sep">•</span>
+            <a href="#" class="legal-link">Terms of Service</a>
+            <span class="legal-sep">•</span>
+            <a href="#" class="legal-link">Security Audit</a>
+          </div>
+        </div>
+
+      </div>
+    </footer>
 
     <script type="module" src="about.js"></script>
 </body>

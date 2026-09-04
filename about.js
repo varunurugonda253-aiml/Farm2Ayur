@@ -154,3 +154,84 @@ setInterval(() => {
             .to(".lightning", { opacity: 0, duration: 0.12 });
     }
 }, 6500);
+
+/* =====================================
+   COMIC-STYLE STAGGERED POP-UP ANIMATIONS FOR CARDS
+===================================== */
+gsap.utils.toArray(".member").forEach((member, i) => {
+    // Pop-Up Scale & Slide Entrance with Elastic Easing
+    gsap.fromTo(member, 
+        { 
+            opacity: 0, 
+            y: 120, 
+            scale: 0.85,
+            rotationX: 15
+        },
+        {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            rotationX: 0,
+            duration: 1.2,
+            ease: "back.out(1.7)", // Comic-Style Elastic Pop-Up
+            scrollTrigger: {
+                trigger: member,
+                start: "top 85%",
+                end: "top 30%",
+                toggleActions: "play none none reverse",
+            }
+        }
+    );
+
+    // Staggered Tags Animation inside each card with full size guarantee
+    const tags = member.querySelectorAll(".member-tags span");
+    if (tags.length > 0) {
+        gsap.fromTo(tags, 
+            {
+                opacity: 0,
+                y: 15
+            },
+            {
+                opacity: 1,
+                y: 0,
+                duration: 0.45,
+                stagger: 0.08,
+                ease: "power2.out",
+                clearProps: "all",
+                scrollTrigger: {
+                    trigger: member,
+                    start: "top 85%",
+                    once: true
+                }
+            }
+        );
+    }
+});
+
+/* =====================================
+   3D TILT EFFECT ON CARD HOVER
+===================================== */
+document.querySelectorAll(".member-image").forEach((card) => {
+    card.addEventListener("mousemove", (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+
+        gsap.to(card, {
+            rotationY: x * 0.05,
+            rotationX: -y * 0.05,
+            transformPerspective: 1000,
+            ease: "power1.out",
+            duration: 0.4
+        });
+    });
+
+    card.addEventListener("mouseleave", () => {
+        gsap.to(card, {
+            rotationY: 0,
+            rotationX: 0,
+            ease: "power2.out",
+            duration: 0.6
+        });
+    });
+});

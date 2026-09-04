@@ -197,7 +197,11 @@ select option {
   z-index: 0 !important;
   pointer-events: none !important;
   user-select: none !important;
-  filter: brightness(1.12) contrast(1.02) saturate(1.05) !important;
+  /* -------------------------------------------------------------
+     LIGHTING / BRIGHTNESS CONTROL:
+     Adjust brightness value below (e.g. 1.0 = normal, 1.25 = bright, 1.4 = very bright, 0.8 = darker)
+     ------------------------------------------------------------- */
+  filter: brightness(1.28) contrast(1.02) saturate(1.05) !important;
 }
 
 /* Transparent overlay allowing video to be 100% clearly visible without bottom shade */
@@ -208,11 +212,16 @@ select option {
   width: 100% !important;
   height: 100% !important;
   z-index: 1 !important;
+  /* -------------------------------------------------------------
+     DARK OVERLAY CONTROL (LIGHTING SHADE):
+     Lower the alpha values (e.g. 0.15 -> 0.05) to make the screen lighter,
+     or increase them (e.g. 0.4) to make it darker.
+     ------------------------------------------------------------- */
   background: linear-gradient(
     180deg,
-    rgba(6, 16, 14, 0.25) 0%,
-    rgba(6, 16, 14, 0.1) 50%,
-    rgba(6, 16, 14, 0.15) 100%
+    rgba(6, 16, 14, 0.18) 0%,
+    rgba(6, 16, 14, 0.06) 50%,
+    rgba(6, 16, 14, 0.10) 100%
   ) !important;
   pointer-events: none !important;
 }
@@ -326,6 +335,22 @@ select option {
   box-sizing: border-box !important;
   opacity: 0;
   visibility: hidden;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), top 0.35s ease, background 0.35s ease, box-shadow 0.35s ease, padding 0.35s ease;
+}
+
+/* Scrolled dock state — shrinks slightly with enhanced glass shadow */
+.app-header.scrolled-dock {
+  top: 0.75rem !important;
+  transform: translateX(-50%) scale(0.975) !important;
+  background: rgba(10, 18, 28, 0.92) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.4), 0 0 25px rgba(16, 185, 129, 0.2) !important;
+}
+
+.app-header.scrolled-dock .header-container {
+  height: 52px !important;
+  padding: 0.2rem 1.2rem !important;
 }
 
 /* Layout inside floating card */
@@ -337,6 +362,7 @@ select option {
   justify-content: space-between !important;
   align-items: center !important;
   width: 100% !important;
+  transition: height 0.35s ease, padding 0.35s ease;
 }
 
 /* Logo — left column */
@@ -489,11 +515,17 @@ select option {
 }
 
 /* Keep the visible site above the background without changing fixed overlays. */
-body>.app-header,
-body>.main-content,
+body>.app-header {
+  position: fixed;
+  z-index: 1000;
+}
 body>.app-footer {
   position: relative;
-  z-index: 2;
+  z-index: 100;
+}
+body>.main-content {
+  position: static !important;
+  z-index: auto !important;
 }
 
 @keyframes aurora-pulse {
@@ -1868,11 +1900,11 @@ body>.app-footer {
 #flow-process-section,
 .flow-section-wrap {
   position: relative;
-  z-index: 5;
+  z-index: 2;
   width: 100% !important;
   max-width: 100vw !important;
   margin: 0 !important;
-  background-color: #FAF3E2 !important;
+  background-color: transparent !important;
 }
 
 .flow-track-wrapper {

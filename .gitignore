@@ -1,4 +1,65 @@
-node_modules/
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
 dist/
-.vite/
-*.log
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+venv/
+venv_new/
+env/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment variables & local configuration
+.env
+.env.*
+
+# Local SQLite databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Static uploads & generated temporary files
+static/uploads/*
+!static/uploads/.gitkeep
+static/qr/*
+!static/qr/.gitkeep
+scratch/
+tmp/
+*.tmp
+
+# IDE / Editor configuration
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Explicitly ensure ML model file is tracked
+!app/ml/farm2ayur_v9_best.keras

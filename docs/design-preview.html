@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Farm2Ayur — Design System Interactive Preview</title>
+  
+  <!-- Google Fonts used across Farm2Ayur -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cinzel:wght@600;700;800&family=Montserrat:wght@400;500;600;700&family=Outfit:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* CSS Tokens directly mirroring Farm2Ayur styles */
+    :root {
+      --emerald-primary: #10b981;
+      --emerald-light: #34d399;
+      --emerald-glow: rgba(16, 185, 129, 0.45);
+      --emerald-dark: #047857;
+      --primary-dark: #064e3b;
+      --cyan-accent: #06b6d4;
+      --cyan-light: #67e8f9;
+      --gold-primary: #eab308;
+      --gold-dark: #ca8a04;
+      --gold-light: #fef08a;
+      
+      --bg-warm: #FAF3E2;
+      --bg-dark: #0c1813;
+      --text-primary: #0f291e;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      
+      --glass-panel: rgba(255, 255, 255, 0.88);
+      --glass-border: rgba(16, 185, 129, 0.25);
+      --glass-shadow: 0 25px 70px rgba(16, 185, 129, 0.12), 0 4px 25px rgba(0, 0, 0, 0.04);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-warm);
+      color: var(--text-primary);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      line-height: 1.6;
+      padding: 2.5rem 1.5rem;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Ambient Background Blobs */
+    .ambient-blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.28;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .blob-1 {
+      width: 450px;
+      height: 450px;
+      background: #10b981;
+      top: -100px;
+      left: -80px;
+    }
+    .blob-2 {
+      width: 500px;
+      height: 500px;
+      background: #06b6d4;
+      bottom: -120px;
+      right: -100px;
+    }
+
+    .preview-container {
+      max-width: 1140px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Header Bar */
+    header {
+      background: var(--glass-panel);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 28px;
+      padding: 2rem 2.5rem;
+      margin-bottom: 2.5rem;
+      box-shadow: var(--glass-shadow);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .brand-title {
+      font-family: 'Cinzel', serif;
+      font-size: 2.2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #064e3b, #10b981, #0891b2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 0.5px;
+    }
+
+    .brand-tagline {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .badge-bar {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .doc-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 1.1rem;
+      border-radius: 50px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      transition: all 0.25s ease;
+    }
+
+    .doc-pill-primary {
+      background: #10b981;
+      color: #ffffff;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35);
+    }
+    .doc-pill-primary:hover {
+      background: #059669;
+      transform: translateY(-2px);
+    }
+
+    .doc-pill-secondary {
+      background: #ffffff;
+      color: var(--primary-dark);
+      border: 1px solid var(--glass-border);
+    }
+    .doc-pill-secondary:hover {
+      border-color: #10b981;
+      transform: translateY(-2px);
+    }
+
+    /* Section Styling */
+    section {
+      background: var(--glass-panel);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 28px;
+      padding: 2.2rem;
+      margin-bottom: 2.5rem;
+      box-shadow: var(--glass-shadow);
+    }
+
+    h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .section-desc {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      margin-bottom: 1.8rem;
+    }
+
+    /* Color Grid */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .color-card {
+      background: #ffffff;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      cursor: pointer;
+    }
+    .color-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.15);
+    }
+
+    .color-swatch-box {
+      height: 95px;
+      width: 100%;
+      position: relative;
+    }
+
+    .color-info {
+      padding: 1rem;
+    }
+
+    .color-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      margin-bottom: 0.2rem;
+    }
+
+    .color-hex {
+      font-family: monospace;
+      font-size: 0.85rem;
+      color: var(--emerald-dark);
+      font-weight: 700;
+    }
+
+    .color-role {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+    }
+
+    /* Typography Preview Cards */
+    .type-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .type-specimen {
+      background: #ffffff;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 20px;
+      padding: 1.5rem 1.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .type-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 1px dashed rgba(16, 185, 129, 0.25);
+      padding-bottom: 0.6rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .type-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .type-role {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .type-sample {
+      color: var(--text-primary);
+      word-break: break-word;
+    }
+
+    /* Component Sandbox Grid */
+    .sandbox-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 1.8rem;
+    }
+
+    .component-card {
+      background: #ffffff;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 22px;
+      padding: 1.8rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.25rem;
+      text-align: center;
+    }
+
+    .component-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+    }
+
+    /* Native Buttons matching Farm2Ayur CSS */
+    .btn-emerald {
+      background: linear-gradient(135deg, #10b981 0%, #059669 60%, #047857 100%);
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.92rem;
+      padding: 0.85rem 1.9rem;
+      border-radius: 50px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 20px rgba(16, 185, 129, 0.45);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-emerald:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 8px 30px rgba(16, 185, 129, 0.65);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #eab308, #ca8a04);
+      color: #040907;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 13px 40px;
+      border: none;
+      border-radius: 50px;
+      letter-spacing: 1px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(234, 179, 8, 0.4);
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      transform: scale(1.04);
+      box-shadow: 0 6px 25px rgba(234, 179, 8, 0.6);
+    }
+
+    .btn-outline {
+      background: rgba(12, 24, 19, 0.85);
+      border: 1px solid rgba(254, 240, 138, 0.7);
+      color: #fef08a;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 13px 36px;
+      border-radius: 50px;
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+    }
+    .btn-outline:hover {
+      background: rgba(234, 179, 8, 0.25);
+      box-shadow: 0 0 20px rgba(234, 179, 8, 0.4);
+      transform: scale(1.04);
+    }
+
+    .scanner-nav-btn {
+      background: #ffffff;
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      color: #064e3b;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      transition: all 0.25s ease;
+    }
+    .scanner-nav-btn:hover {
+      background: #ecfdf5;
+      border-color: #10b981;
+      transform: scale(1.08);
+      box-shadow: 0 0 16px rgba(16, 185, 129, 0.35);
+    }
+
+    /* Live HUD Pills with pulsing animations */
+    .hud-pills-wrap {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .hud-stat-pill {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      backdrop-filter: blur(14px);
+      padding: 0.35rem 0.85rem;
+      border-radius: 50px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #334155;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.08);
+    }
+    .hud-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    .dot-emerald {
+      background: #34d399;
+      box-shadow: 0 0 10px #10b981;
+      animation: pulse-dot 1.8s infinite cubic-bezier(0.4, 0, 0.6, 1);
+    }
+    .dot-cyan {
+      background: #67e8f9;
+      box-shadow: 0 0 10px #06b6d4;
+      animation: pulse-dot 2.2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    /* Live Leaf Scanning Reticle Miniaturized */
+    .reticle-mini {
+      position: relative;
+      width: 170px;
+      height: 170px;
+      border-radius: 28px;
+      background: rgba(16, 185, 129, 0.04);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      box-shadow: inset 0 0 25px rgba(16, 185, 129, 0.15), 0 0 20px rgba(16, 185, 129, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .corner-bracket {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      border: 3px solid #10b981;
+      pointer-events: none;
+    }
+    .corner-tl { top: 0; left: 0; border-right: none; border-bottom: none; border-top-left-radius: 20px; }
+    .corner-tr { top: 0; right: 0; border-left: none; border-bottom: none; border-top-right-radius: 20px; }
+    .corner-bl { bottom: 0; left: 0; border-right: none; border-top: none; border-bottom-left-radius: 20px; }
+    .corner-br { bottom: 0; right: 0; border-left: none; border-top: none; border-bottom-right-radius: 20px; }
+    
+    .reticle-laser {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #10b981, #67e8f9, #10b981, transparent);
+      box-shadow: 0 0 14px #10b981;
+      animation: laser-sweep 2.4s infinite ease-in-out;
+    }
+    @keyframes laser-sweep {
+      0% { top: 6%; opacity: 0.8; }
+      50% { top: 92%; opacity: 1; }
+      100% { top: 6%; opacity: 0.8; }
+    }
+
+    /* Glass Input */
+    .glass-input {
+      background: rgba(12, 24, 19, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 14px;
+      padding: 12px 18px;
+      font-size: 0.9rem;
+      color: #ffffff;
+      width: 100%;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    .glass-input:focus {
+      border-color: #10b981;
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+    }
+    .glass-input::placeholder {
+      color: #e2e8f0;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Mesh Blobs -->
+  <div class="ambient-blob blob-1"></div>
+  <div class="ambient-blob blob-2"></div>
+
+  <div class="preview-container">
+    
+    <!-- Top Brand Bar -->
+    <header>
+      <div>
+        <h1 class="brand-title">Farm2Ayur</h1>
+        <p class="brand-tagline">🌿 Design System Interactive Specification Showcase</p>
+      </div>
+      <div class="badge-bar">
+        <a href="./DESIGN_SYSTEM.md" class="doc-pill doc-pill-secondary">📖 View DESIGN_SYSTEM.md</a>
+        <a href="https://github.com/varunurugonda253-aiml/Farm2Ayur" class="doc-pill doc-pill-primary" target="_blank">⭐ GitHub Repo</a>
+      </div>
+    </header>
+
+    <!-- 1. Color Palette -->
+    <section>
+      <h2>🎨 Verified Color Palette</h2>
+      <p class="section-desc">Interactive color tokens extracted directly from <code>styles.css</code>, <code>scan.css</code>, and <code>about.css</code>. Click any card to copy its HEX value.</p>
+      
+      <div class="color-grid">
+        <div class="color-card" onclick="copyHex('#10b981')">
+          <div class="color-swatch-box" style="background: #10b981;"></div>
+          <div class="color-info">
+            <div class="color-title">Primary Emerald</div>
+            <div class="color-hex">#10b981</div>
+            <div class="color-role">--emerald-primary • CTAs, reticles</div>
+          </div>
+        </div>
+
+        <div class="color-card" onclick="copyHex('#34d399')">
+          <div class="color-swatch-box" style="background: #34d399;"></div>
+          <div class="color-info">
+            <div class="color-title">Emerald Light</div>
+            <div class="color-hex">#34d399</div>
+            <div class="color-role">--emerald-light • Laser lines, accents</div>
+          </div>
+        </div>
+
+        <div class="color-card" onclick="copyHex('#047857')">
+          <div class="color-swatch-box" style="background: #047857;"></div>
+          <div class="color-info">
+            <div class="color-title">Emerald Dark</div>
+            <div class="color-hex">#047857</div>
+            <div class="color-role">--emerald-dark • Dark headings, badges</div>
+          </div>
+        </div>
+
+        <div class="color-card" onclick="copyHex('#06b6d4')">
+          <div class="color-swatch-box" style="background: #06b6d4;"></div>
+          <div class="color-info">
+            <div class="color-title">Cyan Accent</div>
+            <div class="color-hex">#06b6d4</div>
+            <div class="color-role">--cyan-accent • Cyber scans, HUD pills</div>
+          </div>
+        </div>
+
+        <div class="color-card" onclick="copyHex('#eab308')">
+          <div class="color-swatch-box" style="background: linear-gradient(135deg, #eab308, #ca8a04);"></div>
+          <div class="color-info">
+            <div class="color-title">Gold Primary</div>
+            <div class="color-hex">#eab308</div>
+            <div class="color-role">Gold CTAs, active highlights</div>
+          </div>
+        </div>
+
+        <div class="color-card" onclick="copyHex('#fef08a')">
+          <div class="color-swatch-box" style="background: #fef08a;"></div>
+          <div class="color-info">
+            <div class="color-title">Gold Light</div>
+            <div class="color-hex">#fef08a</div>
+            <div class="color-role">--text-gold • Display text, borders</div>
+          </div>
+        </div>
+
+        <div class="color-card" onclick="copyHex('#FAF3E2')">
+          <div class="color-swatch-box" style="background: #FAF3E2; border-bottom: 1px solid rgba(0,0,0,0.06);"></div>
+          <div class="color-info">
+            <div class="color-title">Deep Mesh Warm</div>
+            <div class="color-hex">#FAF3E2</div>
+            <div class="color-role">--bg-deep-mesh • Scanner backdrop</div>
+          </div>
+        </div>
+
+        <div class="color-card" onclick="copyHex('#0c1813')">
+          <div class="color-swatch-box" style="background: #0c1813;"></div>
+          <div class="color-info">
+            <div class="color-title">Deep Obsidian</div>
+            <div class="color-hex">#0c1813</div>
+            <div class="color-role">Dark body background, video vignette</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Typography Hierarchy -->
+    <section>
+      <h2>📜 Typography Hierarchy</h2>
+      <p class="section-desc">Living type specimens loaded directly from Google Fonts matching production usage.</p>
+      
+      <div class="type-grid">
+        <div class="type-specimen">
+          <div class="type-header">
+            <span class="type-name">Cinzel (Serif)</span>
+            <span class="type-role">Brand Display & Hero Headings (Weight 700, 800)</span>
+          </div>
+          <div class="type-sample" style="font-family: 'Cinzel', serif; font-size: 2rem; font-weight: 800; color: #064e3b;">
+            From Soil to Synergy — Authentic Ayurvedic Provenance
+          </div>
+        </div>
+
+        <div class="type-specimen">
+          <div class="type-header">
+            <span class="type-name">Outfit (Sans-Serif)</span>
+            <span class="type-role">Camera HUD Titles & Shimmer Labels (Weight 700)</span>
+          </div>
+          <div class="type-sample" style="font-family: 'Outfit', sans-serif; font-size: 1.55rem; font-weight: 700; color: #10b981;">
+            ⚡ Neural Venation Scan & Biomarker Diagnostic HUD
+          </div>
+        </div>
+
+        <div class="type-specimen">
+          <div class="type-header">
+            <span class="type-name">Plus Jakarta Sans (Sans-Serif)</span>
+            <span class="type-role">Primary UI, Inputs & Body Text (Weight 400 - 700)</span>
+          </div>
+          <div class="type-sample" style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.05rem; color: #334155;">
+            Align the medicinal plant specimen within the emerald reticle to identify botanical taxonomy, active phytochemical markers, and harvest batch credentials.
+          </div>
+        </div>
+
+        <div class="type-specimen">
+          <div class="type-header">
+            <span class="type-name">Montserrat (Sans-Serif)</span>
+            <span class="type-role">About Content & Tracking Badges (Weight 600, 700)</span>
+          </div>
+          <div class="type-sample" style="font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 5px; text-transform: uppercase; color: #047857;">
+            TRADITIONAL PHARMACOPEIA • HERITAGE SCIENCE
+          </div>
+        </div>
+
+        <div class="type-specimen">
+          <div class="type-header">
+            <span class="type-name">Bebas Neue (Condensed Display)</span>
+            <span class="type-role">Large Numeric Watermarks & Display Headers (Weight 400)</span>
+          </div>
+          <div class="type-sample" style="font-family: 'Bebas Neue', sans-serif; font-size: 2.8rem; letter-spacing: 3px; color: #0f172a;">
+            BATCH B-2026-001 • WITHANIA SOMNIFERA
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. UI Component Sandbox -->
+    <section>
+      <h2>🧩 Interactive UI Component Sandbox</h2>
+      <p class="section-desc">Live components rendered using the exact CSS rules defined in the Farm2Ayur codebase.</p>
+      
+      <div class="sandbox-grid">
+        
+        <!-- Button Specimens -->
+        <div class="component-card">
+          <div class="component-label">Buttons & Controls</div>
+          <button class="btn-emerald">🌿 Identify Specimen</button>
+          <button class="btn-primary">Sign In to Ledger</button>
+          <button class="btn-outline">Explore Pharmacopeia</button>
+          <div style="display: flex; gap: 0.8rem; align-items: center;">
+            <button class="scanner-nav-btn" title="Back">←</button>
+            <button class="scanner-nav-btn" title="Flashlight">⚡</button>
+            <button class="scanner-nav-btn" title="Info">ℹ️</button>
+          </div>
+        </div>
+
+        <!-- Scanning Reticle Specimen -->
+        <div class="component-card">
+          <div class="component-label">AI Scanning Reticle & Laser</div>
+          <div class="reticle-mini">
+            <div class="corner-bracket corner-tl"></div>
+            <div class="corner-bracket corner-tr"></div>
+            <div class="corner-bracket corner-bl"></div>
+            <div class="corner-bracket corner-br"></div>
+            <div class="reticle-laser"></div>
+            <span style="font-size: 2.8rem; user-select: none;">🍃</span>
+          </div>
+          <span style="font-size: 0.78rem; font-weight: 600; color: #047857;">Active Reticle Sweep</span>
+        </div>
+
+        <!-- Telemetry HUD & Form Input -->
+        <div class="component-card">
+          <div class="component-label">Telemetry HUD Pills & Inputs</div>
+          <div class="hud-pills-wrap">
+            <div class="hud-stat-pill">
+              <span class="hud-dot dot-emerald"></span>
+              <span>Light: <strong>490 Lux</strong></span>
+            </div>
+            <div class="hud-stat-pill">
+              <span class="hud-dot dot-cyan"></span>
+              <span>Match: <strong>99.4%</strong></span>
+            </div>
+          </div>
+
+          <div style="width: 100%; max-width: 250px;">
+            <input type="text" class="glass-input" placeholder="Search batch code...">
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <footer>
+      Farm2Ayur Design System • Live Interactive Specification Preview • Built for GitHub
+    </footer>
+
+  </div>
+
+  <script>
+    function copyHex(hex) {
+      navigator.clipboard.writeText(hex).then(() => {
+        alert("Copied " + hex + " to clipboard!");
+      }).catch(err => {
+        console.log("Clipboard copy:", hex);
+      });
+    }
+  </script>
+</body>
+</html>

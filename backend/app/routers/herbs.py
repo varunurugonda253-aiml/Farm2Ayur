@@ -1,4 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Query
+from app.models.user import User
+from app.utils.auth import require_roles
 from sqlalchemy.orm import Session
 from typing import List, Optional
 
@@ -22,7 +24,7 @@ router = APIRouter(
     status_code=status.HTTP_201_CREATED,
     summary="Create a new herb (with names, classification, habitat, etc.)"
 )
-def create_herb(payload: HerbCreate, db: Session = Depends(get_db)):
+def create_herb(payload: HerbCreate, db: Session = Depends(get_db), current_user: User = Depends(require_roles("admin"))):
     existing = db.query(Herb).filter(Herb.herb_code == payload.herb_code).first()
     if existing:
         raise HTTPException(
@@ -109,7 +111,7 @@ def get_herb_by_code(herb_code: str, db: Session = Depends(get_db)):
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Delete a herb (cascades to all related rows)"
 )
-def delete_herb(herb_id: int, db: Session = Depends(get_db)):
+def delete_herb(herb_id: int, db: Session = Depends(get_db), current_user: User = Depends(require_roles("admin"))):
     herb = db.query(Herb).filter(Herb.id == herb_id).first()
     if not herb:
         raise HTTPException(status_code=404, detail="Herb not found")

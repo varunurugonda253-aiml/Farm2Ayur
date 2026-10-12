@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 import os
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -5,15 +6,28 @@ from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 
 from app.routers import herbs, auth, batches, uploads, scan, verification, blockchain, admin, chat
-from app.database import get_db
+from app.database import get_db, init_db, engine, Base
+import app.models
 from app.models.batch import Batch
 from app.schemas.batch import BatchDetailResponse
+
+# Ensure all database tables are created automatically
+init_db()
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    init_db()
+    yield
+
 
 app = FastAPI(
     title="Ayurvedic Platform API",
     description="Backend for herb identification, batch tracking, AI & blockchain",
     version="1.0.0",
+    lifespan=lifespan,
 )
+
 
 origins = [
     "http://localhost:3000",

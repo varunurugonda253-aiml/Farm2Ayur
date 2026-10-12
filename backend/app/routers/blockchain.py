@@ -9,17 +9,24 @@ from app.schemas.blockchain import (
     BlockchainAnchorRequest,
     BlockchainRecordResponse,
     BlockchainVerifyResponse,
+    ChainVerifyResponse,
 )
-from app.services.blockchain import anchor_batch, verify_batch_records
-from app.utils.auth import get_current_user, require_roles
+from app.services.blockchain import (
+    anchor_batch,
+    verify_batch_records,
+    verify_batch_on_chain,
+    ContractRevertError,
+)
+from app.utils.auth import require_roles
 
 router = APIRouter(prefix="/blockchain", tags=["Blockchain"])
+
 
 @router.post(
     "/anchor",
     response_model=BlockchainRecordResponse,
     status_code=status.HTTP_201_CREATED,
-    summary="Anchor a batch snapshot on-chain (mock/real provider)"
+    summary="Anchor a batch snapshot on-chain (mock/real provider)",
 )
 def anchor_batch_endpoint(
     payload: BlockchainAnchorRequest,
@@ -30,19 +37,29 @@ def anchor_batch_endpoint(
     if not batch:
         raise HTTPException(status_code=404, detail="Batch not found")
 
-    record = anchor_batch(
-        db=db,
-        batch=batch,
-        record_type=payload.record_type or "batch_anchor",
-        batch_event_id=payload.batch_event_id,
-        notes=payload.notes,
-    )
-    return record
+    try:
+        record = anchor_batch(
+            db=db,
+            batch=batch,
+            record_type=payload.record_type or "batch_anchor",
+            batch_event_id=payload.batch_event_id,
+            notes=payload.notes,
+        )
+        return record
+    except ContractRevertError as e:
+        raise HTTPException(status_code=400, detail=f"Contract reverted: {e.reason}")
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Failed to anchor batch: {str(e)}"
+        )
+
 
 @router.get(
     "/batch/{batch_id}",
     response_model=List[BlockchainRecordResponse],
-    summary="List blockchain records for a batch"
+    summary="List blockchain records for a batch",
 )
 def list_batch_blockchain(batch_id: int, db: Session = Depends(get_db)):
     rows = (
@@ -53,10 +70,11 @@ def list_batch_blockchain(batch_id: int, db: Session = Depends(get_db)):
     )
     return rows
 
+
 @router.get(
     "/tx/{transaction_hash}",
     response_model=BlockchainRecordResponse,
-    summary="Lookup by transaction hash"
+    summary="Lookup by transaction hash",
 )
 def get_by_tx(transaction_hash: str, db: Session = Depends(get_db)):
     row = (
@@ -68,10 +86,11 @@ def get_by_tx(transaction_hash: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Transaction not found")
     return row
 
+
 @router.get(
     "/verify/{batch_id}",
     response_model=BlockchainVerifyResponse,
-    summary="Verify batch blockchain integrity"
+    summary="Verify batch blockchain integrity",
 )
 def verify_batch(batch_id: int, db: Session = Depends(get_db)):
     batch = db.query(Batch).filter(Batch.id == batch_id).first()
@@ -80,7 +99,9 @@ def verify_batch(batch_id: int, db: Session = Depends(get_db)):
 
     result = verify_batch_records(db, batch)
     latest = result.get("latest_record")
-    latest_resp = BlockchainRecordResponse.model_validate(latest) if latest else None
+    latest_resp = (
+        BlockchainRecordResponse.model_validate(latest) if latest else None
+    )
 
     return {
         "batch_id": batch.id,
@@ -91,10 +112,11 @@ def verify_batch(batch_id: int, db: Session = Depends(get_db)):
         "message": result["message"],
     }
 
+
 @router.get(
     "/verify/code/{batch_code}",
     response_model=BlockchainVerifyResponse,
-    summary="Verify by batch code (public-friendly)"
+    summary="Verify by batch code (public-friendly)",
 )
 def verify_batch_code(batch_code: str, db: Session = Depends(get_db)):
     batch = db.query(Batch).filter(Batch.batch_code == batch_code).first()
@@ -103,7 +125,9 @@ def verify_batch_code(batch_code: str, db: Session = Depends(get_db)):
 
     result = verify_batch_records(db, batch)
     latest = result.get("latest_record")
-    latest_resp = BlockchainRecordResponse.model_validate(latest) if latest else None
+    latest_resp = (
+        BlockchainRecordResponse.model_validate(latest) if latest else None
+    )
 
     return {
         "batch_id": batch.id,
@@ -113,3 +137,31 @@ def verify_batch_code(batch_code: str, db: Session = Depends(get_db)):
         "latest_record": latest_resp,
         "message": result["message"],
     }
+
+
+@router.get(
+    "/verify-chain/{batch_id}",
+    response_model=ChainVerifyResponse,
+    summary="Verify batch on-chain against latest local hash",
+)
+def verify_batch_chain_endpoint(batch_id: int, db: Session = Depends(get_db)):
+    batch = db.query(Batch).filter(Batch.id == batch_id).first()
+    if not batch:
+        raise HTTPException(status_code=404, detail="Batch not found")
+
+    return verify_batch_on_chain(db, batch)
+
+
+@router.get(
+    "/verify-chain/code/{batch_code}",
+    response_model=ChainVerifyResponse,
+    summary="Verify batch on-chain by batch code",
+)
+def verify_batch_chain_by_code_endpoint(
+    batch_code: str, db: Session = Depends(get_db)
+):
+    batch = db.query(Batch).filter(Batch.batch_code == batch_code).first()
+    if not batch:
+        raise HTTPException(status_code=404, detail="Batch not found")
+
+    return verify_batch_on_chain(db, batch)

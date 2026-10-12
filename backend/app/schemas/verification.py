@@ -45,4 +45,7 @@ class VerificationResponse(BaseModel):
     created_at: datetime
     updated_at: Optional[datetime] = None
     verifier_name: Optional[str] = None
+    blockchain_status: Optional[str] = None
+    anchor_note: Optional[str] = None
+    note: Optional[str] = None
     model_config = ConfigDict(from_attributes=True)

@@ -1,3 +1,4 @@
+import logging
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status, Query
@@ -10,14 +11,29 @@ from app.models.herb import Herb
 from app.models.ai_scan import AIScanRecord
 from app.models.verification import VerificationRecord
 from app.schemas.verification import VerificationCreate, VerificationResponse
+from app.services.blockchain import anchor_batch, has_on_chain_anchor
 from app.utils.auth import get_current_user, require_roles
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/verification", tags=["Verification"])
 
 
-def _to_response(row: VerificationRecord) -> dict:
+def _to_response(
+    row: VerificationRecord,
+    anchor_note: Optional[str] = None,
+    blockchain_status: Optional[str] = None,
+) -> dict:
     data = VerificationResponse.model_validate(row).model_dump()
     data["verifier_name"] = row.verifier.full_name if row.verifier else None
+    data["anchor_note"] = anchor_note
+    data["note"] = anchor_note
+    data["blockchain_status"] = blockchain_status
+    if anchor_note:
+        if not data.get("comments"):
+            data["comments"] = anchor_note
+        elif "failed" in anchor_note.lower() and anchor_note not in data["comments"]:
+            data["comments"] = f"{data['comments']} ({anchor_note})"
     return data
 
 @router.post(
@@ -34,6 +50,7 @@ def create_verification(
     batch_id = None
     herb_id = None
     ai_scan_id = None
+    batch = None
 
     if payload.target_type == "batch":
         batch = db.query(Batch).filter(Batch.id == payload.target_id).first()
@@ -87,7 +104,34 @@ def create_verification(
     db.add(record)
     db.commit()
     db.refresh(record)
-    return _to_response(record)
+
+    anchor_note: Optional[str] = None
+    blockchain_status: Optional[str] = None
+
+    # Auto-anchor batch on verification approval
+    if payload.target_type == "batch" and payload.decision == "approved" and batch is not None:
+        # Skip if batch already has an on-chain (non-mock) anchor
+        if has_on_chain_anchor(db, batch):
+            anchor_note = "Batch already has on-chain anchor; skipped duplicate anchor"
+            blockchain_status = "already_anchored"
+        else:
+            try:
+                anchor_rec = anchor_batch(
+                    db=db,
+                    batch=batch,
+                    record_type="batch_anchor",
+                    notes=f"Auto-anchored on verification approval (Verification #{record.id})",
+                )
+                blockchain_status = "anchored"
+                anchor_note = f"Batch anchored on {anchor_rec.network} (tx: {anchor_rec.transaction_hash})"
+            except Exception as exc:
+                # If anchoring fails, keep the verification record, don't report the batch as anchored,
+                # and return a clear note in the response. No 500s.
+                logger.warning(f"Auto-anchoring failed for batch {batch.id}: {exc}")
+                blockchain_status = "failed"
+                anchor_note = f"Verification saved, but blockchain anchoring failed: {str(exc)}"
+
+    return _to_response(record, anchor_note=anchor_note, blockchain_status=blockchain_status)
 
 
 @router.get(

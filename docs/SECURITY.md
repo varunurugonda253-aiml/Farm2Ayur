@@ -8,27 +8,31 @@
 
 ![Auth](https://img.shields.io/badge/Auth-JWT%20(HS256)-059669?style=for-the-badge&logo=jsonwebtokens)
 ![Hashing](https://img.shields.io/badge/Passwords-Bcrypt%20Salted-10B981?style=for-the-badge&logo=shield)
-![RBAC](https://img.shields.io/badge/RBAC-4%20Roles%20Enforced-06B6D4?style=for-the-badge&logo=security)
-![Integrity](https://img.shields.io/badge/Ledger-SHA--256%20Mock--Chain-EAB308?style=for-the-badge&logo=hyperledger)
+![RBAC](https://img.shields.io/badge/RBAC-4%20Roles-06B6D4?style=for-the-badge&logo=security)
+![Integrity](https://img.shields.io/badge/Ledger-SHA--256- EAB308?style=for-the-badge&logo=hyperledger)
 ![Status](https://img.shields.io/badge/Audit%20Stage-🟡%20Prototype%20(v1.0)-yellow?style=for-the-badge)
 
 | Attribute | Details | Attribute | Details |
 | :--- | :--- | :--- | :--- |
-| **System Name** | **Farm2Ayur** | **Security Baseline** | OWASP Top 10 API Security Alignment |
-| **Backend Framework** | FastAPI (Python 3.10+) · Uvicorn | **Authentication** | OAuth2 Bearer Token (JWT / HS256) |
-| **Data Protection** | Parameterized ORM · Bcrypt (72-byte cap) | **Data Storage** | SQLite (Dev) / PostgreSQL · SQLAlchemy 2.0 |
-| **Integrity Model** | Deterministic SHA-256 Hash Chaining | **Blockchain Stage** | Internal Mock-Chain (Public Anchoring Planned) |
+| **System Name** | **Farm2Ayur** | **Security Baseline** | Security controls reviewed against common OWASP API risks |
+| **Backend Framework** | FastAPI · Python · Uvicorn | **Authentication** | JWT Bearer Tokens / HS256 |
+| **Password Storage** | Salted bcrypt hashes | **Data Storage** | SQLite / PostgreSQL · SQLAlchemy |
+| **Integrity Model** | SHA-256 Hash Chaining | **Blockchain Stage** | Polygon Amoy Testnet + Internal Mock-Chain Fallback |
 
 ---
 
 ## 1. Security Overview
 
-Farm2Ayur handles critical herbal supply chain records, botanical laboratory assays, and consumer health references. The security model prioritizes:
+Farm2Ayur manages herb batch information, verification decisions, uploaded documents, botanical records, and blockchain-related integrity references. Its security approach includes:
 
-1. **Identity & Authorization:** Restricting sensitive operations (harvest creation, lab verification, blockchain anchoring) via Role-Based Access Control (RBAC).
-2. **Data Integrity & Provenance:** Providing mathematical proof of data tampering via deterministic SHA-256 hash chaining.
-3. **Botanical & Consumer Safety:** Enforcing confidence thresholds on AI botanical identification and appending mandatory medical disclaimers to AI chat responses.
-4. **Transport & Storage Protection:** Using bcrypt password hashing, input sanitization via Pydantic schemas, and parameterized ORM database execution.
+1. **Identity & Authorization:** JWT authentication and role-based restrictions on sensitive operations such as batch creation, verification decisions, and blockchain anchoring.
+2. **Data Integrity & Provenance:** Deterministic SHA-256 hashing, a local hash-chain ledger, and optional public-testnet anchoring to help detect changes to recorded data.
+3. **Botanical & Consumer Safety:** A configured plant-identification confidence threshold and an educational safety disclaimer for Ayurvedic assistant responses.
+4. **Credential Protection:** Salted bcrypt password hashing and environment-based configuration for application secrets.
+5. **API & File Security:** Request validation, a CORS allowlist, upload-extension checks, and generated filenames.
+6. **Security Hardening:** Additional work remains for upload-size enforcement, content validation, public-data exposure, rate limiting, and production secret management.
+
+**Scope note:** This document describes controls observed in the inspected code. It is not a penetration-test report or a certification of overall security.
 
 ---
 
@@ -36,62 +40,88 @@ Farm2Ayur handles critical herbal supply chain records, botanical laboratory ass
 
 ```mermaid
 flowchart TD
-    Client["👤 Client / Web App"] -->|1. HTTP Request + Bearer JWT| Gateway["⚙️ API Gateway (FastAPI)"]
+    Client["👤 Client / Web App"] --> Gateway["⚙️ FastAPI Application"]
+    Gateway --> CORS{"🌐 CORS Policy"}
+    CORS -->|Allowed Origin| Route["📦 API Route"]
+    CORS -->|Origin Not Allowed| Block["🚫 Browser Access Restricted"]
     
-    Gateway --> CORS{"🌐 CORS Validation"}
-    CORS -->|Disallowed Origin| Err400["❌ 400 Bad Request / Blocked"]
-    CORS -->|Allowed Origin| AuthDep{"🔐 Authentication (get_current_user)"}
+    Route --> Auth{"🔐 Route Requires Authentication?"}
+    Auth -->|Yes| JWT["Validate Bearer JWT"]
+    Auth -->|No| Public["Public Endpoint"]
     
-    AuthDep -->|Missing / Invalid Token| Err401["❌ 401 Unauthorized"]
-    AuthDep -->|Active User Verified| RoleDep{"🛡️ Role Authorization (require_roles)"}
+    JWT -->|Invalid / Expired / Inactive User| Err401["❌ 401 Unauthorized"]
+    JWT -->|Valid User| Role{"🛡️ Role Required?"}
+    Role -->|Not Authorized| Err403["❌ 403 Forbidden"]
+    Role -->|Allowed / No Additional Role| Handler["Request Validation and Handler"]
+    Public --> Handler
     
-    RoleDep -->|Forbidden Role| Err403["❌ 403 Forbidden"]
-    RoleDep -->|Authorized Role| Router["📦 API Handler & Pydantic Validation"]
+    Handler --> Service["🧠 API Services"]
+    Service --> DB[(🗄️ Database)]
+    Service --> Uploads["📁 Uploaded Files"]
+    Service --> Chain["🔗 Optional Blockchain Service"]
     
-    Router --> Services["🧠 Core Services (AI Scanner / RAG / Blockchain)"]
-    Services --> DB[(🗄️ Relational Database & Ledger Records)]
-    
-    subgraph IntegrityCheck ["🔗 Cryptographic Ledger Verification"]
-        DB --> VerifyService["verify_batch_records()"]
-        VerifyService --> HashCheck{"SHA-256 Recalculation & Chain Match?"}
-        HashCheck -->|Hash Mismatch / Broken Link| Invalid["⚠️ Integrity Check Failed"]
-        HashCheck -->|All Hashes & Links Valid| Valid["✅ Cryptographic Integrity Verified"]
-    end
+    DB --> Integrity["SHA-256 Hash-Chain Verification"]
+    Integrity --> Result["✅ Integrity Result / ⚠️ Mismatch"]
+    Chain --> Network["Polygon Amoy or Mock-Chain"]
 ```
+
+**Architecture note:** CORS is a browser cross-origin policy, not an authentication or authorization mechanism. Route-level access controls must independently protect restricted operations. Some routes are public by design, so the security boundary must be evaluated endpoint by endpoint.
 
 ---
 
 ## 3. Authentication and Authorization
 
 ### 3.1 JWT Authentication Pipeline (`app/utils/auth.py`)
-- **Token Format:** Signed JSON Web Tokens (JWT) using the `HS256` symmetric algorithm.
-- **Payload Claims:** Claims include subject ID (`sub`), user email (`email`), user role (`role`), and expiration timestamp (`exp`).
-- **Token Lifespan:** Configured via `ACCESS_TOKEN_EXPIRE_MINUTES` (defaults to 1440 minutes / 24 hours).
-- **Session Verification:** `get_current_user` decodes the token, validates expiration, queries the database, and verifies `is_active == True`.
+
+- **Token Format:** JSON Web Tokens signed using the `HS256` symmetric algorithm.
+- **Token Claims:** Tokens include the subject user ID, email, role, and expiration timestamp.
+- **Token Lifespan:** Configured through `ACCESS_TOKEN_EXPIRE_MINUTES`, defaulting to 1440 minutes (24 hours).
+- **Session Verification:** `get_current_user` decodes the token, retrieves the user from the database, and rejects missing, invalid, expired, or inactive accounts.
+- **Authorization:** The `require_roles(*allowed_roles)` dependency checks the database user's current role for routes using that dependency.
+- **Registration:** `POST /auth/register` assigns `role="user"` in the route, regardless of the role supplied in the request.
 
 ### 3.2 Role-Based Access Control (RBAC) Matrix
 
-Access permissions are enforced through the `require_roles(*allowed_roles)` dependency:
+The application defines four roles: `user`, `collector`, `verifier`, and `admin`.
 
-| Role Key | Description | Allowed Operations & Endpoint Scopes |
+| Role Key | Description | Observed Operations & Endpoint Scopes |
 | :--- | :--- | :--- |
-| `user` | Public Consumer / Enthusiast | Leaf scanning (`/scan/`), RAG queries (`/chat/query`), public tracking (`/track/{code}`), verification lookups. |
-| `collector` | Herb Harvester / Field Worker | Register batches (`POST /batches/`), add harvest events (`POST /batches/{id}/events`), create blockchain anchors. |
-| `verifier` | Quality Analyst / Lab Verifier | Submit lab decisions (`POST /verification/`), approve/reject batches, attach Certificates of Analysis (COA). |
-| `admin` | Platform Administrator | Full platform control: system health telemetry (`/admin/stats`), user role management, system audits. |
+| `user` | Public Consumer / Enthusiast | Authenticated plant scanning (`/scan/`), chat queries (`/chat/query`), and other authenticated routes permitted to general users. |
+| `collector` | Herb Harvester / Field Worker | Create batches (`POST /batches/`), add lifecycle events, and request blockchain anchors. |
+| `verifier` | Quality Analyst / Lab Verifier | Record verification decisions, update applicable batch statuses, add lifecycle events, and request blockchain anchors. |
+| `admin` | Platform Administrator | Admin dashboard and management routes, herb management, user role management, and other explicitly authorized operations. |
+
+### 3.3 Access-Control Considerations
+
+- New registrations are created as ordinary `user` accounts. Privileged roles are available through the administrator role-management route.
+- Authentication is not applied globally to every route; it is defined on individual endpoint handlers.
+- Batch-code lookups, public tracking, QR downloads, herb-read endpoints, and several blockchain lookup or verification endpoints do not require authentication in the inspected code.
+- Some verification-detail endpoints require only authentication rather than a verifier/admin role.
+- Public responses and authenticated-user responses should expose only the information required for their purpose.
+
+**Status:** JWT authentication and role-aware dependencies are implemented in the backend. Route-by-route authorization and data-exposure testing remain necessary.
 
 ---
 
 ## 4. Data Protection & Cryptography
 
 ### 4.1 Credential & Secret Management
-- **Password Hashing:** Salted hashes generated via `bcrypt` (`bcrypt.hashpw` with `bcrypt.gensalt()`). The implementation truncates passwords to 72 bytes to prevent Denial-of-Service attacks targeting bcrypt's maximum byte limit.
-- **Credential Masking:** Passwords and hashes are excluded from all Pydantic response models (`UserResponse`).
-- **Environment Variables:** Loaded via `python-dotenv`. A fallback development key is defined if `SECRET_KEY` is not supplied.
+
+- **Password Hashing:** Passwords are hashed using bcrypt with a generated salt.
+- **Password Length Handling:** The current implementation truncates UTF-8 password bytes to 72 bytes before hashing and verification. This means distinct passwords sharing the same first 72 bytes may be treated as equivalent and should be addressed.
+- **Password Validation:** The user schema requires a minimum password length of six characters. Stronger password requirements should be considered before production deployment.
+- **Response Models:** The inspected user response schema exposes profile fields but does not include the stored password hash.
+- **Secret Configuration:** `python-dotenv` loads environment configuration, while `SECRET_KEY` currently has a hardcoded fallback value.
+- **Production Requirement:** A production startup must fail safely if a strong, unique `SECRET_KEY` has not been explicitly configured.
 
 ### 4.2 Database & Query Security (`app/database.py`)
-- **SQL Injection Prevention:** All database operations utilize **SQLAlchemy 2.0 ORM** parameterized queries (`db.query(...).filter(...)`). Raw SQL string concatenation is not used anywhere in the codebase.
-- **Cross-Dialect Type Safety:** Custom types (`BigIntPK` and `JSONType`) provide type abstraction between SQLite and PostgreSQL.
+
+- **ORM Usage:** The inspected routes use SQLAlchemy query expressions for database access.
+- **Input Validation:** Pydantic request schemas provide type validation and selected field validators, including role, batch-event, and batch-status validation.
+- **Database Configuration:** `DATABASE_URL` is required by the current database initialization code.
+- **Database Permissions:** Production database access should follow least privilege, with restricted network exposure, protected credentials, and appropriate backups.
+
+**Security limitation:** The use of an ORM and request schemas helps reduce common risks, but does not by itself prove that every query, input, or business rule is safe.
 
 ---
 
@@ -99,78 +129,138 @@ Access permissions are enforced through the `require_roles(*allowed_roles)` depe
 
 | Security Control | Implementation Detail | Source File | Status |
 | :--- | :--- | :--- | :---: |
-| **Request Schema Validation** | Strict type enforcement, regex validation, and length constraints via Pydantic v2 schemas. | `app/schemas/*.py` | 🟢 Implemented |
-| **CORS Origin Whitelist** | Restricted to localhost dev ports (`http://localhost:3000`, `http://localhost:5173`, `127.0.0.1`). | `app/main.py` | 🟢 Implemented |
-| **Upload Extension Whitelist** | Whitelist check accepting only `.jpg`, `.jpeg`, `.png`, `.webp`, and `.pdf` files. | `app/routers/uploads.py` | 🟢 Implemented |
-| **Path Traversal Prevention** | Uploaded files are renamed using randomly generated UUIDs (`uuid.uuid4().hex`). | `app/routers/uploads.py` | 🟢 Implemented |
-| **File Size Enforcement** | `MAX_FILE_SIZE_MB = 10` is defined as a constant, but active byte-stream checking is omitted. | `app/routers/uploads.py` | 🟡 Partial |
-| **Upload MIME-Type Sniffing** | Validates only file extensions without inspecting magic byte signatures. | `app/routers/uploads.py` | 🟡 Partial |
-| **Static File Access Control** | Static directory (`/static/uploads`) is served publicly without authentication headers. | `app/main.py` | 🟡 Partial |
-| **Rate Limiting** | No global or endpoint-specific rate limiting middleware (e.g., SlowAPI) is currently configured. | `app/main.py` | 🔴 Not Implemented |
+| **Request Schema Validation** | Pydantic models validate request fields and selected allowed values. Coverage differs by schema. | `app/schemas/*.py` | 🟢 Implemented |
+| **JWT Authentication** | Bearer-token validation and active-user checks on routes that declare authentication dependencies. | `app/utils/auth.py` | 🟢 Implemented |
+| **Role Authorization** | `require_roles` restricts selected batch, verification, herb-management, and admin operations. | `app/utils/auth.py`, `app/routers/*.py` | 🟢 Implemented; audit required |
+| **CORS Origin Allowlist** | Allows configured localhost development origins on ports 3000 and 5173. | `app/main.py` | 🟢 Development configuration |
+| **Public Data Exposure** | Public tracking, batch-code lookup, QR download, and some verification/blockchain routes return data without authentication. | `app/main.py`, `app/routers/*.py` | 🟡 Review required |
+| **Upload Extension Allowlist** | Upload endpoints check filename extensions against configured image/PDF extensions. | `app/routers/uploads.py` | 🟡 Partial |
+| **Generated Upload Filenames** | UUID-based filenames reduce the risk of collisions and user-controlled path names. | `app/routers/uploads.py` | 🟢 Implemented |
+| **File Size Enforcement** | A 10 MB constant exists, but active byte-limit enforcement is absent from the inspected upload handlers. | `app/routers/uploads.py` | 🔴 Not enforced |
+| **Upload Content Validation** | Actual file content and magic-byte signatures are not checked in the inspected upload handlers. | `app/routers/uploads.py` | 🔴 Not implemented |
+| **Static File Access Control** | The `/static` directory, including uploaded files, is mounted for public serving. | `app/main.py` | 🟡 Review required |
+| **Rate Limiting** | No global or endpoint-specific rate-limiting middleware was found in the inspected application setup. | `app/main.py` | 🔴 Not observed |
+| **Safe Error Responses** | Some exception handlers return exception text in HTTP responses. | `app/routers/uploads.py`, `app/routers/blockchain.py` | 🟡 Hardening required |
+| **Production CORS Configuration** | The configured origins are development localhost values. Production origins must be configured explicitly. | `app/main.py` | 🟡 Deployment task |
+
+### 5.1 Important API Exposure Notes
+
+- `GET /track/{batch_code}` and `GET /batches/code/{batch_code}` return batch details that may contain location, collector-related, note, and event information.
+- `GET /batches/{batch_id}/qr` is not protected by an authentication dependency in the inspected route.
+- Blockchain record lookup and verification endpoints include public routes.
+- Verification-detail routes allow any authenticated user where the handler uses `get_current_user` without an additional verifier/admin role check.
+- The application must define which data is intentionally public, then redact or restrict the remaining fields accordingly.
 
 ---
 
 ## 6. AI and Botanical Data Safety
 
 ### 6.1 Plant Identification Safeguards (`app/services/ai_identifier.py`)
-- **Confidence Gating:** Predictions with confidence below `LOW_CONFIDENCE_THRESHOLD = 0.55` are flagged as `low_confidence`, prompting the user to retake the photo with clearer lighting.
-- **Graceful Degradation:** If TensorFlow/Keras fails to load at runtime, an automated heuristic fallback prevents system crashes.
-- **Limitation:** The classifier is bounded to 5 trained botanical species (*Amla, Ashwagandha, Guduchi, Neem, Tulsi*). Unseen species outside this set may trigger false positives or default to low confidence.
 
-### 6.2 Ayurvedic Knowledge & RAG Guardrails (`app/services/rag_engine.py`)
-- **Curated Context Source:** Document retrieval filters knowledge records using `KnowledgeDocument.is_verified == True`.
-- **Mandatory Medical Disclaimer:** Every AI response automatically appends a standardized medical safety disclaimer advising users to consult licensed Ayurvedic physicians.
-- **Limitation:** The RAG retrieval pipeline relies on lexical SQL substring matching rather than vector embeddings with guardrail filtering.
+- **Confidence Threshold:** Predictions below `LOW_CONFIDENCE_THRESHOLD = 0.55` are returned with a `low_confidence` status when the model inference path is used.
+- **Graceful Degradation:** If the model is unavailable or inference fails, the service falls back to filename-based herb-name matching.
+- **Classification Scope:** The configured model classes are Amla, Ashwagandha, Guduchi, Neem, and Tulsi.
+- **Result Limitation:** The configured class list does not establish reliable identification for unknown species or guarantee that a high-confidence prediction is correct.
+- **Fallback Limitation:** Filename-based matching uses input metadata rather than visual evidence and must not be presented as visual AI recognition.
+- **User Safety:** Plant predictions should be treated as assistance, not as a definitive determination for medicinal use, harvesting, or treatment.
+
+### 6.2 Ayurvedic Knowledge & Assistant Guardrails (`app/services/rag_engine.py`)
+
+- **Knowledge Document Filtering:** The inspected retrieval code filters knowledge documents to those marked `is_verified == True`.
+- **Herb Database Records:** Herb matching is performed against available herb names; this path is not the same as verifying every retrieved herb record.
+- **Response Construction:** The current service uses keyword/substring matching and templated responses rather than a demonstrated vector-embedding retrieval system or general-purpose generative model.
+- **Safety Disclaimer:** Responses append an educational-use disclaimer recommending consultation with a qualified Ayurvedic physician or healthcare provider.
+- **Limitations:** A disclaimer does not guarantee medical safety or prevent every incorrect, incomplete, or misunderstood response.
+- **Future Hardening:** Improve source traceability, handle ambiguous queries explicitly, and evaluate protections against prompt-based manipulation if generative model capabilities are introduced.
 
 ---
 
 ## 7. Blockchain and Data Integrity
 
-### 7.1 Internal Mock-Chain Architecture (`app/services/blockchain.py`)
-Farm2Ayur implements an **internal cryptographic ledger** to provide tamper-evidence without public transaction fees:
+### 7.1 Local Hash-Chain Ledger (`app/services/blockchain.py`)
 
-1. **Deterministic Serialization:** Batch state snapshots are serialized using canonical sorting:
-   $$\text{Canonical JSON} = \text{json.dumps}(\text{payload}, \text{sort\_keys}=\text{True}, \text{separators}=(\text{","}, \text{":"}))$$
-2. **SHA-256 Digest Generation:** A 64-character hexadecimal digest is calculated over the canonical byte stream:
-   $$\text{data\_hash} = \text{SHA-256}(\text{Canonical JSON})$$
-3. **Cryptographic Chaining:** Each new record anchors the previous record's `data_hash` as its `previous_hash`.
-4. **Integrity Verification:** The `/blockchain/verify/{batch_id}` endpoint recalculates each block's SHA-256 digest and verifies chain link continuity.
+Farm2Ayur maintains local integrity records using deterministic JSON serialization and SHA-256 hashing.
 
-### 7.2 Implemented Mock-Chain vs. Public Blockchain
+1. **Deterministic Serialization:** Batch snapshot data is serialized using sorted keys and compact separators.
+2. **SHA-256 Digest:** A digest is calculated from the canonical JSON byte sequence.
+3. **Hash Linking:** New ledger records include the previous hash associated with that batch.
+4. **Local Verification:** The `/blockchain/verify/{batch_id}` endpoint recalculates stored payload hashes and checks the expected previous-hash links.
+5. **Integrity Scope:** These checks detect inconsistencies between the stored payload, digest, and recorded link. They do not independently prove the truth of the original physical-world information.
 
-| Characteristic | 🟢 Implemented (Internal Mock-Chain) | 🔵 Planned (Public Blockchain) |
+### 7.2 Local Ledger vs. Public Blockchain
+
+| Characteristic | 🟢 Local Hash-Chain Ledger | 🟢 Polygon Amoy Testnet |
 | :--- | :--- | :--- |
-| **Storage Medium** | Database table (`blockchain_records`) | Decentralized public state (EVM / Polygon) |
-| **Trust Model** | Mathematical tamper-detection via recalculation | Decentralized consensus & Merkle proofs |
-| **Network Cost** | $0.00 (Zero gas overhead) | Network gas fees |
-| **Immutability Scope** | Local tamper-evidence (detects altered records) | Global immutable consensus (tamper-proof) |
+| **Storage Medium** | Local database records | Smart-contract state and public transaction history |
+| **Integrity Mechanism** | SHA-256 digest and previous-hash checks | On-chain batch hash compared with the applicable locally rebuilt hash |
+| **Transaction Cost** | No public-network transaction fee | Testnet gas required for real transactions |
+| **Deployment Status** | Implemented | Contract deployed; anchoring and verification demonstrated |
+| **Trust Limitation** | A party controlling the database may alter records and attempt to recompute hashes. | An anchored hash protects the reference on-chain, but does not prove that the submitted facts were true. |
+
+### 7.3 Public Blockchain Integration
+
+- **Network:** Polygon Amoy Testnet.
+- **Chain ID:** `80002`.
+- **Contract Address:** `0x69ce77ef7Fb9AbC100D5FAd402EC24E87434bC6b`.
+- **Explorer:** https://amoy.polygonscan.com/address/0x69ce77ef7Fb9AbC100D5FAd402EC24E87434bC6b
+- **Example Transaction:** https://amoy.polygonscan.com/tx/0xaaf79278cd3343d0145b45967e6e716a5abf965bdf8b1a3cb8e929323ff11cd3
+
+The backend supports real contract interaction using `CHAIN_ENABLED`, `CHAIN_RPC_URL`, `CONTRACT_ADDRESS`, and `CHAIN_PRIVATE_KEY`.
+
+**Operational considerations:**
+
+- If blockchain functionality is disabled or real-network configuration or connectivity fails, the service can create a mock-chain record.
+- Mock records use the `mock-chain` network label and synthetic transaction-like values. These must not be presented as real on-chain transactions.
+- Contract reverts are handled differently from general network/configuration failures.
+- The verification endpoints distinguish states including verified, modified-since-anchor, not-anchored, and mock-anchored.
+- The current design anchors a batch snapshot/reference at the applicable anchor point; it does not automatically establish that every later lifecycle event was individually written to the blockchain.
+- Private signing keys must remain outside source control, frontend code, logs, and API responses.
 
 ---
 
 ## 8. Security Status Matrix
 
-| Security Domain | Verified Implementation in Code | Status | Recommended Improvement |
+| Security Domain | Verified Implementation in Inspected Code | Status | Recommended Improvement |
 | :--- | :--- | :---: | :--- |
-| **User Authentication** | OAuth2 Bearer token with JWT (`HS256`) and bcrypt hashing | 🟢 Implemented | Add refresh tokens and account lockout policies. |
-| **Role Authorization** | Role check dependency (`require_roles`) on batch and admin routes | 🟢 Implemented | Restrict public self-assignment of privileged roles. |
-| **SQL Injection** | Parameterized queries via SQLAlchemy 2.0 ORM | 🟢 Implemented | Maintain strict policy against raw SQL queries. |
-| **Path Traversal** | Uploaded files renamed with random UUIDs | 🟢 Implemented | Store uploaded media in secure cloud object storage. |
-| **Data Integrity** | Canonical JSON with SHA-256 hash chaining | 🟢 Implemented | Transition to periodic public blockchain anchoring. |
-| **AI Safety Guardrails** | Confidence threshold (0.55) & mandatory medical disclaimer | 🟢 Implemented | Add adversarial prompt-injection filtering. |
-| **File Upload Validation** | Whitelist file extension check (.jpg, .png, .pdf) | 🟡 Partial | Add active byte size checks and magic byte validation. |
-| **Secret Management** | Environment variable loading via `python-dotenv` | 🟡 Partial | Prevent default fallback secrets in production builds. |
-| **Static File Protection** | `/static/uploads` served without authentication | 🟡 Partial | Implement authenticated pre-signed URLs for COA files. |
-| **Rate Limiting** | No request throttling configured on endpoints | 🔴 Not Implemented | Integrate `slowapi` rate limiting on auth and scan routes. |
+| **User Authentication** | JWT `HS256`, active-user check, and bcrypt password hashing | 🟢 Implemented | Strengthen password policy and evaluate account lockout and token/session requirements. |
+| **Role Authorization** | Role-check dependency used on selected protected routes | 🟢 Implemented; audit required | Test every route and preserve admin-only role assignment. |
+| **Registration Role Assignment** | Registration route assigns `role="user"` | 🟢 Enforced in route | Remove the unnecessary role field from the registration request schema for clarity. |
+| **SQL Injection Risk** | Inspected routes use SQLAlchemy ORM query patterns | 🟢 Partial evidence | Continue reviewing query construction and input handling across all endpoints. |
+| **Password Handling** | Salted bcrypt hashing; input is truncated to 72 bytes | 🟡 Partial | Avoid silent truncation and define a safe maximum password policy. |
+| **Secret Management** | Environment variable loading with a hardcoded fallback secret | 🟡 Partial | Require a strong configured secret in production and prevent insecure startup. |
+| **File Upload Validation** | Extension allowlist and UUID filenames | 🟡 Partial | Enforce byte limits, validate file contents, and handle cleanup safely. |
+| **Static File Protection** | `/static` directory is publicly served | 🟡 Review required | Restrict confidential evidence or use authorized file-access mechanisms. |
+| **Public API Exposure** | Several public routes return batch or integrity data | 🟡 Review required | Define public response schemas and remove unnecessary sensitive fields. |
+| **Rate Limiting** | No limiter found in the inspected application setup | 🔴 Not observed | Add throttling to login, scanning, uploads, chat, and resource-intensive endpoints. |
+| **Safe Error Handling** | Some responses include raw exception text | 🟡 Partial | Return sanitized errors and retain detailed diagnostic information in protected logs. |
+| **AI Safety Guardrails** | Model confidence threshold and assistant disclaimer | 🟡 Partial | Improve uncertainty communication and assess model/assistant failure cases. |
+| **Local Data Integrity** | Canonical JSON, SHA-256, and previous-hash checks | 🟢 Implemented | Protect database access and back up integrity records. |
+| **Public Blockchain Anchoring** | HerbTrace smart contract deployed; testnet interaction implemented | 🟢 Testnet demonstrated | Verify real-vs-mock outcomes and prepare a separate production deployment review. |
+| **CORS Configuration** | Localhost development-origin allowlist | 🟢 Development setting | Configure and validate the exact frontend origins for each deployment. |
 
 ---
 
 ## 9. Known Limitations and Hardening Roadmap
 
-1. **Role Self-Selection on Registration:** The registration endpoint (`POST /auth/register`) accepts a `role` field from the client. Public registrations should default strictly to `role="user"`, with `collector`, `verifier`, and `admin` roles assigned exclusively by administrators.
-2. **Hardcoded Fallback Secret Key:** `auth.py` contains a fallback secret key string if `SECRET_KEY` is not present in `.env`. Production deployments must enforce a mandatory check that terminates startup if `SECRET_KEY` is missing.
-3. **File Size & Magic Byte Verification:** In `uploads.py`, file size limits should be enforced before writing chunks to disk, and file headers should be inspected via `python-magic` to prevent extension spoofing.
-4. **Rate Limiting & Brute-Force Protection:** Implement IP- and user-based throttling on `/auth/login` and `/scan/` to prevent brute-force credential stuffing and resource exhaustion.
-5. **Decentralized Anchoring:** Transition from the internal single-node ledger to periodic state root anchoring on a public EVM-compatible testnet (e.g., Polygon Amoy).
+1. **Route Authorization and Public Data Review:** Audit each API route for authentication and role requirements. Review public batch, verification, QR, and blockchain responses and expose only intentionally public fields.
+
+2. **Secret Management:** Remove reliance on the fallback `SECRET_KEY`. Require a strong, unique secret in production, protect blockchain signing credentials, and ensure secrets are never committed to GitHub.
+
+3. **File Size & Content Validation:** Enforce upload-size limits while reading uploaded data. Validate actual file contents rather than relying on filename extensions alone. Handle invalid files safely and review access to uploaded PDFs and images.
+
+4. **Rate Limiting & Abuse Protection:** Add request throttling and brute-force protection for authentication, plant scanning, uploads, and other resource-intensive endpoints.
+
+5. **Password Policy:** Address bcrypt's 72-byte truncation behavior, strengthen the minimum password policy, and test how long or malformed input is handled.
+
+6. **Safe Error Handling:** Remove raw exception details from public HTTP responses where they may expose paths, provider information, network details, or internal implementation. Keep diagnostic logs protected.
+
+7. **Verification and Evidence Access:** Define which users may read individual verification records and evidence references. Review the exposure of verifier comments and associated files.
+
+8. **Blockchain Outcome Validation:** Ensure UI and API consumers can distinguish actual Polygon transactions from mock-chain records. Test missing RPC configuration, network failure, transaction failure, and contract reverts.
+
+9. **Production CORS and Deployment:** Replace development-only localhost origins with explicitly configured deployment origins. Review HTTPS, reverse-proxy configuration, database privileges, backups, and operational logging.
+
+10. **Automated Security Testing:** Add tests for unauthorized access, role escalation, public-data exposure, upload validation, oversized files, unsafe error responses, and mock-versus-real blockchain status.
 
 ---
 
@@ -178,8 +268,11 @@ Farm2Ayur implements an **internal cryptographic ledger** to provide tamper-evid
 
 If you discover a security vulnerability or potential data-protection risk in the Farm2Ayur codebase:
 
-1. **Do not open a public issue.** Please report the issue privately through GitHub:
+1. **Do not publish exploit details in a public issue.** Use the repository's private vulnerability-reporting process if it is available:
    - Navigate to the [Farm2Ayur GitHub Repository](https://github.com/varunurugonda253-aiml/Farm2Ayur).
-   - Go to **Security** → **Report a vulnerability** to submit a private security advisory.
-2. Include a clear description of the vulnerability, reproduction steps, and potential impact.
-3. The project maintainers will review and address the report responsibly.
+   - Open the repository's **Security** section and check whether **Report a vulnerability** is enabled.
+2. Include a clear description of the vulnerability, reproduction steps, affected component, and potential impact.
+3. Avoid including private keys, passwords, tokens, personal data, or other sensitive material in the report unless strictly necessary for secure investigation.
+4. The project maintainers should assess the report, prioritize the risk, and coordinate a responsible fix.
+
+If private vulnerability reporting is not enabled, contact the maintainers privately before sharing sensitive technical details publicly.

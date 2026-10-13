@@ -9,42 +9,46 @@
 | Attribute | Details | Attribute | Details |
 | :--- | :--- | :--- | :--- |
 | **Product Name** | **Farm2Ayur** | **Current Stage** | 🟡 Prototype (v1.0) |
-| **Domain** | Ayurvedic Traceability & AgTech | **Core Tech** | FastAPI · Vite · MobileNetV2 · SHA-256 Ledger |
-| **Target Users** | Harvesters, Verifiers, Consumers, Admins | **Integrity Model** | Hash-Chained Event Ledger (Internal Mock-Chain) |
+| **Domain** | Ayurvedic Traceability & AgTech | **Core Tech** | FastAPI · Vite · MobileNetV2 · SHA-256 · Web3 |
+| **Target Users** | Harvesters, Verifiers, Consumers, Admins | **Integrity Model** | Local Hash-Chain Ledger + Polygon Amoy Testnet |
 
 ---
 
 ## 1. Product Overview
 
-**Farm2Ayur** is an end-to-end digital provenance and plant identification platform designed to bring transparency, authenticity, and scientific rigor to the Ayurvedic medicinal herb supply chain. 
+**Farm2Ayur** is a digital provenance and plant identification platform designed to bring transparency, authenticity, and accountability to the Ayurvedic medicinal herb supply chain.
 
-Bridging classical Ayurvedic botanical wisdom with modern digital verification, the platform empowers harvesters with mobile AI leaf recognition, provides lab analysts with a formal verification portal, and gives consumers an instant, tamper-evident record of their herbal remedies.
+The platform combines AI-assisted plant identification, digital batch management, quality verification, QR-based tracking, and cryptographic integrity checks. Its backend provides APIs for these capabilities, while several frontend interfaces still use demonstration data and require integration with live backend services.
+
+Farm2Ayur also demonstrates blockchain-based batch integrity verification through the HerbTrace smart contract deployed on Polygon Amoy Testnet.
 
 ---
 
 ## 2. Problem Statement
 
-The global surge in natural wellness has accelerated demand for Ayurvedic raw materials, exposing critical vulnerabilities in traditional herbal supply chains:
+The growing demand for natural wellness products exposes critical challenges in traditional herbal supply chains:
 
 | # | Challenge | Supply Chain Impact |
 | :-: | :--- | :--- |
 | **1** | **No Farm-to-Consumer Traceability** | Consumers lack visibility into grower identity, geographical origin (*Desha*), and harvest season (*Ritu*). |
-| **2** | **Species Substitution & Adulteration** | Lookalike weeds harvested in place of genuine herbs degrade therapeutic potency (*Virya*) and risk toxicity. |
-| **3** | **Vulnerable Paper-Based Assurances** | Physical Certificates of Analysis (COAs) are easily lost, misplaced, or illicitly modified without detection. |
-| **4** | **Consumer Information Disconnect** | Buyers lack verified, contextual educational resources connecting classical Ayurvedic principles with modern safety data. |
+| **2** | **Species Substitution & Adulteration** | Incorrect plant identification can affect raw-material quality and potentially introduce unsafe substitutions. |
+| **3** | **Vulnerable Paper-Based Assurances** | Certificates of Analysis (COAs) and other documents may be lost, misplaced, or modified without an effective integrity check. |
+| **4** | **Consumer Information Disconnect** | Buyers lack convenient access to batch history, verification status, and contextual Ayurvedic information. |
 
 ---
 
 ## 3. Product Vision & Goals
 
 > ### 🎯 Product Vision
-> To establish an unbroken chain of trust and authentic botanical knowledge from the soil of the cultivator to the daily remedy of the consumer.
+> To establish a trustworthy and traceable journey from the soil of the cultivator to the daily remedy of the consumer.
 
 ### Key Goals
-- **Verifiable Provenance:** Transform raw botanical harvesting into an accountable pipeline where every parcel carries a verifiable digital passport.
-- **Democratized AI Vision:** Put instant botanical identification into the hands of harvesters and consumers via standard mobile browser cameras.
-- **Heritage & Scientific Rigor:** Combine traditional Ayurvedic parameters (*Rasa, Guna, Virya, Vipaka*) with modern laboratory assay proof.
-- **Practical Transparency:** Deliver tamper-evident data integrity through lightweight cryptographic chaining without prohibitive transaction costs.
+
+- **Verifiable Provenance:** Maintain digital batch records that connect herb collection, processing, and verification information.
+- **Democratized AI Vision:** Support plant identification for five configured medicinal plant classes using MobileNetV2.
+- **Heritage & Scientific Rigor:** Connect available Ayurvedic knowledge and verification evidence with digital batch records.
+- **Practical Transparency:** Detect changes to recorded data using SHA-256 integrity checks and demonstrate blockchain anchoring on a public test network.
+- **Connected Experience:** Integrate frontend interfaces with live backend APIs to provide a complete user journey.
 
 ---
 
@@ -52,10 +56,10 @@ The global surge in natural wellness has accelerated demand for Ayurvedic raw ma
 
 | Persona | Role Key | Primary Goals & Responsibilities |
 | :--- | :--- | :--- |
-| **👤 End Consumer & Enthusiast** | `user` / Public | Scan plants for identification, scan product QR codes to inspect origin and lab purity, and query the Ayurvedic assistant. |
-| **🧑‍🌾 Herb Harvester & Collector** | `collector` | Register new herb harvests at source, log GPS coordinates and timestamps, and generate serialized batch QR codes. |
-| **🔬 Quality Verifier & Lab Analyst** | `verifier` | Review incoming batches, validate physical/chemical laboratory findings, and issue approval decisions with COA evidence. |
-| **🛡️ Platform Administrator** | `admin` | Monitor system-wide supply chain telemetry, oversee platform health, and manage user accounts and botanical catalogs. |
+| **👤 End Consumer & Enthusiast** | `user` / Public | Access available plant information, scan batch QR codes, and inspect public traceability details. |
+| **🧑‍🌾 Herb Harvester & Collector** | `collector` | Register herb batches, record available collection information, and generate batch QR codes. |
+| **🔬 Quality Verifier & Lab Analyst** | `verifier` | Review batch information, record verification decisions, and work with associated evidence. |
+| **🛡️ Platform Administrator** | `admin` | Manage authorized platform operations and access restricted administrative functions. |
 
 ---
 
@@ -63,53 +67,64 @@ The global surge in natural wellness has accelerated demand for Ayurvedic raw ma
 
 | 🌿 **AI Plant Identification** | 📦 **Batch Lifecycle Tracking** |
 | :--- | :--- |
-| Browser-based leaf image scanning powered by MobileNetV2 to identify 5 core Ayurvedic species (*Amla, Ashwagandha, Guduchi, Neem, Tulsi*) with confidence scoring. | Granular milestone tracking across 5 distinct lifecycle stages: *Harvested*, *Processed*, *Quality Tested*, *In Transit*, and *Delivered*. |
-| **Status:** ✅ Implemented | **Status:** ✅ Implemented |
+| MobileNetV2-based backend identification for five configured species: *Amla, Ashwagandha, Guduchi, Neem,* and *Tulsi*. A filename-based fallback exists when model inference is unavailable. | Backend APIs support batch registration, retrieval, status updates, event records, and QR generation. The intended lifecycle includes *Harvested, Processed, Quality Tested, In Transit,* and *Delivered*. |
+| **Status:** ⚠️ Backend implemented; frontend integration pending | **Status:** ⚠️ Backend implemented; complete workflow integration pending |
 
 | 📱 **QR-Based Instant Access** | 🔗 **Tamper-Evident Ledger** |
 | :--- | :--- |
-| Serialized, downloadable 2D QR codes that route directly to public verification pages, giving instant crop-to-remedy visibility. | Deterministic SHA-256 cryptographic hash chaining linking batch events to mathematically prevent retroactive alteration. |
-| **Status:** ✅ Implemented | **Status:** ✅ Implemented |
+| Backend support generates downloadable QR codes and provides batch lookup. The complete frontend tracking journey still needs to use live backend data instead of demonstration records. | SHA-256 hashing, a local hash-chain ledger, and integrity-verification endpoints detect inconsistencies. Approved batch records can also be anchored to the HerbTrace smart contract on Polygon Amoy Testnet. |
+| **Status:** ⚠️ Backend implemented; frontend integration pending | **Status:** ✅ Local ledger implemented; testnet anchoring demonstrated |
 
-| 🧪 **Quality & COA Verification** | 💬 **RAG Ayurvedic Assistant** |
+| 🧪 **Quality & COA Verification** | 💬 **Ayurvedic Knowledge Assistant** |
 | :--- | :--- |
-| Dedicated review interface for authorized verifiers to approve batches and attach digital Certificate of Analysis (COA) PDFs. | Interactive AI chat grounded in verified internal herb records to answer botanical and Ayurvedic queries with safety context. |
-| **Status:** ✅ Implemented | **Status:** ✅ Implemented |
+| Backend verification workflows record approval decisions and can trigger blockchain anchoring. An upload API exists, but the complete verifier interface and COA workflow are not yet confirmed as integrated. | A basic backend assistant uses keyword matching and templated responses from available herb records and knowledge documents. A full vector-based or generative RAG implementation is not currently established. |
+| **Status:** ⚠️ Backend capabilities available; complete workflow pending | **Status:** ⚠️ Basic backend implemented; frontend integration pending |
 
 ---
 
 ## 6. How Farm2Ayur Works
 
-Farm2Ayur unifies all stakeholders across an unbroken, multi-stage verification journey:
+Farm2Ayur is designed to connect herb collectors, verifiers, and consumers through a structured traceability workflow.
 
 ```mermaid
 flowchart LR
     A[🧑‍🌾 Harvester / Collector] -->|1. Identifies Plant| B(🌿 AI Leaf Scanner)
-    B -->|2. Logs Origin & GPS| C(📋 Batch Registration)
-    C -->|3. Lab Tests Purity| D(🔬 Quality Verification)
-    D -->|4. Hashes Milestone| E(🔗 Traceability Ledger)
+    B -->|2. Registers Batch| C(📋 Batch Registration)
+    C -->|3. Reviews Evidence| D(🔬 Quality Verification)
+    D -->|4. Records Integrity Reference| E(🔗 Traceability Ledger)
     E -->|5. Scans QR Code| F[👤 Consumer Verification]
 ```
 
-1. **Identification:** Harvesters or consumers verify botanical authenticity of a plant leaf using the AI scanner.
-2. **Registration:** Harvesters register a new batch at the farm, recording GPS location, timestamp, and quantity to generate a serialized QR code.
-3. **Verification:** Lab analysts test the batch for purity and upload formal verification decisions with COA documentation.
-4. **Traceability:** The system logs each lifecycle transition and anchors event records using cryptographic SHA-256 hash chaining.
-5. **Consumption:** Consumers scan the package QR code to inspect the complete, tamper-evident farm-to-shelf journey.
+1. **Identification:** The backend supports image-based identification of five configured medicinal plant classes.
+2. **Registration:** Collectors can register batches and generate batch-specific QR codes through backend APIs.
+3. **Verification:** Authorized users can record verification decisions and work with associated batch evidence.
+4. **Traceability:** The local ledger supports SHA-256 hash-chain checks, and approved batch records can be anchored to Polygon Amoy Testnet. The current workflow does not independently anchor every lifecycle milestone.
+5. **Consumer Access:** Consumers can use a batch code or QR reference to access available public tracking information.
+
+**Integration Note:** Several frontend components currently use hardcoded demonstration data. Connecting the complete journey to live backend APIs remains a key development milestone.
 
 ---
 
 ## 7. Technology Overview
 
-Farm2Ayur is architected as a lightweight, decoupled full-stack application:
+Farm2Ayur uses a decoupled frontend and backend architecture with a local integrity ledger and optional external blockchain integration.
 
 | Subsystem | Technology Stack | Purpose & Implementation |
 | :--- | :--- | :--- |
-| **Frontend** | Vite · Vanilla HTML5 / CSS / ES Modules | Responsive, accessible client interface ready for React component migration. |
-| **Backend API** | Python 3 · FastAPI · SQLAlchemy | High-performance asynchronous REST API handling authentication, batch workflows, and business logic. |
-| **Database** | SQLite / PostgreSQL | Relational persistence for user accounts, batch logs, verifications, and botanical datasets. |
-| **AI Vision Engine** | TensorFlow / Keras · MobileNetV2 (`farm2ayur-v9`) | 224×224 leaf classification pipeline with heuristic fallback mechanism for 5 plant species. |
-| **Provenance Layer** | SHA-256 Hash Chaining (Internal Mock-Chain) | Lightweight zero-gas event ledger linking block hashes to ensure data tamper-evidence. |
+| **Frontend** | Vite · Vanilla HTML5 / CSS / JavaScript ES Modules | Browser-based interfaces for scanning, batch information, and user interactions. Live API integration remains incomplete in several areas. |
+| **Backend API** | Python · FastAPI · SQLAlchemy | REST APIs for authentication, batch operations, uploads, scanning, verification, and the knowledge assistant. |
+| **Database** | SQLite / PostgreSQL | Structured persistence for application records, including batches, events, and verification data. |
+| **AI Vision Engine** | TensorFlow / Keras · MobileNetV2 | 224×224 image-classification pipeline for five configured plant species, with a filename-based fallback. |
+| **Integrity Layer** | SHA-256 Hash Chaining | Local hash-chain ledger and integrity-verification operations. |
+| **Blockchain Layer** | Web3.py · HerbTrace Smart Contract | Anchoring and verification of batch integrity references on Polygon Amoy Testnet, with mock-chain fallback support. |
+
+**Blockchain Deployment:** Polygon Amoy Testnet · Chain ID `80002`
+
+**Contract Address:** `0x69ce77ef7Fb9AbC100D5FAd402EC24E87434bC6b`
+
+**Contract Explorer:** https://amoy.polygonscan.com/address/0x69ce77ef7Fb9AbC100D5FAd402EC24E87434bC6b
+
+**Example Transaction:** https://amoy.polygonscan.com/tx/0xaaf79278cd3343d0145b45967e6e716a5abf965bdf8b1a3cb8e929323ff11cd3
 
 ---
 
@@ -117,20 +132,33 @@ Farm2Ayur is architected as a lightweight, decoupled full-stack application:
 
 | Capability Area | Implementation Details | Status |
 | :--- | :--- | :---: |
-| **AI Plant Identification** | 5 core species classified via MobileNetV2 with confidence metrics and heuristic fallback | ✅ Implemented |
-| **User & Access Control** | JWT-based authentication with role-based access control (`user`, `collector`, `verifier`, `admin`) | ✅ Implemented |
-| **Batch Lifecycle Tracking** | Full CRUD, 5 lifecycle stages, GPS coordinates, timestamps, and serialized QR generation | ✅ Implemented |
-| **Quality & COA Management** | Verifier review interface with status transitions and file/PDF evidence attachment | ✅ Implemented |
-| **Cryptographic Provenance** | SHA-256 hash-chained event records providing auditability without gas overhead | ✅ Implemented |
-| **RAG Knowledge Assistant** | Interactive chat assistant querying internal herb profiles and classical parameters | ✅ Implemented |
-| **Public Blockchain Anchor** | External decentralization to public network | 🔵 Planned |
-| **Multi-Herb Formulations** | Complex formulation tracking (*e.g., Chyawanprash*) | 🔵 Planned |
+| **AI Plant Identification** | Backend MobileNetV2 pipeline for five configured species with a fallback mechanism | ⚠️ Backend implemented |
+| **User & Access Control** | JWT authentication and role-aware backend access controls | ✅ Backend implemented |
+| **Batch Lifecycle Tracking** | Batch creation, retrieval, event records, status operations, and QR generation | ⚠️ Backend implemented; integration pending |
+| **Quality & COA Management** | Verification-decision workflows and document-upload endpoint | ⚠️ Backend capabilities available; complete workflow pending |
+| **Cryptographic Provenance** | SHA-256 local hash-chain ledger and integrity-verification endpoints | ✅ Implemented |
+| **Blockchain Anchoring** | HerbTrace contract deployed on Polygon Amoy; successful anchoring demonstration | ✅ Testnet demonstrated |
+| **Blockchain Fallback** | Local mock-chain records can be created when real blockchain anchoring is unavailable or disabled | ✅ Implemented |
+| **Ayurvedic Knowledge Assistant** | Keyword-based matching and templated responses using available knowledge records | ⚠️ Basic backend implemented |
+| **Frontend–Backend Integration** | Several inspected frontend modules still use hardcoded demonstration data | 🔵 In Progress |
+| **Maps & Geographic Visualization** | Map-based presentation of collection and traceability information | 🔵 Planned |
+| **AI-Assisted Certification** | Additional AI support for the evidence and certification workflow | 🔵 Planned |
+| **Multi-Herb Formulations** | Traceability for composite formulations such as *Chyawanprash* | 🔵 Planned |
+| **Production Blockchain Deployment** | Evaluation of production-network deployment and operations | 🔵 Planned |
+
+**Status Clarification:** Backend implementation, successful testnet demonstration, frontend integration, and production readiness are separate milestones. A blockchain mock record is not equivalent to a real on-chain transaction, and a successful hash check does not independently prove that the original real-world information is truthful.
 
 ---
 
 ## 9. Future Scope
 
-- **🔵 Public Blockchain Anchoring:** Transition from the internal hash-chained mock-ledger to periodic anchoring on a decentralized public blockchain network.
-- **🔵 Continuous Model Expansion:** Expand the AI vision pipeline to recognize additional Ayurvedic plant species and integrate automated retraining from verifier feedback.
-- **🔵 IoT & Cold Chain Integration:** Connect environmental sensors (temperature, humidity) for automated telemetry during the *In Transit* phase.
-- **🔵 Formulation Traceability:** Scale provenance tracking from single raw herbs to composite, multi-ingredient classical Ayurvedic formulations.
+- **🔵 Frontend–Backend Integration:** Connect the scanner, authentication, batch tracking, QR lookup, verification, and integrity-status interfaces to live APIs.
+- **🔵 Maps & Geographic Traceability:** Add map-based visualization when collection-location data and access requirements are defined.
+- **🔵 AI-Assisted Certification:** Explore AI support for reviewing evidence while retaining explicit, authorized verification decisions.
+- **🔵 Continuous Model Expansion:** Expand plant classes and evaluate model accuracy, confidence handling, and controlled retraining.
+- **🔵 Advanced Ayurvedic Assistant:** Evaluate improved retrieval methods and additional validated knowledge sources.
+- **🔵 IoT & Cold Chain Integration:** Explore temperature and humidity monitoring during transportation.
+- **🔵 Milestone-Level Blockchain Anchoring:** Evaluate whether each lifecycle transition should receive an independent integrity reference.
+- **🔵 Production Blockchain Deployment:** Assess network costs, security, monitoring, and operational requirements beyond testnet.
+- **🔵 Formulation Traceability:** Extend the system from individual herbs to composite, multi-ingredient Ayurvedic formulations.
+

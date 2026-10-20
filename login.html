@@ -3,23 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ayurvedic Portal Auth — Farm2Ayur</title>
+  <title>Ayurvedic Portal Auth & Profile — Farm2Ayur</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <script>
+    // Anti-flicker: immediately activate logged-in state before DOM paint
+    try {
+      if (localStorage.getItem('farm2ayur_logged_in') === 'true') {
+        document.documentElement.classList.add('user-logged-in');
+      }
+    } catch(e) {}
+  </script>
   <script type="module" src="./public/runtime/cursor-trail.js"></script>
 </head>
 <body>
 
-  <!-- Background Video -->
+  <!-- Background Video (Active for Login / Register view only) -->
   <video class="bg-video" autoplay loop muted playsinline id="bgVideo">
     <source src="/login-video.mp4" type="video/mp4">
   </video>
   
-  <div class="vignette-overlay"></div>
+  <div class="vignette-overlay" id="vignetteOverlay"></div>
 
-  <!-- Main Split Glass Container -->
+  <!-- Main Split Glass Container (Shown when logged out) -->
   <div class="container" id="container">
     
     <!-- Sign Up Form Panel -->
@@ -89,6 +97,169 @@
 
   </div>
 
+  <!-- User Profile & Stats Container (Displayed when Logged In) -->
+  <div class="profile-container" id="profileContainer" style="display: none;">
+    
+    <!-- Top Action Bar -->
+    <div class="profile-top-bar">
+      <a href="index.html" class="profile-nav-back" title="Return to Portal Homepage">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span>Back to Farm2Ayur</span>
+      </a>
+
+      <div class="profile-status-badge">
+        <span class="pulse-indicator"></span>
+        <span>Active Ayurvedic Session</span>
+      </div>
+
+      <button type="button" class="btn-profile-logout" id="profileLogoutBtn" title="Sign out of your account">
+        <span>Log Out</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Profile Identity Display (Direct on Canvas) -->
+    <div class="profile-header-section">
+      <div class="avatar-wrapper">
+        <div class="profile-avatar" id="profileAvatar">
+          <span id="avatarInitials">A</span>
+        </div>
+        <div class="avatar-badge-icon" title="Ayurvedic Verified">🌿</div>
+      </div>
+
+      <div class="profile-title-block">
+        <div class="profile-eyebrow">Authenticated Herbalist & Seeker</div>
+        <h1 class="profile-user-name" id="profileName">Loading Profile...</h1>
+        <div class="profile-chips-row">
+          <div class="chip chip-email">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            <span id="profileEmailText">loading@farm2ayur.org</span>
+          </div>
+          <span class="chip chip-role" id="profileRoleBadge">🌿 Verified Seeker</span>
+          <span class="chip chip-id" id="profileIdBadge">ID: #AYUR-001</span>
+          <span class="chip chip-verified">✓ Blockchain Validated</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="profile-stats-grid">
+      <!-- Stat 1: AI Scans -->
+      <div class="stat-card">
+        <div class="stat-icon-box">🍃</div>
+        <div class="stat-info">
+          <div class="stat-number" id="statScansCount">14</div>
+          <div class="stat-label">AI Herb Scans</div>
+          <div class="stat-subtext" id="statScansSub">Botanical Species Identified</div>
+        </div>
+      </div>
+
+      <!-- Stat 2: Supply Chain Batches -->
+      <div class="stat-card">
+        <div class="stat-icon-box">⛓️</div>
+        <div class="stat-info">
+          <div class="stat-number" id="statBatchesCount">28</div>
+          <div class="stat-label">Batches Traced</div>
+          <div class="stat-subtext">Geo-provenance Anchored</div>
+        </div>
+      </div>
+
+      <!-- Stat 3: Formulations -->
+      <div class="stat-card">
+        <div class="stat-icon-box">📜</div>
+        <div class="stat-info">
+          <div class="stat-number" id="statFormulationsCount">12</div>
+          <div class="stat-label">Ayurvedic Remedies</div>
+          <div class="stat-subtext">Classical Pharmacopeia</div>
+        </div>
+      </div>
+
+      <!-- Stat 4: Purity & Trust -->
+      <div class="stat-card">
+        <div class="stat-icon-box">🛡️</div>
+        <div class="stat-info">
+          <div class="stat-number" id="statPurityRating">99.8%</div>
+          <div class="stat-label">Botanical Purity</div>
+          <div class="stat-subtext">AYUSH Grade A Standard</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Split: Activity & Quick Actions -->
+    <div class="profile-bottom-grid">
+      <!-- Activity Snippet -->
+      <div class="profile-activity-box">
+        <div class="box-header">
+          <span class="box-icon">⚡</span>
+          <span class="box-title">Recent Botanical Activity</span>
+        </div>
+        <ul class="activity-list" id="profileActivityList">
+          <li class="activity-item">
+            <span class="activity-bullet">🌿</span>
+            <div class="activity-text">
+              <strong>Tulsi (Ocimum sanctum)</strong> verified with 99.4% confidence
+            </div>
+            <span class="activity-time">Recent</span>
+          </li>
+          <li class="activity-item">
+            <span class="activity-bullet">📦</span>
+            <div class="activity-text">
+              <strong>Ashwagandha Batch #ASH-2026-X1</strong> supply chain confirmed
+            </div>
+            <span class="activity-time">Verified</span>
+          </li>
+          <li class="activity-item">
+            <span class="activity-bullet">✨</span>
+            <div class="activity-text">
+              <strong>Brahmi Neuro-Tonic</strong> formulation saved to remedies
+            </div>
+            <span class="activity-time">Saved</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Quick Action Navigation Hub -->
+      <div class="profile-quick-actions">
+        <div class="box-header">
+          <span class="box-icon">🧭</span>
+          <span class="box-title">Portal Navigation</span>
+        </div>
+        <div class="action-buttons-group">
+          <a href="scan.html" class="btn-portal-primary">
+            <span class="btn-icon">📷</span>
+            <div class="btn-label-group">
+              <span class="btn-title">Launch AI Leaf Scanner</span>
+              <span class="btn-desc">Identify fresh botanical specimens</span>
+            </div>
+          </a>
+          <a href="index.html" class="btn-portal-secondary">
+            <span class="btn-icon">🌿</span>
+            <div class="btn-label-group">
+              <span class="btn-title">Explore Herbal Directory</span>
+              <span class="btn-desc">Browse Ayurvedic herbs & properties</span>
+            </div>
+          </a>
+          <a href="index.html#supply-chain" class="btn-portal-secondary">
+            <span class="btn-icon">🔗</span>
+            <div class="btn-label-group">
+              <span class="btn-title">Trace Supply Chain</span>
+              <span class="btn-desc">Verify crop-to-remedy batches</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
   <script type="module" src="script.js"></script>
+  <script type="module" src="auth.js"></script>
 </body>
 </html>

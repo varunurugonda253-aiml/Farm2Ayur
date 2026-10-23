@@ -63,3 +63,7 @@ tmp/
 
 # Explicitly ensure ML model file is tracked
 !app/ml/farm2ayur_v9_best.keras
+node_modules/
+
+backend/static/uploads/
+backend/static/qr/

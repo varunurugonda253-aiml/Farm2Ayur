@@ -176,6 +176,20 @@ def _heuristic_fallback(
     }
 
 
+def _scanner_unavailable() -> Dict[str, Any]:
+    """Honest result when the model cannot answer: no herb, no confidence."""
+    return {
+        "predicted_herb_id": None,
+        "predicted_name": None,
+        "scientific_name": None,
+        "confidence": None,
+        "top_predictions": [],
+        "status": "scanner_unavailable",
+        "notes": "The scanner could not analyse this image. No herb was identified. Try another photo or try again later.",
+        "model_version": MODEL_VERSION,
+    }
+
+
 def identify_plant(
     db: Session,
     image_path: str,
@@ -185,14 +199,10 @@ def identify_plant(
     model = _get_model()
 
     if model is None:
-        return _heuristic_fallback(
-            db=db,
-            original_filename=original_filename,
-            note_prefix="V9 model not active in runtime."
-        )
+        return _scanner_unavailable()
 
     try:
-        # 1. Preprocess image
+        # 1. Preprocess image (raw 0-255 pixels, verified on test photos)
         img_array = _preprocess_image(image_path)
 
         # 2. Run model inference
@@ -242,8 +252,4 @@ def identify_plant(
 
     except Exception as e:
         print(f"[AI Scanner] Inference error on {image_path}: {e}")
-        return _heuristic_fallback(
-            db=db,
-            original_filename=original_filename,
-            note_prefix=f"Inference error ({str(e)})."
-        )
+        return _scanner_unavailable()

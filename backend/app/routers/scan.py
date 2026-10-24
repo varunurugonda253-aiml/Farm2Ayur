@@ -77,7 +77,7 @@ async def scan_plant(
     elif record.status == "completed":
         resp.message = "Scan completed successfully."
     else:
-        resp.message = "Scan finished with warnings."
+        resp.message = "Scanner unavailable. No herb was identified. Please try another photo." if record.status == "scanner_unavailable" else "Scan finished with warnings."
     return resp
 
 

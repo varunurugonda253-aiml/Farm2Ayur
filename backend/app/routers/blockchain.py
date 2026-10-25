@@ -31,7 +31,7 @@ router = APIRouter(prefix="/blockchain", tags=["Blockchain"])
 def anchor_batch_endpoint(
     payload: BlockchainAnchorRequest,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles("collector", "verifier", "admin")),
+    current_user: User = Depends(require_roles("verifier", "admin")),
 ):
     batch = db.query(Batch).filter(Batch.id == payload.batch_id).first()
     if not batch:

@@ -139,7 +139,8 @@ def add_batch_event(
     batch = db.query(Batch).filter(Batch.id == batch_id).first()
     if not batch:
         raise HTTPException(status_code=404, detail="Batch not found")
-
+    if payload.event_type in {"verified", "rejected"} and current_user.role.lower() not in {"verifier", "admin"}:
+        raise HTTPException(status_code=403, detail="Only a verifier or admin can record verified or rejected events")
     event = BatchEvent(
         batch_id=batch.id,
         event_type=payload.event_type,

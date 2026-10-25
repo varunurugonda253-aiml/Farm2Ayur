@@ -1,80 +1,33 @@
-/**
- * ==========================================================================
- * FARM2AYUR — DEDICATED AI LEAF CAMERA SCANNER SCRIPT (scan.js)
- * Enhanced with:
- * - Drag-and-Drop Image Inspection Dropzone
- * - Reactive Cursor Dynamic Ambient Glow
- * - Real-Time Diagnostic HUD Strip Simulation
- * - Glassmorphism & Emerald Scanning Visualizer
- * - Accessible Keyboard Controls (Space, T, Z, Esc)
- * ==========================================================================
- */
+/* ==========================================================================
+ * FARM2AYUR - AI LEAF SCANNER (scan.js)
+ * Sends the photo to the real backend (POST /scan/) and shows the real result.
+ * No invented data: if the scanner cannot answer, it says so.
+ * ========================================================================== */
+
+const API = 'http://127.0.0.1:8000';
+const TOKEN_KEY = 'farm2ayur_token';
+const ALLOWED_EXT = ['.jpg', '.jpeg', '.png', '.webp'];
 
 let activeCameraStream = null;
 let currentZoom = 1;
 let isTorchOn = false;
-let currentActiveHerb = 'tulsi';
 let isScanningActive = false;
+let previewUrl = null;
 
-const botanicalKnowledgeBase = {
-  tulsi: {
-    name: "Holy Basil / Tulsi",
-    scientificName: "Ocimum sanctum L.",
-    family: "Lamiaceae",
-    matchScore: "99.4%",
-    dosha: "Kapha & Vata Balancer",
-    activeCompound: "Eugenol (74.2%) & Ursolic Acid (3.1%)",
-    notes: "Elliptic-oblong serrated aromatic leaves with rich glandular trichomes and deep purplish-green venation.",
-    batchId: "TUL-2026-07"
-  },
-  ashwagandha: {
-    name: "Ashwagandha (Indian Ginseng)",
-    scientificName: "Withania somnifera (L.) Dunal",
-    family: "Solanaceae",
-    matchScore: "98.6%",
-    dosha: "Vata & Kapha Pacifying",
-    activeCompound: "Withaferin-A (4.82%) & Withanolide-D (1.2%)",
-    notes: "Ovate dull-green leaves with stellate puberulous hairs. Adaptogenic root and leaf phytochemical vigor.",
-    batchId: "ASH-2026-08"
-  },
-  neem: {
-    name: "Neem (Arishta)",
-    scientificName: "Azadirachta indica A. Juss.",
-    family: "Meliaceae",
-    matchScore: "97.8%",
-    dosha: "Pitta & Kapha Cooling",
-    activeCompound: "Azadirachtin (1.45%) & Nimbin",
-    notes: "Asymmetric falcate lanceolate leaflets with deeply serrate margins and cooling bitter triterpenoids.",
-    batchId: "NEE-2026-06"
-  },
-  brahmi: {
-    name: "Brahmi (Gotu Kola)",
-    scientificName: "Bacopa monnieri (L.) Wettst.",
-    family: "Plantaginaceae",
-    matchScore: "99.1%",
-    dosha: "Pitta Pacifying & Medhya (Cognitive)",
-    activeCompound: "Bacosides A & B (18.6%)",
-    notes: "Spathulate fleshy succulent leaves with prominent neural clarity markers and micro-cellular venation.",
-    batchId: "BRA-2026-05"
-  },
-  turmeric: {
-    name: "Turmeric (Haridra)",
-    scientificName: "Curcuma longa L.",
-    family: "Zingiberaceae",
-    matchScore: "96.9%",
-    dosha: "Tridoshic (Vata, Pitta, Kapha)",
-    activeCompound: "Total Curcuminoids (95.2%) & Bisdemethoxycurcumin",
-    notes: "Broad oblong-lanceolate leaf sheaths rising from underground aromatic medicinal rhizomes.",
-    batchId: "TUR-2026-09"
-  }
-};
+function esc(value) {
+  return String(value ?? '').replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
 
-const herbKeys = Object.keys(botanicalKnowledgeBase);
+function pct(value) {
+  const n = Number(value);
+  return Number.isFinite(n) ? (n * 100).toFixed(1) + '%' : 'n/a';
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   const videoEl = document.getElementById('scanVideoElement');
   const ambientFeed = document.getElementById('cameraAmbientFeed');
-  const ambientSpecimen = document.getElementById('ambientLeafSpecimen');
   const activationOverlay = document.getElementById('cameraActivationOverlay');
   const startCameraBtn = document.getElementById('startLiveCameraBtn');
   const torchBtn = document.getElementById('scanTorchBtn');
@@ -96,68 +49,86 @@ document.addEventListener('DOMContentLoaded', () => {
   const viewportStage = document.getElementById('scannerViewportStage');
   const dragDropOverlay = document.getElementById('dragDropOverlay');
   const cursorGlow = document.getElementById('cursorAmbientGlow');
-  
-  // Diagnostic HUD Elements
+
   const hudLightingValue = document.getElementById('hudLightingValue');
   const hudFocusValue = document.getElementById('hudFocusValue');
   const hudConfidenceValue = document.getElementById('hudConfidenceValue');
 
-  /* --------------------------------------------------------------------------
-     1. Reactive Mouse Ambient Glow Source
-     -------------------------------------------------------------------------- */
+  /* ---------- helpers ---------- */
+  function setInstruction(text) {
+    if (instructionMain) instructionMain.textContent = text;
+  }
+
+  function setHud(lighting, focus, confidence) {
+    if (hudLightingValue) hudLightingValue.textContent = lighting;
+    if (hudFocusValue) hudFocusValue.textContent = focus;
+    if (hudConfidenceValue) hudConfidenceValue.textContent = confidence;
+  }
+
+  function showDrawer(html) {
+    if (!drawerContent) return;
+    drawerContent.innerHTML = html;
+    if (drawer) drawer.classList.add('open');
+  }
+
+  const SMALL_TEXT = 'font-size:0.84rem; line-height:1.5; margin-bottom:1.1rem; color:var(--text-secondary);';
+
+  function showMessageCard(title, subtitle, message, actionHtml) {
+    showDrawer(`
+      <div class="result-card-header">
+        <div>
+          <h3 class="result-herb-name">${esc(title)}</h3>
+          <span class="result-scientific-name">${esc(subtitle)}</span>
+        </div>
+      </div>
+      <p style="${SMALL_TEXT}">${esc(message)}</p>
+      <div class="result-actions-grid">${actionHtml || ''}</div>
+    `);
+  }
+
+  const AGAIN_BTN = '<a href="#" class="btn-secondary-action" id="scanAgainBtn">Try another photo</a>';
+  const LOGIN_BTN = '<a href="login.html" class="btn-primary-action">Log in</a>';
+
+  if (drawerContent) {
+    drawerContent.addEventListener('click', (e) => {
+      if (e.target.closest('#scanAgainBtn')) {
+        e.preventDefault();
+        if (drawer) drawer.classList.remove('open');
+        setHud('Not measured', 'Not measured', 'Ready');
+        setInstruction('Align leaf within the emerald reticle');
+      }
+    });
+  }
+
+  setHud('Not measured', 'Not measured', 'Ready');
+
+  /* ---------- cursor glow ---------- */
   if (cursorGlow) {
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
     let currentX = mouseX;
     let currentY = mouseY;
-
     window.addEventListener('pointermove', (e) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
     }, { passive: true });
-
-    function animateCursorGlow() {
-      // Smooth interpolation
+    const animateCursorGlow = () => {
       currentX += (mouseX - currentX) * 0.12;
       currentY += (mouseY - currentY) * 0.12;
       cursorGlow.style.transform = `translate(${currentX}px, ${currentY}px) translate(-50%, -50%)`;
       requestAnimationFrame(animateCursorGlow);
-    }
+    };
     requestAnimationFrame(animateCursorGlow);
   }
 
-  /* --------------------------------------------------------------------------
-     2. Real-Time Diagnostic Stats Simulation
-     -------------------------------------------------------------------------- */
-  function updateDiagnosticStats(state = 'idle') {
-    if (!hudLightingValue || !hudFocusValue || !hudConfidenceValue) return;
-
-    if (state === 'scanning') {
-      hudLightingValue.textContent = 'Analyzing (520 Lux)';
-      hudFocusValue.textContent = 'Locking Venation...';
-      hudConfidenceValue.textContent = 'Deep Neural Match';
-    } else if (state === 'identified') {
-      const current = botanicalKnowledgeBase[currentActiveHerb];
-      hudLightingValue.textContent = 'Optimal (490 Lux)';
-      hudFocusValue.textContent = 'Locked (99.4%)';
-      hudConfidenceValue.textContent = `${current ? current.matchScore : '98.5%'} Match`;
-    } else {
-      hudLightingValue.textContent = 'Optimal (480 Lux)';
-      hudFocusValue.textContent = 'Locked (98.6%)';
-      hudConfidenceValue.textContent = 'Ready';
-    }
-  }
-
-  /* --------------------------------------------------------------------------
-     3. Request & Start Camera Stream
-     -------------------------------------------------------------------------- */
+  /* ---------- camera ---------- */
   async function startCamera() {
     if (activationOverlay) activationOverlay.classList.add('hidden');
-    if (instructionMain) instructionMain.textContent = "Align leaf within the emerald reticle";
-    updateDiagnosticStats('idle');
+    setInstruction('Align leaf within the emerald reticle');
 
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       if (ambientFeed) ambientFeed.style.display = 'flex';
+      setInstruction('No camera available. Use the gallery button to upload a leaf photo.');
       return;
     }
     try {
@@ -171,37 +142,30 @@ document.addEventListener('DOMContentLoaded', () => {
         if (ambientFeed) ambientFeed.style.display = 'none';
       }
     } catch (err) {
-      console.log("WebRTC camera access denied or unavailable, utilizing ambient botanical simulator:", err);
+      console.log('Camera access denied or unavailable:', err);
       if (ambientFeed) ambientFeed.style.display = 'flex';
       if (videoEl) videoEl.style.display = 'none';
+      setInstruction('Camera not available. Use the gallery button to upload a leaf photo.');
     }
   }
 
   function stopCamera() {
     if (activeCameraStream) {
-      activeCameraStream.getTracks().forEach(track => track.stop());
+      activeCameraStream.getTracks().forEach((track) => track.stop());
       activeCameraStream = null;
     }
   }
 
   window.addEventListener('beforeunload', stopCamera);
+  if (startCameraBtn) startCameraBtn.addEventListener('click', startCamera);
 
-  if (startCameraBtn) {
-    startCameraBtn.addEventListener('click', startCamera);
-  }
-
-  /* --------------------------------------------------------------------------
-     4. Torch / Flashlight Toggle
-     -------------------------------------------------------------------------- */
+  /* ---------- torch ---------- */
   if (torchBtn) {
     torchBtn.addEventListener('click', async () => {
       isTorchOn = !isTorchOn;
       torchBtn.classList.toggle('active', isTorchOn);
       if (torchGlow) torchGlow.classList.toggle('active', isTorchOn);
-
-      if (hudLightingValue) {
-        hudLightingValue.textContent = isTorchOn ? 'Torch Active (720 Lux)' : 'Optimal (480 Lux)';
-      }
+      if (hudLightingValue) hudLightingValue.textContent = isTorchOn ? 'Torch on' : 'Not measured';
 
       if (activeCameraStream) {
         const track = activeCameraStream.getVideoTracks()[0];
@@ -209,213 +173,226 @@ document.addEventListener('DOMContentLoaded', () => {
           try {
             await track.applyConstraints({ advanced: [{ torch: isTorchOn }] });
           } catch (e) {
-            // Hardware torch unavailable; simulated UI beam active
+            // Hardware torch unavailable on this device; only the on-screen glow is shown
           }
         }
       }
     });
   }
 
-  /* --------------------------------------------------------------------------
-     5. Digital Zoom Toggle (1x / 2x)
-     -------------------------------------------------------------------------- */
+  /* ---------- zoom (visual only) ---------- */
   if (zoomBtn) {
     zoomBtn.addEventListener('click', () => {
       currentZoom = currentZoom === 1 ? 2 : 1;
       if (zoomLevel) zoomLevel.innerText = `${currentZoom}x`;
       zoomBtn.classList.toggle('active', currentZoom === 2);
-      
       const scaleStr = `scale(${currentZoom})`;
       if (videoEl) videoEl.style.transform = scaleStr;
       if (ambientFeed) ambientFeed.style.transform = scaleStr;
-
-      if (hudFocusValue) {
-        hudFocusValue.textContent = currentZoom === 2 ? 'Macro 2x (99.8%)' : 'Locked (98.6%)';
-      }
+      if (hudFocusValue) hudFocusValue.textContent = currentZoom === 2 ? 'Zoom 2x' : 'Not measured';
     });
   }
 
-  /* --------------------------------------------------------------------------
-     6. Central Shutter Button
-     -------------------------------------------------------------------------- */
+  /* ---------- real scan: send photo to the backend ---------- */
+  async function runScan(blob, filename) {
+    if (isScanningActive) return;
+
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (!token) {
+      setInstruction('Please log in to scan.');
+      showMessageCard('Login required', 'Scanner locked', 'You need to be logged in to use the AI scanner.', LOGIN_BTN);
+      return;
+    }
+
+    isScanningActive = true;
+    if (shutterBtn) shutterBtn.style.transform = 'scale(0.92)';
+    setInstruction('Analysing photo... the first scan can take a few seconds.');
+    setHud('Not measured', 'Not measured', 'Analysing...');
+
+    try {
+      const form = new FormData();
+      form.append('file', blob, filename);
+      const res = await fetch(API + '/scan/', {
+        method: 'POST',
+        headers: { Authorization: 'Bearer ' + token },
+        body: form
+      });
+
+      if (res.status === 401) {
+        setInstruction('Your session expired. Please log in again.');
+        showMessageCard('Session expired', 'Login required', 'Please log in again to continue scanning.', LOGIN_BTN);
+        return;
+      }
+      if (!res.ok) {
+        let detail = 'The server could not process this photo.';
+        try {
+          const err = await res.json();
+          if (typeof err.detail === 'string') detail = err.detail;
+        } catch (e) { /* keep default message */ }
+        setInstruction('Scan failed.');
+        showMessageCard('Scan failed', 'No herb was identified', detail, AGAIN_BTN);
+        return;
+      }
+
+      renderResult(await res.json());
+    } catch (err) {
+      console.log('Scan request failed:', err);
+      setInstruction('Cannot reach the server.');
+      showMessageCard('Cannot reach the server', 'No herb was identified',
+        'Check that the backend is running and try again.', AGAIN_BTN);
+    } finally {
+      isScanningActive = false;
+      if (shutterBtn) shutterBtn.style.transform = '';
+    }
+  }
+
+  function renderResult(data) {
+    if (data.status === 'scanner_unavailable' || !data.predicted_name) {
+      setInstruction('Scanner unavailable. No herb was identified.');
+      setHud('Not measured', 'Not measured', 'Unavailable');
+      showMessageCard('Scanner unavailable', 'No herb was identified',
+        data.message || data.notes || 'The scanner could not analyse this image.', AGAIN_BTN);
+      return;
+    }
+
+    const lowConfidence = data.status === 'low_confidence';
+    const confText = pct(data.confidence);
+    const top = Array.isArray(data.top_predictions) ? data.top_predictions : [];
+
+    setInstruction(lowConfidence
+      ? `Low confidence: closest match is ${data.predicted_name} (${confText})`
+      : `Identified: ${data.predicted_name} (${confText})`);
+    setHud('Not measured', 'Not measured', `${confText}${lowConfidence ? ' (low)' : ''}`);
+
+    const topTags = top.map((p) =>
+      `<span class="result-tag">${esc(p.name)}: ${pct(p.confidence)}</span>`).join('');
+
+    showDrawer(`
+      <div class="result-card-header">
+        <div>
+          <h3 class="result-herb-name" id="drawerHerbName">${esc(data.predicted_name)}</h3>
+          <span class="result-scientific-name">${data.scientific_name ? esc(data.scientific_name) : 'Herb record not found in database'}</span>
+        </div>
+        <span class="result-match-badge">${lowConfidence ? 'Low confidence ' : ''}${confText}</span>
+      </div>
+
+      ${lowConfidence ? `<p style="${SMALL_TEXT} color:#b45309;"><strong>Not reliable.</strong> The scanner is unsure. Retake the photo in clear light with one leaf filling the frame.</p>` : ''}
+
+      <div class="result-tags-row">${topTags}</div>
+
+      <p style="${SMALL_TEXT}">${esc(data.notes || '')}</p>
+      <p style="${SMALL_TEXT}"><em>AI suggestion from a photo. It is not a lab test. Confirm the herb before relying on it. Model: ${esc(data.model_version || 'unknown')}</em></p>
+
+      <div class="result-actions-grid">${AGAIN_BTN}</div>
+    `);
+  }
+
+  /* ---------- shutter: capture a real camera frame ---------- */
   if (shutterBtn) {
     shutterBtn.addEventListener('click', () => {
       if (activationOverlay) activationOverlay.classList.add('hidden');
-      // Cycle through botanical specimens on repeated scans
-      const nextIdx = (herbKeys.indexOf(currentActiveHerb) + 1) % herbKeys.length;
-      currentActiveHerb = herbKeys[nextIdx];
-      triggerBotanicalScan(currentActiveHerb);
+      if (!activeCameraStream || !videoEl) {
+        setInstruction('No live camera. Use the gallery button to upload a leaf photo.');
+        return;
+      }
+      videoEl.style.display = 'block';
+      if (ambientFeed) ambientFeed.style.display = 'none';
+      if (!videoEl.videoWidth) {
+        setInstruction('Camera is not ready yet. Try again in a moment.');
+        return;
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = videoEl.videoWidth;
+      canvas.height = videoEl.videoHeight;
+      canvas.getContext('2d').drawImage(videoEl, 0, 0);
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          setInstruction('Could not capture the photo. Try again.');
+          return;
+        }
+        runScan(blob, 'camera.jpg');
+      }, 'image/jpeg', 0.92);
     });
   }
 
-  /* --------------------------------------------------------------------------
-     7. Gallery Photo Upload & Drag-and-Drop Image Handlers
-     -------------------------------------------------------------------------- */
+  /* ---------- gallery upload and drag-and-drop ---------- */
   function handleImageFile(file) {
-    if (!file || !file.type.startsWith('image/')) return;
+    if (!file) return;
+    const ext = '.' + (file.name.split('.').pop() || '').toLowerCase();
+    if (!ALLOWED_EXT.includes(ext)) {
+      setInstruction('Unsupported file. Use a JPG, PNG or WEBP photo.');
+      return;
+    }
+    if (isScanningActive) return;
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      if (activationOverlay) activationOverlay.classList.add('hidden');
-      if (ambientFeed) {
-        ambientFeed.style.display = 'flex';
-        ambientFeed.innerHTML = `
-          <img src="${event.target.result}" alt="Uploaded Leaf Specimen" 
-               style="width:100%; height:100%; object-fit:cover; filter: contrast(1.05) saturate(1.1);">
-        `;
-      }
-      if (videoEl) videoEl.style.display = 'none';
+    if (activationOverlay) activationOverlay.classList.add('hidden');
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    previewUrl = URL.createObjectURL(file);
+    if (ambientFeed) {
+      ambientFeed.innerHTML = '';
+      const img = document.createElement('img');
+      img.src = previewUrl;
+      img.alt = 'Uploaded leaf photo';
+      img.style.cssText = 'width:100%; height:100%; object-fit:cover;';
+      ambientFeed.appendChild(img);
+      ambientFeed.style.display = 'flex';
+    }
+    if (videoEl) videoEl.style.display = 'none';
 
-      // Pick next interesting herb
-      const nextIdx = (herbKeys.indexOf(currentActiveHerb) + 1) % herbKeys.length;
-      currentActiveHerb = herbKeys[nextIdx];
-      triggerBotanicalScan(currentActiveHerb);
-    };
-    reader.readAsDataURL(file);
+    runScan(file, file.name);
   }
 
-  // Gallery Button Click
   if (galleryBtn && fileInput) {
-    galleryBtn.addEventListener('click', () => {
-      fileInput.click();
-    });
-
+    galleryBtn.addEventListener('click', () => fileInput.click());
     fileInput.addEventListener('change', (e) => {
-      if (e.target.files && e.target.files[0]) {
-        handleImageFile(e.target.files[0]);
-      }
+      if (e.target.files && e.target.files[0]) handleImageFile(e.target.files[0]);
+      fileInput.value = '';
     });
   }
 
-  // Desktop Drag-and-Drop Listeners
   if (viewportStage) {
     let dragCounter = 0;
-
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach((eventName) => {
       viewportStage.addEventListener(eventName, (e) => {
         e.preventDefault();
         e.stopPropagation();
       }, false);
     });
-
-    viewportStage.addEventListener('dragenter', (e) => {
+    viewportStage.addEventListener('dragenter', () => {
       dragCounter++;
       if (dragDropOverlay) dragDropOverlay.classList.add('active');
     });
-
-    viewportStage.addEventListener('dragleave', (e) => {
+    viewportStage.addEventListener('dragleave', () => {
       dragCounter--;
       if (dragCounter <= 0 && dragDropOverlay) {
         dragDropOverlay.classList.remove('active');
         dragCounter = 0;
       }
     });
-
     viewportStage.addEventListener('drop', (e) => {
       dragCounter = 0;
       if (dragDropOverlay) dragDropOverlay.classList.remove('active');
       const dt = e.dataTransfer;
-      if (dt && dt.files && dt.files[0]) {
-        handleImageFile(dt.files[0]);
-      }
+      if (dt && dt.files && dt.files[0]) handleImageFile(dt.files[0]);
     });
   }
 
-  /* --------------------------------------------------------------------------
-     8. Botanical AI Scan Analysis Execution
-     -------------------------------------------------------------------------- */
-  function triggerBotanicalScan(herbKey) {
-    if (isScanningActive) return;
-    isScanningActive = true;
-
-    const herbData = botanicalKnowledgeBase[herbKey] || botanicalKnowledgeBase.tulsi;
-    
-    if (instructionMain) {
-      instructionMain.innerHTML = `<span style="color:var(--cyan-light);">⚡ Analyzing Neural Venation & Biomarkers...</span>`;
-    }
-    updateDiagnosticStats('scanning');
-
-    // Visual feedback on shutter button
-    if (shutterBtn) shutterBtn.style.transform = 'scale(0.92)';
-
-    setTimeout(() => {
-      if (shutterBtn) shutterBtn.style.transform = '';
-      if (instructionMain) {
-        instructionMain.innerHTML = `<span style="color:var(--emerald-light);">🌿 Identified: ${herbData.name} (${herbData.matchScore})</span>`;
-      }
-      updateDiagnosticStats('identified');
-
-      renderResultDrawer(herbData, herbKey);
-      if (drawer) drawer.classList.add('open');
-      isScanningActive = false;
-    }, 1200);
-  }
-
-  function renderResultDrawer(herbData, herbKey) {
-    if (!drawerContent) return;
-    drawerContent.innerHTML = `
-      <div class="result-card-header">
-        <div>
-          <h3 class="result-herb-name" id="drawerHerbName">${herbData.name}</h3>
-          <span class="result-scientific-name">${herbData.scientificName}</span>
-        </div>
-        <span class="result-match-badge">⚡ ${herbData.matchScore} Match</span>
-      </div>
-
-      <div class="result-tags-row">
-        <span class="result-tag">🌿 Family: ${herbData.family}</span>
-        <span class="result-tag">⚖️ ${herbData.dosha}</span>
-      </div>
-
-      <div class="result-phytochemicals">
-        <strong>🔬 Active Phytochemical Compounds:</strong>
-        <span>${herbData.activeCompound}</span>
-      </div>
-
-      <p style="font-size: 0.84rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1.1rem;">
-        <strong style="color:var(--emerald-light);">Morphological Notes:</strong> ${herbData.notes}
-      </p>
-
-      <div class="result-actions-grid">
-        <a href="index.html#home" class="btn-primary-action" id="scanViewProfileBtn">
-          🌿 View Pharmacopeia
-        </a>
-        <a href="index.html#supply-chain?batch=${herbData.batchId}" class="btn-secondary-action" id="scanTraceBatchBtn">
-          🔗 Trace Batch (${herbData.batchId})
-        </a>
-      </div>
-    `;
-  }
-
-  /* --------------------------------------------------------------------------
-     9. Drawer & Modal Controls
-     -------------------------------------------------------------------------- */
+  /* ---------- drawer and modal ---------- */
   if (drawerHandle && drawer) {
-    drawerHandle.addEventListener('click', () => {
-      drawer.classList.toggle('open');
-    });
+    drawerHandle.addEventListener('click', () => drawer.classList.toggle('open'));
   }
-
   if (infoBtn && infoModal) {
-    infoBtn.addEventListener('click', () => {
-      infoModal.classList.add('open');
-    });
+    infoBtn.addEventListener('click', () => infoModal.classList.add('open'));
   }
-
-  [infoCloseBtn, infoGotItBtn, infoBackdrop].forEach(btn => {
+  [infoCloseBtn, infoGotItBtn, infoBackdrop].forEach((btn) => {
     if (btn && infoModal) {
-      btn.addEventListener('click', () => {
-        infoModal.classList.remove('open');
-      });
+      btn.addEventListener('click', () => infoModal.classList.remove('open'));
     }
   });
 
-  /* --------------------------------------------------------------------------
-     10. Keyboard Accessibility Shortcuts (Space, T, Z, Esc)
-     -------------------------------------------------------------------------- */
+  /* ---------- keyboard shortcuts ---------- */
   window.addEventListener('keydown', (e) => {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-
     if (e.code === 'Space') {
       e.preventDefault();
       if (shutterBtn) shutterBtn.click();
